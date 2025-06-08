@@ -1,0 +1,203 @@
+@import 'src/assets/styles/variables.scss';
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  position: relative;
+  
+  // Special handling for chat model select
+  &.chat-model-select {
+    .select-dropdown {
+      min-width: 15rem;
+      width: auto;
+      left: 0;
+      right: auto;
+    }
+  }
+}
+
+.select-label {
+  font-size: $font-sm;
+  color: var(--text-primary-color);
+}
+
+.enhanced-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm $spacing-md;
+  border: $border-width solid var(--border-color);
+  border-radius: $radius-md;
+  background-color: var(--background-color);
+  color: var(--text-primary-color);
+  min-height: 2.5rem;
+  cursor: pointer;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  
+  // Default variant
+  &.default {
+    // These are already the default styles
+  }
+  
+  // Minimal variant for chat and compact UIs
+  &.minimal {
+    border: 1px solid transparent;
+    padding: 0.25rem 0.5rem;
+    min-height: 2rem;
+    background-color: transparent;
+    font-size: $font-sm;
+    color: var(--text-secondary-color);
+    
+    &:hover:not(.disabled) {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+      color: var(--primary-color);
+      border-color: rgba(var(--primary-color-rgb), 0.2);
+    }
+    
+    &.open {
+      box-shadow: none;
+      border-color: var(--primary-color);
+    }
+  }
+  
+  &:hover:not(.disabled) {
+    border-color: var(--primary-color);
+  }
+  
+  &.open {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.125rem rgba(var(--primary-color-rgb), 0.1);
+  }
+  
+  &.error {
+    border-color: var(--error-color);
+  }
+  
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--component-bg-color);
+  }
+  
+  .selected-option {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .placeholder {
+    color: var(--text-placeholder-color);
+  }
+}
+
+.model-icon {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+  vertical-align: middle;
+  margin-right: $spacing-xs;
+}
+
+.select-dropdown {
+  position: absolute;
+  width: 100%;
+  background-color: var(--component-bg-color);
+  border: $border-width solid var(--border-color);
+  border-radius: $radius-md;
+  box-shadow: 0 $spacing-sm $spacing-lg rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-height: 15rem;
+  overflow-y: auto;
+  
+  // Position dropdown below the select (default)
+  &.bottom {
+    top: 100%;
+    left: 0;
+    margin-top: $spacing-xs;
+  }
+  
+  // Position dropdown above the select
+  &.top {
+    bottom: 100%;
+    left: 0;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .search-container {
+    padding: $spacing-xs;
+    border-bottom: $border-width solid var(--border-color);
+    
+    .search-input {
+      width: 100%;
+      padding: $spacing-sm;
+      border: $border-width solid var(--border-color);
+      border-radius: $radius-sm;
+      font-size: $font-sm;
+      background-color: var(--background-color);
+      color: var(--text-primary-color);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+      
+      &::placeholder {
+        color: var(--text-placeholder-color);
+      }
+    }
+  }
+  
+  .options-list {
+    max-height: 12.5rem;
+    overflow-y: auto;
+  }
+  
+  .select-option {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    border-bottom: $border-width solid var(--border-color);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &:hover {
+      background-color: rgba(var(--primary-color-rgb), 0.05);
+    }
+    
+    &.selected {
+      background-color: rgba(var(--primary-color-rgb), 0.1);
+      font-weight: 500;
+      color: var(--primary-color);
+    }
+  }
+  
+  .no-results {
+    padding: $spacing-md;
+    text-align: center;
+    color: var(--text-secondary-color);
+    font-size: $font-sm;
+  }
+}
+
+.select-error {
+  color: var(--error-color);
+  font-size: $font-xs;
+} 

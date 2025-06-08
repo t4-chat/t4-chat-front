@@ -1,0 +1,36 @@
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.25rem;
+  
+  span {
+    display: inline-block;
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 50%;
+    background-color: var(--text-secondary-color);
+    margin: 0 0.125rem;
+    opacity: 0.6;
+    animation: dot-pulse 1.5s infinite ease-in-out;
+    
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes dot-pulse {
+  0%, 60%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  
+  30% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+} 

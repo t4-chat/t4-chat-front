@@ -1,0 +1,74 @@
+@import 'src/assets/styles/variables.scss';
+
+// Local variables that extend from global ones
+$message-padding: $spacing-lg;
+$message-radius: $radius-lg;
+
+@mixin message-base {
+  padding: $message-padding;
+  margin: $spacing-md 0;
+  border-radius: $message-radius;
+  max-width: 85%;
+  animation: fadeIn $transition-normal;
+  box-shadow: 0 $spacing-xs $spacing-sm rgba(0, 0, 0, 0.05);
+}
+
+.chat-message {
+  @include message-base;
+  position: relative;
+
+  &.user {
+    background-color: var(--message-user-bg-color);
+    margin-left: auto;
+    margin-right: $spacing-lg;
+    border-bottom-right-radius: $spacing-xs;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: -$spacing-sm;
+      width: $spacing-sm;
+      height: $spacing-sm;
+      background-color: var(--message-user-bg-color);
+      clip-path: polygon(0 0, 0% 100%, 100% 100%);
+    }
+  }
+
+  &.assistant {
+    background-color: var(--message-assistant-bg-color);
+    margin-right: auto;
+    margin-left: $spacing-lg;
+    border-bottom-left-radius: $spacing-xs;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -$spacing-sm;
+      width: $spacing-sm;
+      height: $spacing-sm;
+      background-color: var(--message-assistant-bg-color);
+      clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    }
+  }
+
+  .message-content {
+    font-size: $font-md;
+    line-height: 1.5;
+    color: var(--text-primary-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY($spacing-sm);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    environment:
+      - GOOGLE_CLIENT_ID=1076577335423-6ofdc747qbbp38vhn68h80bq41lh13fo.apps.googleusercontent.com
+      - API_URL=http://localhost:9001
+    restart: unless-stopped

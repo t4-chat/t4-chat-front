@@ -1,0 +1,86 @@
+@import 'src/assets/styles/variables.scss';
+
+.chat-page {
+  height: calc(100vh - 3.75rem); /* Adjust for header (3.75rem) and footer (3.75rem) */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--background-color);
+  overflow: hidden;
+  position: fixed; /* Fix the position to prevent scrolling */
+  top: 3.75rem; /* Position below header */
+  left: 0;
+  right: 0;
+  margin: 0;
+  transition: padding-left $transition-normal, bottom $transition-normal;
+  
+  &.with-sidebar {
+    @media (min-width: $breakpoint-md) {
+      padding-left: 20rem; /* Add padding equal to sidebar width on larger screens */
+    }
+  }
+}
+
+.chat-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--component-bg-color);
+  /* Set maximum width for larger screens */
+  max-width: 100%;
+  transition: max-width $transition-normal;
+}
+
+/* Responsive breakpoints */
+@media (min-width: $breakpoint-md) {
+  .chat-container {
+    max-width: 90%;
+  }
+}
+
+@media (min-width: $breakpoint-lg) {
+  .chat-container {
+    max-width: 80%;
+    max-width: 56.25rem; /* 900px -> 56.25rem */
+  }
+}
+
+@media (min-width: $breakpoint-xl) {
+  .chat-container {
+    max-width: 62.5rem; /* 1000px -> 62.5rem */
+  }
+}
+
+/* Mobile optimization */
+@media (max-width: $breakpoint-sm) {
+  .chat-page {
+    padding: 0;
+  }
+}
+
+.chat-header {
+  padding: 1rem 1.5rem;
+  border-bottom: $border-width solid var(--border-color);
+  
+  .chat-title {
+    font-size: $font-xl;
+    font-weight: 500;
+    color: var(--text-primary-color);
+    margin: 0;
+  }
+}
+
+.chat-wrapper {
+  flex: 1;
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: $breakpoint-md) {
+  .chat-page {
+    padding: 0;
+  }
+} 

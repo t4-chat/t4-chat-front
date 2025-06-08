@@ -1,0 +1,90 @@
+@import 'src/assets/styles/variables.scss';
+
+.chat-input-integrated-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 80rem;
+  width: 100%;
+  position: relative;
+  border: $border-width solid var(--border-color);
+  border-radius: 1.5rem;
+  background-color: var(--background-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  &:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.125rem rgba(var(--primary-color-rgb), 0.2);
+  }
+  
+  .chat-input {
+    flex: 1;
+    min-height: 2.75rem;
+    max-height: 9.375rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: var(--text-primary-color);
+    resize: none;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    outline: none;
+    
+    &::placeholder {
+      color: var(--text-placeholder-color);
+    }
+    
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+  
+  .chat-input-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem 0.5rem 0.75rem;
+    border-top: none;
+    
+    .model-selector-container {
+      position: relative;
+      
+      .chat-model-select {
+        min-width: 7.5rem;
+      }
+    }
+    
+    .send-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--text-secondary-color);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      
+      &:hover:not(:disabled) {
+        background-color: rgba(var(--primary-color-rgb), 0.1);
+        color: var(--primary-color);
+      }
+      
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      
+      &.active {
+        background-color: var(--primary-color);
+        color: white;
+        
+        &:hover:not(:disabled) {
+          background-color: var(--primary-color-hover);
+        }
+      }
+    }
+  }
+} 

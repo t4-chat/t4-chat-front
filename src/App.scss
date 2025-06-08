@@ -1,0 +1,20 @@
+@import './assets/styles/variables';
+@import './assets/styles/theme';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+} 

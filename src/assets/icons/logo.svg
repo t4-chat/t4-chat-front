@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main circular hub -->
+  <circle cx="256" cy="256" r="112" fill="currentColor" class="hub-circle" />
+  
+  <!-- Connecting nodes/spokes -->
+  <g class="nodes">
+    <!-- Top node -->
+    <circle cx="256" cy="88" r="40" fill="currentColor" class="node" />
+    <path d="M256 144V116" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Top right node -->
+    <circle cx="376" cy="136" r="32" fill="currentColor" class="node" />
+    <path d="M339 178L310 159" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Right node -->
+    <circle cx="424" cy="256" r="40" fill="currentColor" class="node" />
+    <path d="M368 256L396 256" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Bottom right node -->
+    <circle cx="376" cy="376" r="32" fill="currentColor" class="node" />
+    <path d="M339 334L310 353" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Bottom node -->
+    <circle cx="256" cy="424" r="40" fill="currentColor" class="node" />
+    <path d="M256 368V396" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Bottom left node -->
+    <circle cx="136" cy="376" r="32" fill="currentColor" class="node" />
+    <path d="M173 334L202 353" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Left node -->
+    <circle cx="88" cy="256" r="40" fill="currentColor" class="node" />
+    <path d="M144 256L116 256" stroke="currentColor" stroke-width="12" class="connection" />
+    
+    <!-- Top left node -->
+    <circle cx="136" cy="136" r="32" fill="currentColor" class="node" />
+    <path d="M173 178L202 159" stroke="currentColor" stroke-width="12" class="connection" />
+  </g>
+  
+  <!-- Clear white circle for letter background -->
+  <circle cx="256" cy="256" r="60" fill="var(--background-color, #ffffff)" class="letter-background" />
+  
+  <!-- Bold letter 'A' -->
+  <path 
+    d="M226 296V256H286V296H266V276H246V296H226ZM226 236V216H286V236H226ZM246 256H266V236H246V256Z" 
+    fill="var(--primary-color, #2196f3)" 
+    class="core-letter" 
+  />
+  
+  <style>
+    .hub-circle {
+      fill: var(--primary-color, #2196f3);
+      opacity: 0.9;
+    }
+    .node {
+      fill: var(--primary-color, #2196f3);
+      opacity: 0.7;
+    }
+    .connection {
+      stroke: var(--primary-color, #2196f3);
+      opacity: 0.8;
+    }
+    .letter-background {
+      fill: var(--background-color, #ffffff);
+    }
+    .core-letter {
+      fill: var(--primary-color, #2196f3);
+    }
+  </style>
+</svg> 

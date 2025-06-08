@@ -1,0 +1,118 @@
+@import 'src/assets/styles/variables.scss';
+
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: $spacing-sm;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: $radius-sm;
+
+    &:hover {
+      background-color: var(--text-secondary-color);
+    }
+  }
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-lg 0;
+  scroll-behavior: smooth;
+  
+  // Styling for empty chat state
+  .empty-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-secondary-color);
+    
+    .empty-chat-content {
+      text-align: center;
+      
+      h2 {
+        font-size: $font-xl;
+        margin-bottom: $spacing-sm;
+        font-weight: 500;
+      }
+      
+      p {
+        font-size: $font-md;
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  // Container for the messages
+  .messages-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 80rem;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+  }
+  
+  // Message wrapper
+  .message-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: $spacing-md;
+    
+    &.user-message {
+      align-items: flex-end;
+    }
+    
+    &.assistant-message {
+      align-items: flex-start;
+    }
+
+    .message-loading {
+      margin-top: $spacing-xs;
+      margin-left: $spacing-lg;
+      height: $spacing-md;
+    }
+  }
+
+  @include scrollbar;
+}
+
+// Loading dots animation
+.typing-indicator {
+  display: flex;
+  gap: $spacing-xs;
+  padding: $spacing-xs;
+  border-radius: $radius-lg;
+  width: fit-content;
+
+  span {
+    width: $spacing-xs;
+    height: $spacing-xs;
+    background-color: var(--text-secondary-color);
+    border-radius: 50%;
+    animation: typing 1s infinite ease-in-out;
+
+    @for $i from 1 through 3 {
+      &:nth-child(#{$i}) {
+        animation-delay: 0.2s * $i;
+      }
+    }
+  }
+}
+
+@keyframes typing {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-$spacing-xs);
+  }
+} 
