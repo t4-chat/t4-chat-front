@@ -39,7 +39,7 @@ export type ErrorCallback = (error: Error) => void;
 export type DoneCallback = () => void;
 
 export class ChatService {
-  private baseUrl = process.env.API_URL || 'http://localhost:9001';
+  private baseUrl = process.env.REACT_APP_API_URL;
 
   private getAuthHeaders(): HeadersInit {
     return {

@@ -4,7 +4,7 @@ import { router } from './routes';
 import './App.scss';
 
 // Google Client ID - Replace with your actual client ID from Google Cloud Console
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '1076577335423-6ofdc747qbbp38vhn68h80bq41lh13fo.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 
 function App() {
   return (
