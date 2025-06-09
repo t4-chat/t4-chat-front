@@ -1,76 +1,80 @@
-import { useRef, useEffect, useMemo } from 'react';
-import { ChatMessage as ChatMessageType } from '@/features/chat/types';
-import { ChatMessage } from '@/features/chat/components/ChatMessage/ChatMessage';
-import { LoadingDots } from '@/components/ui-kit/LoadingDots/LoadingDots';
-import './ChatMessages.scss';
+import { useRef, useEffect, useMemo } from "react";
+import { ChatMessage as ChatMessageType } from "@/features/chat/types";
+import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage";
+import { LoadingDots } from "@/components/ui-kit/LoadingDots/LoadingDots";
+import "./ChatMessages.scss";
 
 interface ChatMessagesProps {
-  messages: ChatMessageType[];
-  isLoading?: boolean;
+	messages: ChatMessageType[];
+	isLoading?: boolean;
 }
 
-export const ChatMessages = ({ messages, isLoading = false }: ChatMessagesProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  
-  const hasMessages = useMemo(() => messages.length > 0, [messages.length]);
+export const ChatMessages = ({
+	messages,
+	isLoading = false,
+}: ChatMessagesProps) => {
+	const messagesEndRef = useRef<HTMLDivElement>(null);
+	const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      // Use a small timeout to ensure DOM has updated
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'end' 
-        });
-      }, 100);
-    }
-  }, [messages]);
+	const hasMessages = useMemo(() => messages.length > 0, [messages.length]);
 
-  // Initial scroll to bottom
-  useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-    }
-  }, []);
+	// Scroll to bottom when messages change
+	useEffect(() => {
+		if (messagesEndRef.current) {
+			// Use a small timeout to ensure DOM has updated
+			setTimeout(() => {
+				messagesEndRef.current?.scrollIntoView({
+					behavior: "smooth",
+					block: "end",
+				});
+			}, 100);
+		}
+	}, [messages]);
 
-  return (
-    <div className="chat-messages" ref={messagesContainerRef}>
-      {!hasMessages && (
-        <div className="empty-chat">
-          <div className="empty-chat-content">
-            <h2>Start a new conversation</h2>
-            <p>Type a message below to begin</p>
-          </div>
-        </div>
-      )}
+	// Initial scroll to bottom
+	useEffect(() => {
+		if (messagesContainerRef.current) {
+			messagesContainerRef.current.scrollTop =
+				messagesContainerRef.current.scrollHeight;
+		}
+	}, []);
 
-      {hasMessages && (
-        <div className="messages-container">
-          {messages.map((message) => (
-            <div 
-              key={message.id} 
-              className={`message-wrapper ${message.role === 'user' ? 'user-message' : 'assistant-message'}`}
-            >
-              <ChatMessage 
-                content={message.content} 
-                role={message.role} 
-                created_at={message.created_at}
-                attachments={message.attachments}
-              />
-              {isLoading && 
-               message.role === 'assistant' && 
-               message === messages[messages.length - 1] && (
-                <div className="message-loading">
-                  <LoadingDots />
-                </div>
-              )}
-            </div>
-          ))}
-          <div ref={messagesEndRef} style={{ height: '1rem' }} />
-        </div>
-      )}
-    </div>
-  );
-}; 
+	return (
+		<div className="chat-messages" ref={messagesContainerRef}>
+			{!hasMessages && (
+				<div className="empty-chat">
+					<div className="empty-chat-content">
+						<h2>Start a new conversation</h2>
+						<p>Type a message below to begin</p>
+					</div>
+				</div>
+			)}
+
+			{hasMessages && (
+				<div className="messages-container">
+					{messages.map((message) => (
+						<div
+							key={message.id}
+							className={`message-wrapper ${message.role === "user" ? "user-message" : "assistant-message"}`}
+						>
+							<ChatMessage
+								content={message.content}
+								role={message.role}
+								created_at={message.created_at}
+								attachments={message.attachments}
+							/>
+							{isLoading &&
+								message.role === "assistant" &&
+								message === messages[messages.length - 1] && (
+									<div className="message-loading">
+										<LoadingDots />
+									</div>
+								)}
+						</div>
+					))}
+					<div ref={messagesEndRef} style={{ height: "1rem" }} />
+				</div>
+			)}
+		</div>
+	);
+};
