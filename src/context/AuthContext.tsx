@@ -7,12 +7,18 @@ import {
   type FC,
 } from "react";
 import { authService } from "@/features/auth/services/authService";
-import { userService } from "@/services/userService";
 import { useNavigate } from "react-router-dom";
-import type { User } from "../models/user";
+import {
+  useAuthenticationServicePostApiAuthGoogle,
+  useUsersServiceGetApiUsersCurrent,
+} from "../../openapi/queries/queries";
+import type { UserResponse } from "../../openapi/requests/types.gen";
+import { useQueryClient } from "@tanstack/react-query";
+import { UseUsersServiceGetApiUsersCurrentKeyFn } from "../../openapi/queries/common";
+import { tokenService } from "../../openapi/requests/core/OpenAPI";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserResponse;
   isAuthenticated: boolean;
   isLoading: boolean;
   loginWithGoogle: (googleToken: string) => Promise<void>;
@@ -26,45 +32,33 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const checkAuth = async () => {
-    try {
-      if (authService.isAuthenticated()) {
-        const user = await userService.getCurrentUser();
-        setUser(user);
-      }
-    } catch (error) {
-      console.error("Authentication check failed:", error);
-      authService.logout();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    error,
+    refetch: refetchUser,
+  } = useUsersServiceGetApiUsersCurrent();
+
+  const { mutateAsync: loginWithGoogle, isPending: isLoginWithGooglePending } =
+    useAuthenticationServicePostApiAuthGoogle({
+      onSuccess: (data) => {
+        tokenService.setToken(data.access_token);
+        refetchUser();
+      },
+    });
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (!error) return;
+    console.error("Authentication check failed:", error);
+    tokenService.removeToken();
+  }, [error]);
 
-  const loginWithGoogle = async (googleToken: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      await authService.loginWithGoogle(googleToken);
-      const user = await userService.getCurrentUser();
-      setUser(user);
-    } catch (error) {
-      console.error("Google login failed:", error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = (): void => {
-    authService.logout();
-    setUser(null);
+  const logout = () => {
+    tokenService.removeToken();
+    queryClient.setQueryData(UseUsersServiceGetApiUsersCurrentKeyFn(), null);
     navigate("/");
   };
 
@@ -73,8 +67,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       value={{
         user,
         isAuthenticated: !!user,
-        isLoading,
-        loginWithGoogle,
+        isLoading: isUserLoading || isLoginWithGooglePending,
+        loginWithGoogle: async (googleToken: string) => {
+          await loginWithGoogle({ requestBody: { token: googleToken } });
+        },
         logout,
       }}
     >
