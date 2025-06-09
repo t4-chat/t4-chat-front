@@ -3,6 +3,7 @@ export interface ChatMessage {
   content: string;
   role: 'user' | 'assistant';
   created_at: Date;
+  attachments?: string[];
 }
 
 export interface AIModel {

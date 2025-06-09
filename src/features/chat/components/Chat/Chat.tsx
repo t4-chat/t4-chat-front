@@ -10,6 +10,7 @@ import { AiModel } from 'src/features/ai-providers/types';
 import { providerIconPaths } from 'src/assets/icons/ai-providers/index';
 import { useAuth } from 'src/context/AuthContext';
 import { LoginModal } from 'src/features/auth/components/LoginModal/LoginModal';
+import { fileService } from 'src/services/fileService';
 import './Chat.scss';
 
 interface ChatProps {
@@ -97,6 +98,7 @@ export const Chat = ({ className = '', chatId = null, onChatCreated }: ChatProps
           ...msg,
           created_at: new Date(msg.created_at)
         }));
+        
         setMessages(messagesWithDateObjects);
       }
       
@@ -115,8 +117,8 @@ export const Chat = ({ className = '', chatId = null, onChatCreated }: ChatProps
     };
   }, []);
 
-  const handleSendMessage = async (content: string) => {
-    if (!content.trim() || !selectedModel) return;
+  const handleSendMessage = async (content: string, files?: File[]) => {
+    if ((!content.trim() && (!files || files.length === 0)) || !selectedModel) return;
 
     // If user is not authenticated, store the message and show login modal
     if (!isAuthenticated) {
@@ -125,24 +127,40 @@ export const Chat = ({ className = '', chatId = null, onChatCreated }: ChatProps
       return;
     }
 
-    await sendMessage(content);
+    await sendMessage(content, files);
   };
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string, files?: File[]) => {
     setIsLoading(true);
+
+    // Upload files first if they exist
+    let attachmentIds: string[] = [];
+    if (files && files.length > 0) {
+      try {
+        const uploadPromises = files.map(file => fileService.uploadFile(file));
+        const uploadResults = await Promise.all(uploadPromises);
+        attachmentIds = uploadResults.map(result => result.file_id);
+      } catch (error) {
+        console.error('Failed to upload files:', error);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       content,
       role: 'user',
-      created_at: new Date()
+      created_at: new Date(),
+      attachments: attachmentIds.length > 0 ? attachmentIds : undefined
     };
     
     setMessages(prev => [...prev, userMessage]);
     const updatedMessages = [...messages, userMessage];
     const messageHistory: ChatMessageRequest[] = updatedMessages.map(msg => ({
       role: msg.role,
-      content: msg.content
+      content: msg.content,
+      attachments: msg.attachments
     }));
 
     abortFunctionRef.current = chatServiceRef.current.streamChat(

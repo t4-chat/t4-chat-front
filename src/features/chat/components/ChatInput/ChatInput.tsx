@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { ReactComponent as SendIcon } from 'src/assets/icons/send.svg';
 import { Select, SelectOption } from 'src/components/ui-kit/Select/Select';
+import { FileUpload } from 'src/components/ui-kit/FileUpload';
+import { FilePreview } from 'src/components/ui-kit/FilePreview';
 import './ChatInput.scss';
 
 interface ChatInputProps {
-  onSend: (message: string) => void;
+  onSend: (message: string, files?: File[]) => void;
   isLoading?: boolean;
   placeholder?: string;
   modelOptions?: SelectOption[];
@@ -21,6 +23,7 @@ export const ChatInput = ({
   onModelChange
 }: ChatInputProps) => {
   const [message, setMessage] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -34,9 +37,10 @@ export const ChatInput = ({
   };
   
   const handleSend = () => {
-    if (message.trim() && !isLoading) {
-      onSend(message);
+    if ((message.trim() || files.length > 0) && !isLoading) {
+      onSend(message, files.length > 0 ? files : undefined);
       setMessage('');
+      setFiles([]);
       
       // Reset height after sending
       if (textareaRef.current) {
@@ -52,6 +56,26 @@ export const ChatInput = ({
     }
   };
 
+  const handleFilesSelected = (selectedFiles: File[]) => {
+    setFiles((prevFiles) => {
+      // Check if adding these files would exceed the limit
+      const remainingSlots = 3 - prevFiles.length;
+      
+      if (remainingSlots <= 0) {
+        return prevFiles; // Already at max
+      }
+      
+      // Only take as many new files as we have slots for
+      const newFiles = selectedFiles.slice(0, remainingSlots);
+      
+      return [...prevFiles, ...newFiles];
+    });
+  };
+  
+  const handleRemoveFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     // Focus the textarea when component mounts
     if (textareaRef.current) {
@@ -61,6 +85,18 @@ export const ChatInput = ({
   
   return (
     <div className="chat-input-integrated-wrapper">
+      {files.length > 0 && (
+        <div className="file-previews">
+          {files.map((file, index) => (
+            <FilePreview 
+              key={`${file.name}-${index}`} 
+              file={file} 
+              onRemove={() => handleRemoveFile(index)} 
+            />
+          ))}
+        </div>
+      )}
+      
       <textarea
         ref={textareaRef}
         className="chat-input"
@@ -88,15 +124,24 @@ export const ChatInput = ({
           </div>
         )}
 
-        <button 
-          className={`send-button ${message.trim() && !isLoading ? 'active' : ''}`}
-          onClick={handleSend}
-          disabled={!message.trim() || isLoading}
-          aria-label="Send message"
-          type="button"
-        >
-          <SendIcon width={20} height={20} />
-        </button>
+        <div className="input-action-buttons">
+          <FileUpload 
+            onFilesSelected={handleFilesSelected}
+            maxFiles={3 - files.length}
+            disabled={isLoading || files.length >= 3}
+            accept="image/*,.pdf,.doc,.docx,.txt"
+          />
+
+          <button 
+            className={`send-button ${(message.trim() || files.length > 0) && !isLoading ? 'active' : ''}`}
+            onClick={handleSend}
+            disabled={!message.trim() && files.length === 0 || isLoading}
+            aria-label="Send message"
+            type="button"
+          >
+            <SendIcon width={20} height={20} />
+          </button>
+        </div>
       </div>
     </div>
   );

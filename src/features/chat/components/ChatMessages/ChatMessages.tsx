@@ -56,7 +56,8 @@ export const ChatMessages = ({ messages, isLoading = false }: ChatMessagesProps)
               <ChatMessage 
                 content={message.content} 
                 role={message.role} 
-                created_at={message.created_at} 
+                created_at={message.created_at}
+                attachments={message.attachments}
               />
               {isLoading && 
                message.role === 'assistant' && 

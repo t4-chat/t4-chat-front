@@ -5,6 +5,7 @@ import { api } from 'src/services/api';
 export interface ChatMessageRequest {
   role: string;
   content: string;
+  attachments?: string[];
 }
 
 export interface StreamRequestBody {
