@@ -10,9 +10,10 @@ import {
   type DropdownMenuItem,
 } from "@/components/DropdownMenu/DropdownMenu";
 import "./Header.scss";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 export const Header = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -44,7 +45,38 @@ export const Header = () => {
       )}
     </button>
   );
+  const { isMinimumLoading } = useMinimumLoading({
+    initialLoading: isLoading,
+  });
 
+  const renderLoginButtonContent = () => {
+    if (isMinimumLoading) {
+      return (
+        <div className="flex justify-center items-center h-10">Loading...</div>
+      );
+    }
+    if (isAuthenticated) {
+      return (
+        <div className="header__user">
+          <DropdownMenu
+            trigger={userTrigger}
+            items={userMenuItems}
+            position="left"
+            className="header__user-dropdown"
+          />
+        </div>
+      );
+    }
+    return (
+      <button
+        className="header__login-btn"
+        onClick={openLoginModal}
+        type="button"
+      >
+        Login
+      </button>
+    );
+  };
   return (
     <header className="header">
       <div className="header__content">
@@ -54,26 +86,7 @@ export const Header = () => {
             <span className="header__logo-text">AI Aggregator</span>
           </div>
         </Link>
-        <div className="header__actions">
-          {isAuthenticated ? (
-            <div className="header__user">
-              <DropdownMenu
-                trigger={userTrigger}
-                items={userMenuItems}
-                position="left"
-                className="header__user-dropdown"
-              />
-            </div>
-          ) : (
-            <button
-              className="header__login-btn"
-              onClick={openLoginModal}
-              type="button"
-            >
-              Login
-            </button>
-          )}
-        </div>
+        <div className="header__actions">{renderLoginButtonContent()}</div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </header>

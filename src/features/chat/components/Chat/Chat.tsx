@@ -1,17 +1,21 @@
-import { useAuth } from "@/context/AuthContext";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
+import { useAuth } from "@/context/AuthContext";
 import { ChatInput } from "@/features/chat/components/ChatInput/ChatInput";
 import { ChatMessages } from "@/features/chat/components/ChatMessages/ChatMessages";
+
+import type { ChatMessage } from "@/features/chat/types";
+// import { ChatService } from "@/services/chatService";
 import {
-  ChatService,
   type ChatMessageRequest,
   type StreamEvent,
-} from "@/features/chat/services/chatService";
-import type { ChatMessage } from "@/features/chat/types";
-import { fileService } from "@/services/fileService";
-import { useAIModelsForChat } from "@/utils/apiUtils";
+  useAIModelsForChat,
+  useStreamChat,
+} from "@/utils/apiUtils";
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {
+  useChatsServiceGetApiChatsByChatId,
+  useFilesServicePostApiFilesUpload,
+} from "~/openapi/queries/queries";
 import "./Chat.scss";
 // import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
@@ -26,10 +30,6 @@ export const Chat = ({
   chatId = null,
   onChatCreated,
 }: ChatProps) => {
-  const location = useLocation();
-  const routerState = (location.state as { selectedModelId?: string }) || {};
-  const initialModelId = routerState.selectedModelId || null;
-
   const { isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,59 +37,34 @@ export const Chat = ({
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const chatServiceRef = useRef(new ChatService());
+  // const chatServiceRef = useRef(new ChatService());
   const abortFunctionRef = useRef<(() => void) | null>(null);
   const assistantMessageIdRef = useRef<string | null>(null);
   const messageContentRef = useRef<string>("");
+
+  const { data: chat, isFetching: isChatLoading } =
+    useChatsServiceGetApiChatsByChatId(
+      { chatId: currentChatId || "" },
+      undefined,
+      { enabled: !!currentChatId },
+    );
 
   const {
     modelOptions,
     selectedModel,
     isFetching: isModelLoading,
     setSelectedModel,
-  } = useAIModelsForChat(initialModelId);
-
-  // Load chat when chatId changes
-  useEffect(() => {
-    if (chatId) {
-      loadChat(chatId);
-    } else {
-      // Reset messages for new chat
-      setMessages([]);
-      setCurrentChatId(null);
-    }
-  }, [chatId]);
-
-  const loadChat = async (id: string) => {
-    try {
-      setIsLoading(true);
-      const chat = await chatServiceRef.current.getChat(id);
-      setCurrentChatId(id);
-
-      if (chat?.messages) {
-        // Convert string dates to Date objects
-        const messagesWithDateObjects = chat.messages.map((msg) => ({
-          ...msg,
-          created_at: new Date(msg.created_at),
-        }));
-
-        setMessages(messagesWithDateObjects);
-      }
-
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Failed to load chat:", error);
-      setIsLoading(false);
-    }
-  };
+  } = useAIModelsForChat();
 
   useEffect(() => {
-    return () => {
-      if (abortFunctionRef.current) {
-        abortFunctionRef.current();
-      }
-    };
-  }, []);
+    if (!chat || !chat?.messages) return;
+    const messagesWithDateObjects = chat.messages.map((msg) => ({
+      ...msg,
+      created_at: new Date(msg.created_at),
+    }));
+
+    setMessages(messagesWithDateObjects);
+  }, [chat]);
 
   const handleSendMessage = async (content: string, files?: File[]) => {
     if ((!content.trim() && (!files || files.length === 0)) || !selectedModel)
@@ -105,6 +80,10 @@ export const Chat = ({
     await sendMessage(content, files);
   };
 
+  const streamChat = useStreamChat();
+
+  const { mutateAsync: uploadFiles } = useFilesServicePostApiFilesUpload();
+
   const sendMessage = async (content: string, files?: File[]) => {
     setIsLoading(true);
 
@@ -113,7 +92,7 @@ export const Chat = ({
     if (files && files.length > 0) {
       try {
         const uploadPromises = files.map((file) =>
-          fileService.uploadFile(file),
+          uploadFiles({ formData: { file } }),
         );
         const uploadResults = await Promise.all(uploadPromises);
         attachmentIds = uploadResults.map((result) => result.file_id);
@@ -140,7 +119,15 @@ export const Chat = ({
       attachments: msg.attachments,
     }));
 
-    abortFunctionRef.current = chatServiceRef.current.streamChat(
+    // abortFunctionRef.current = chatServiceRef.current.streamChat(
+    //   messageHistory,
+    //   Number.parseInt(selectedModel),
+    //   (event: StreamEvent) => onStreamEvent(event),
+    //   (error) => onStreamError(error, assistantMessageIdRef.current),
+    //   () => onStreamDone(),
+    //   { chatId: currentChatId },
+    // );
+    streamChat(
       messageHistory,
       Number.parseInt(selectedModel),
       (event: StreamEvent) => onStreamEvent(event),
@@ -265,11 +252,14 @@ export const Chat = ({
 
   return (
     <div className={`chat ${className}`}>
-      <ChatMessages messages={messages} isLoading={isLoading} />
+      <ChatMessages
+        messages={messages}
+        isLoading={isLoading || isChatLoading}
+      />
 
       <ChatInput
         onSend={handleSendMessage}
-        isLoading={isLoading || isModelLoading}
+        isLoading={isLoading || isModelLoading || isChatLoading}
         modelOptions={modelOptions}
         selectedModel={selectedModel || undefined}
         onModelChange={setSelectedModel}

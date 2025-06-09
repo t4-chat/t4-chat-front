@@ -25,7 +25,7 @@ export const Footer = () => {
     <footer className="footer">
       <div className="footer__content">
         <p className="footer__copyright">
-          &copy; 2024 AGG AI. All rights reserved.
+          &copy; 2025 AGG AI. All rights reserved.
         </p>
         <button
           type="button"

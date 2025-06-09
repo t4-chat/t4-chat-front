@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
 import "./HomePage.scss";
 import type { AiModelResponse } from "~/openapi/requests/types.gen";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -13,9 +14,13 @@ export const HomePage: FC = () => {
 
   const {
     data: models = [],
-    isLoading,
+    isLoading: isModelsLoading,
     error,
   } = useAiModelsServiceGetApiAiModels();
+
+  const { isMinimumLoading } = useMinimumLoading({
+    initialLoading: isModelsLoading,
+  });
 
   const getProviderIconPath = (provider: string): string => {
     return (
@@ -74,7 +79,7 @@ export const HomePage: FC = () => {
         )}
       </div>
 
-      {isLoading ? (
+      {isMinimumLoading ? (
         <div className="home-page__loading">Loading AI models...</div>
       ) : error ? (
         <div className="home-page__error">
