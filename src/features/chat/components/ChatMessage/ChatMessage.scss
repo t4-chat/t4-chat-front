@@ -59,6 +59,106 @@ $message-radius: $radius-lg;
     color: var(--text-primary-color);
     white-space: pre-wrap;
     word-wrap: break-word;
+    
+    .attachments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-md;
+      margin-top: $spacing-md;
+      
+      .attachment-item {
+        display: flex;
+        align-items: center;
+        padding: $spacing-sm $spacing-md;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: $radius-md;
+        cursor: pointer;
+        transition: all $transition-fast;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+        
+        &.downloading {
+          background-color: rgba(var(--primary-color-rgb), 0.1);
+          cursor: default;
+          
+          .attachment-label {
+            color: var(--primary-color);
+          }
+        }
+        
+        &.image-attachment {
+          padding: 0;
+          overflow: hidden;
+          max-width: 200px;
+          max-height: 200px;
+          cursor: default;
+          
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+          }
+          
+          .attachment-image {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            
+            .download-button {
+              position: absolute;
+              bottom: 8px;
+              right: 8px;
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              background-color: rgba(0, 0, 0, 0.5);
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: none;
+              cursor: pointer;
+              opacity: 0;
+              transition: opacity 0.2s;
+              
+              &:hover {
+                background-color: rgba(0, 0, 0, 0.7);
+              }
+            }
+            
+            &:hover .download-button {
+              opacity: 1;
+            }
+          }
+        }
+        
+        .attachment-loading {
+          font-size: $font-sm;
+          color: var(--text-secondary-color);
+          padding: $spacing-sm;
+        }
+        
+        .attachment-icon {
+          margin-right: $spacing-sm;
+          color: var(--text-secondary-color);
+        }
+        
+        .attachment-label {
+          font-size: $font-sm;
+          font-weight: 500;
+          color: var(--text-secondary-color);
+        }
+      }
+    }
   }
 }
 

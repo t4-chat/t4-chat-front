@@ -16,6 +16,13 @@
     box-shadow: 0 0 0 0.125rem rgba(var(--primary-color-rgb), 0.2);
   }
   
+  .file-previews {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem 1rem 0;
+    gap: 8px;
+  }
+  
   .chat-input {
     flex: 1;
     min-height: 2.75rem;
@@ -52,6 +59,12 @@
       .chat-model-select {
         min-width: 7.5rem;
       }
+    }
+    
+    .input-action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
     }
     
     .send-button {
