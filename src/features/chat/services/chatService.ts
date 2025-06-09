@@ -144,12 +144,4 @@ export class ChatService {
 
     return response.data;
   }
-
-  async updateChatTitle(id: string, title: string): Promise<void> {
-    await api.patch(`/api/chats/${id}/title`, { title });
-  }
-
-  async pinChat(id: string, pinned: boolean): Promise<void> {
-    await api.patch(`/api/chats/${id}/pin`, { pinned });
-  }
 }

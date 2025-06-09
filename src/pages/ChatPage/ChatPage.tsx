@@ -4,15 +4,14 @@ import { Chat } from "@/features/chat/components/Chat/Chat";
 import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
 import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
 import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
-import { ChatService } from "@/features/chat/services/chatService";
-import type { Chat as ChatType } from "@/features/chat/types";
-import { useEffect, useRef, useState } from "react";
-import "./ChatPage.scss";
 import { useChats } from "@/utils/apiUtils";
+import { useEffect, useState } from "react";
 import {
   useChatsServiceDeleteApiChatsByChatId,
+  useChatsServicePatchApiChatsByChatIdPin,
   useChatsServicePatchApiChatsByChatIdTitle,
 } from "../../../openapi/queries/queries";
+import "./ChatPage.scss";
 
 export const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -36,9 +35,25 @@ export const ChatPage = () => {
     currentTitle: "",
   });
 
-  const chatServiceRef = useRef(new ChatService());
+  const { chats, refetch: refetchChats, isFetching: isLoading } = useChats();
 
-  const { chats, refetch, isFetching: isLoading } = useChats();
+  const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin({
+    onSuccess: () => {
+      refetchChats();
+    },
+  });
+  const { mutateAsync: deleteChat } = useChatsServiceDeleteApiChatsByChatId({
+    onSuccess: () => {
+      refetchChats();
+    },
+  });
+
+  const { mutateAsync: updateChatTitle } =
+    useChatsServicePatchApiChatsByChatIdTitle({
+      onSuccess: () => {
+        refetchChats();
+      },
+    });
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -69,9 +84,7 @@ export const ChatPage = () => {
   const handleRenameModal = (chatId: string, currentTitle: string) => {
     setRenameModalState({ isOpen: true, chatId, currentTitle });
   };
-  const { mutateAsync: deleteChat } = useChatsServiceDeleteApiChatsByChatId();
-  const { mutateAsync: updateChatTitle } =
-    useChatsServicePatchApiChatsByChatIdTitle();
+
   const handleDeleteChat = async () => {
     try {
       if (deleteModalState.chatId) {
@@ -80,8 +93,6 @@ export const ChatPage = () => {
         if (activeChatId === deleteModalState.chatId) {
           setActiveChatId(null);
         }
-        // Refresh the chats list
-        await refetch();
       }
       setDeleteModalState({ isOpen: false, chatId: null });
     } catch (error) {
@@ -97,8 +108,6 @@ export const ChatPage = () => {
           chatId: renameModalState.chatId,
           requestBody: { title: newTitle },
         });
-        // Refresh the chats list
-        await refetch();
       }
       setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
     } catch (error) {
@@ -109,9 +118,7 @@ export const ChatPage = () => {
 
   const handlePinChat = async (chatId: string, pinned: boolean) => {
     try {
-      await chatServiceRef.current.pinChat(chatId, pinned);
-      // Refresh the chats list
-      await refetch();
+      await pinChat({ chatId });
     } catch (error) {
       console.error("Failed to pin/unpin chat:", error);
     }
@@ -154,7 +161,7 @@ export const ChatPage = () => {
           chatId={activeChatId}
           onChatCreated={(newChatId) => {
             setActiveChatId(newChatId);
-            refetch();
+            refetchChats();
           }}
         />
       </div>

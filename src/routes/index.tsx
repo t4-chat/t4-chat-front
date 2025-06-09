@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { Layout } from "../components/layout/Layout";
+import { Layout } from "../components/Layout/Layout";
 import { ChatPage } from "../pages/ChatPage/ChatPage";
 import { HomePage } from "../pages/HomePage/HomePage";
 import { AuthProvider } from "../context/AuthContext";
