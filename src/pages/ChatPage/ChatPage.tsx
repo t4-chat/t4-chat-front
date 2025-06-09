@@ -37,7 +37,7 @@ export const ChatPage = () => {
     currentTitle: "",
   });
 
-  const { chats, refetch: refetchChats, isFetching: isLoading } = useChats();
+  const { chats, refetch: refetchChats, isLoading } = useChats();
 
   const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin({
     onSuccess: () => {

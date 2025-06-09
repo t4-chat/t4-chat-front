@@ -42,7 +42,7 @@ export const Chat = ({
   const assistantMessageIdRef = useRef<string | null>(null);
   const messageContentRef = useRef<string>("");
 
-  const { data: chat, isFetching: isChatLoading } =
+  const { data: chat, isLoading: isChatLoading } =
     useChatsServiceGetApiChatsByChatId(
       { chatId: currentChatId || "" },
       undefined,
@@ -52,7 +52,7 @@ export const Chat = ({
   const {
     modelOptions,
     selectedModel,
-    isFetching: isModelLoading,
+    isLoading: isModelLoading,
     setSelectedModel,
   } = useAIModelsForChat();
 
