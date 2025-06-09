@@ -1,21 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import type { SelectOption } from "@/components/ui-kit/Select/Select";
-import { ChatMessages } from "@/features/chat/components/ChatMessages/ChatMessages";
+import { useAuth } from "@/context/AuthContext";
+import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
 import { ChatInput } from "@/features/chat/components/ChatInput/ChatInput";
-import type { ChatMessage } from "@/features/chat/types";
+import { ChatMessages } from "@/features/chat/components/ChatMessages/ChatMessages";
 import {
   ChatService,
   type ChatMessageRequest,
   type StreamEvent,
 } from "@/features/chat/services/chatService";
-import { aiModelService } from "@/features/ai-providers/services/aiModelService";
-import type { AiModel } from "@/features/ai-providers/types";
-import { providerIconPaths } from "@/assets/icons/ai-providers/index";
-import { useAuth } from "@/context/AuthContext";
-import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
+import type { ChatMessage } from "@/features/chat/types";
 import { fileService } from "@/services/fileService";
+import { useAIModelsForChat } from "@/utils/apiUtils";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Chat.scss";
+// import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
 interface ChatProps {
   className?: string;
@@ -34,11 +32,7 @@ export const Chat = ({
 
   const { isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [aiModels, setAiModels] = useState<AiModel[]>([]);
-  const [modelOptions, setModelOptions] = useState<SelectOption[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isModelLoading, setIsModelLoading] = useState(true);
   const [currentChatId, setCurrentChatId] = useState<string | null>(chatId);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -48,47 +42,11 @@ export const Chat = ({
   const assistantMessageIdRef = useRef<string | null>(null);
   const messageContentRef = useRef<string>("");
 
-  useEffect(() => {
-    fetchAiModels();
-  }, []);
-
-  const getProviderIconPath = (provider: string): string => {
-    return (
-      providerIconPaths[
-        provider.toLowerCase() as keyof typeof providerIconPaths
-      ] || providerIconPaths.default
-    );
-  };
-
-  const fetchAiModels = async () => {
-    try {
-      setIsModelLoading(true);
-      const models = await aiModelService.getAll();
-      setAiModels(models);
-      const options: SelectOption[] = models.map((model) => ({
-        value: model.id.toString(),
-        label: model.name,
-        iconPath: getProviderIconPath(model.provider.slug),
-      }));
-
-      setModelOptions(options);
-
-      // Set the initial model if provided, otherwise use the first model
-      if (
-        initialModelId &&
-        options.some((option) => option.value === initialModelId)
-      ) {
-        setSelectedModel(initialModelId);
-      } else if (options.length > 0 && !selectedModel) {
-        setSelectedModel(options[0].value);
-      }
-
-      setIsModelLoading(false);
-    } catch (error) {
-      console.error("Failed to fetch AI models:", error);
-      setIsModelLoading(false);
-    }
-  };
+  const {
+    modelOptions,
+    selectedModel,
+    isFetching: isModelLoading,
+  } = useAIModelsForChat(initialModelId);
 
   // Load chat when chatId changes
   useEffect(() => {

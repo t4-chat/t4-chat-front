@@ -1,14 +1,14 @@
-import { useState, useEffect, type FC } from "react";
 import MenuIcon from "@/assets/icons/chats/menu.svg?react";
-import SearchIcon from "@/assets/icons/chats/search.svg?react";
-import NewChatIcon from "@/assets/icons/chats/new-chat.svg?react";
-import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import MoreIcon from "@/assets/icons/chats/more.svg?react";
+import NewChatIcon from "@/assets/icons/chats/new-chat.svg?react";
 import PinIcon from "@/assets/icons/chats/pin.svg?react";
 import RenameIcon from "@/assets/icons/chats/rename.svg?react";
+import SearchIcon from "@/assets/icons/chats/search.svg?react";
+import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import { DropdownMenu } from "@/components/ui-kit/DropdownMenu/DropdownMenu";
-import "./ChatSidebar.scss";
 import type { Chat } from "@/features/chat/types";
+import { useMemo, useState, type FC } from "react";
+import "./ChatSidebar.scss";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -36,12 +36,11 @@ export const ChatSidebar = ({
   isLoading = false,
 }: ChatSidebarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredChats, setFilteredChats] = useState<Chat[]>(chats);
 
-  useEffect(() => {
+  const filteredChats = useMemo(() => {
     if (searchTerm.trim() === "") {
       // Ensure dates are Date objects and sort by updated_at descending
-      const chatsWithDateObjects = chats
+      return chats
         .map((chat) => ({
           ...chat,
           created_at:
@@ -54,28 +53,23 @@ export const ChatSidebar = ({
               : new Date(chat.updated_at),
         }))
         .sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
-
-      setFilteredChats(chatsWithDateObjects);
-    } else {
-      const filtered = chats
-        .map((chat) => ({
-          ...chat,
-          created_at:
-            chat.created_at instanceof Date
-              ? chat.created_at
-              : new Date(chat.created_at),
-          updated_at:
-            chat.updated_at instanceof Date
-              ? chat.updated_at
-              : new Date(chat.updated_at),
-        }))
-        .filter((chat) =>
-          chat.title.toLowerCase().includes(searchTerm.toLowerCase()),
-        )
-        .sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
-
-      setFilteredChats(filtered);
     }
+    return chats
+      .map((chat) => ({
+        ...chat,
+        created_at:
+          chat.created_at instanceof Date
+            ? chat.created_at
+            : new Date(chat.created_at),
+        updated_at:
+          chat.updated_at instanceof Date
+            ? chat.updated_at
+            : new Date(chat.updated_at),
+      }))
+      .filter((chat) =>
+        chat.title.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+      .sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
   }, [searchTerm, chats]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,8 +92,8 @@ export const ChatSidebar = ({
       // This week - show day name
       return date.toLocaleDateString([], { weekday: "short" });
     }
-      // Older - show date
-      return date.toLocaleDateString([], { month: "short", day: "numeric" });
+    // Older - show date
+    return date.toLocaleDateString([], { month: "short", day: "numeric" });
   };
 
   // Split chats into pinned and unpinned

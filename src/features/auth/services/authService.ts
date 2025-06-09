@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { tokenService } from "@/services/tokenService";
+import { tokenService } from "../../../../openapi/requests/core/OpenAPI";
 
 export interface AuthResponse {
   access_token: string;

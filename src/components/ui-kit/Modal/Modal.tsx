@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from "react";
+import { useEffect, type FC, type ReactNode } from "react";
 import "./Modal.scss";
 
 interface ModalProps {
@@ -8,12 +8,7 @@ interface ModalProps {
   title?: string;
 }
 
-export const Modal: FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  children,
-  title,
-}) => {
+export const Modal: FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {

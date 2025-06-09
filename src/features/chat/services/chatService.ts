@@ -1,5 +1,5 @@
-import { tokenService } from "@/services/tokenService";
 import type { Chat } from "@/features/chat/types";
+import { tokenService } from "../../../../openapi/requests/core/OpenAPI";
 import { api } from "@/services/api";
 
 export interface ChatMessageRequest {
@@ -139,21 +139,10 @@ export class ChatService {
 
     return () => controller.abort();
   }
-
-  async getChats(): Promise<Chat[]> {
-    const response = await api.get("/api/chats");
-
-    return response.data;
-  }
-
   async getChat(id: string): Promise<Chat> {
     const response = await api.get(`/api/chats/${id}`);
 
     return response.data;
-  }
-
-  async deleteChat(id: string): Promise<void> {
-    await api.delete(`/api/chats/${id}`);
   }
 
   async updateChatTitle(id: string, title: string): Promise<void> {

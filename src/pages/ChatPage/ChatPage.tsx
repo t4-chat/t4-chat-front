@@ -1,19 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { Chat } from "@/features/chat/components/Chat/Chat";
-import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
-import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
-import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
-import { ChatService } from "@/features/chat/services/chatService";
-import type { Chat as ChatType } from "@/features/chat/types";
 import { ConfirmationModal } from "@/components/ui-kit/Modal/ConfirmationModal";
 import { TextInputModal } from "@/components/ui-kit/Modal/TextInputModal";
+import { Chat } from "@/features/chat/components/Chat/Chat";
+import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
+import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
+import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
+import { ChatService } from "@/features/chat/services/chatService";
+import type { Chat as ChatType } from "@/features/chat/types";
+import { useEffect, useRef, useState } from "react";
 import "./ChatPage.scss";
+import { useChats } from "@/utils/apiUtils";
+import {
+  useChatsServiceDeleteApiChatsByChatId,
+  useChatsServicePatchApiChatsByChatIdTitle,
+} from "../../../openapi/queries/queries";
 
 export const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [chats, setChats] = useState<ChatType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Chat action modals
   const [deleteModalState, setDeleteModalState] = useState<{
@@ -35,21 +38,7 @@ export const ChatPage = () => {
 
   const chatServiceRef = useRef(new ChatService());
 
-  useEffect(() => {
-    loadChats();
-  }, []);
-
-  const loadChats = async () => {
-    try {
-      setIsLoading(true);
-      const userChats = await chatServiceRef.current.getChats();
-      setChats(userChats);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Failed to load chats:", error);
-      setIsLoading(false);
-    }
-  };
+  const { chats, refetch, isFetching: isLoading } = useChats();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -80,17 +69,19 @@ export const ChatPage = () => {
   const handleRenameModal = (chatId: string, currentTitle: string) => {
     setRenameModalState({ isOpen: true, chatId, currentTitle });
   };
-
+  const { mutateAsync: deleteChat } = useChatsServiceDeleteApiChatsByChatId();
+  const { mutateAsync: updateChatTitle } =
+    useChatsServicePatchApiChatsByChatIdTitle();
   const handleDeleteChat = async () => {
     try {
       if (deleteModalState.chatId) {
-        await chatServiceRef.current.deleteChat(deleteModalState.chatId);
+        await deleteChat({ chatId: deleteModalState.chatId });
         // If the deleted chat is the active one, clear the active chat
         if (activeChatId === deleteModalState.chatId) {
           setActiveChatId(null);
         }
         // Refresh the chats list
-        await loadChats();
+        await refetch();
       }
       setDeleteModalState({ isOpen: false, chatId: null });
     } catch (error) {
@@ -102,12 +93,12 @@ export const ChatPage = () => {
   const handleRenameChat = async (newTitle: string) => {
     try {
       if (renameModalState.chatId) {
-        await chatServiceRef.current.updateChatTitle(
-          renameModalState.chatId,
-          newTitle,
-        );
+        await updateChatTitle({
+          chatId: renameModalState.chatId,
+          requestBody: { title: newTitle },
+        });
         // Refresh the chats list
-        await loadChats();
+        await refetch();
       }
       setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
     } catch (error) {
@@ -120,7 +111,7 @@ export const ChatPage = () => {
     try {
       await chatServiceRef.current.pinChat(chatId, pinned);
       // Refresh the chats list
-      await loadChats();
+      await refetch();
     } catch (error) {
       console.error("Failed to pin/unpin chat:", error);
     }
@@ -139,7 +130,6 @@ export const ChatPage = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isSidebarOpen]);
-
   return (
     <div className={`chat-page ${isSidebarOpen ? "with-sidebar" : ""}`}>
       <ChatSidebar
@@ -164,7 +154,7 @@ export const ChatPage = () => {
           chatId={activeChatId}
           onChatCreated={(newChatId) => {
             setActiveChatId(newChatId);
-            loadChats();
+            refetch();
           }}
         />
       </div>

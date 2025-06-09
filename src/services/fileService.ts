@@ -1,5 +1,4 @@
-import { api } from "./api";
-import { tokenService } from "./tokenService";
+import { tokenService } from "../../openapi/requests/core/OpenAPI";
 
 export interface FileUploadResponse {
   file_id: string;

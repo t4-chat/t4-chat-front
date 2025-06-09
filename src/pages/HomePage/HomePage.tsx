@@ -1,39 +1,21 @@
-import { useEffect, useState, type FC } from "react";
-import { useNavigate } from "react-router-dom";
-import "./HomePage.scss";
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
-import { aiModelService } from "@/features/ai-providers/services/aiModelService";
-import type { AiModel } from "@/features/ai-providers/types";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
+import { useMemo, useState, type FC } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
+import "./HomePage.scss";
+import type { AiModelResponse } from "../../../openapi/requests/types.gen";
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [displayModels, setDisplayModels] = useState<AiModel[]>([]);
-  const [filteredModels, setFilteredModels] = useState<AiModel[]>([]);
-  console.log("🚀 ~ filteredModels:", filteredModels);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const query = searchQuery.toLowerCase();
 
-  const fetchModels = async () => {
-    try {
-      setIsLoading(true);
-      const models = await aiModelService.getAll();
-
-      setDisplayModels(models);
-      setFilteredModels(models);
-      setError(null);
-    } catch (err) {
-      console.error("Failed to fetch AI models:", err);
-      setError("Failed to load AI models. Please try again later.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchModels();
-  }, []);
+  const {
+    data: models = [],
+    isLoading,
+    error,
+  } = useAiModelsServiceGetApiAiModels();
 
   const getProviderIconPath = (provider: string): string => {
     return (
@@ -43,23 +25,17 @@ export const HomePage: FC = () => {
     );
   };
 
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredModels(displayModels);
-      return;
-    }
-
-    const query = searchQuery.toLowerCase();
-    const filtered = displayModels.filter(
+  const filteredModels = useMemo(() => {
+    if (!query.trim()) return models;
+    return models.filter(
       (model) =>
         model.name.toLowerCase().includes(query) ||
         model.provider.name.toLowerCase().includes(query),
     );
+  }, [models, query]);
+  console.log("🚀 ~ filteredModels ~ filteredModels:", filteredModels);
 
-    setFilteredModels(filtered);
-  }, [searchQuery, displayModels]);
-
-  const handleTileClick = (model: AiModel): void => {
+  const handleTileClick = (model: AiModelResponse): void => {
     navigate("/chat", {
       state: { selectedModelId: model.id.toString() },
     });
@@ -88,6 +64,7 @@ export const HomePage: FC = () => {
         />
         {searchQuery && (
           <button
+            type="button"
             className="home-page__search-clear"
             onClick={handleClearSearch}
             aria-label="Clear search"
@@ -100,7 +77,9 @@ export const HomePage: FC = () => {
       {isLoading ? (
         <div className="home-page__loading">Loading AI models...</div>
       ) : error ? (
-        <div className="home-page__error">{error}</div>
+        <div className="home-page__error">
+          Failed to load AI models. Please try again later.
+        </div>
       ) : filteredModels.length === 0 ? (
         <p className="home-page__no-results">
           No models found matching "{searchQuery}"
@@ -108,7 +87,8 @@ export const HomePage: FC = () => {
       ) : (
         <div className="home-page__grid">
           {filteredModels.map((model) => (
-            <div
+            <button
+              type="button"
               key={model.id}
               className="home-page__tile"
               onClick={() => handleTileClick(model)}
@@ -121,7 +101,7 @@ export const HomePage: FC = () => {
                 />
               </div>
               <div className="home-page__tile-name">{model.name}</div>
-            </div>
+            </button>
           ))}
         </div>
       )}
