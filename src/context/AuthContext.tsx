@@ -10,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 import {
   useAuthenticationServicePostApiAuthGoogle,
   useUsersServiceGetApiUsersCurrent,
-} from "../../openapi/queries/queries";
-import type { UserResponse } from "../../openapi/requests/types.gen";
+} from "~/openapi/queries/queries";
+import type { UserResponse } from "~/openapi/requests/types.gen";
 import { useQueryClient } from "@tanstack/react-query";
-import { UseUsersServiceGetApiUsersCurrentKeyFn } from "../../openapi/queries/common";
-import { tokenService } from "../../openapi/requests/core/OpenAPI";
+import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
+import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
 interface AuthContextType {
   user: UserResponse;

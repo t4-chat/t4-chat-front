@@ -4,7 +4,7 @@ import { useMemo, useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
 import "./HomePage.scss";
-import type { AiModelResponse } from "../../../openapi/requests/types.gen";
+import type { AiModelResponse } from "~/openapi/requests/types.gen";
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();

@@ -10,7 +10,7 @@ import {
   useChatsServiceDeleteApiChatsByChatId,
   useChatsServicePatchApiChatsByChatIdPin,
   useChatsServicePatchApiChatsByChatIdTitle,
-} from "../../../openapi/queries/queries";
+} from "~/openapi/queries/queries";
 import "./ChatPage.scss";
 
 export const ChatPage = () => {

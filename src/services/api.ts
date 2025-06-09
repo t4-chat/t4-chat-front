@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from "axios";
-import { tokenService } from "../../openapi/requests/core/OpenAPI";
+import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 

@@ -1,5 +1,5 @@
 import type { Chat } from "@/features/chat/types";
-import { tokenService } from "../../../../openapi/requests/core/OpenAPI";
+import { tokenService } from "~/openapi/requests/core/OpenAPI";
 import { api } from "@/services/api";
 
 export interface ChatMessageRequest {

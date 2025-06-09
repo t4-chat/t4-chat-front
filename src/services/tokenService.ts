@@ -1,4 +1,4 @@
-import type { OpenAPIConfig } from "../../openapi/requests/core/OpenAPI";
+import type { OpenAPIConfig } from "~/openapi/requests/core/OpenAPI";
 
 class TokenService {
   readonly TOKEN_KEY = "auth_token";

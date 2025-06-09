@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChats,
-} from "../../openapi/queries/queries";
+} from "~/openapi/queries/queries";
 
 export const getProviderIconPath = (provider: string): string => {
   return (
