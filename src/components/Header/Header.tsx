@@ -4,11 +4,11 @@ import { useAuth } from "@/context/AuthContext";
 import Logo from "@/assets/icons/logo.svg?react";
 import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
-import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
+import { LoginModal } from "@/components/LoginModal/LoginModal";
 import {
   DropdownMenu,
   type DropdownMenuItem,
-} from "@/components/ui-kit/DropdownMenu/DropdownMenu";
+} from "@/components/DropdownMenu/DropdownMenu";
 import "./Header.scss";
 
 export const Header = () => {

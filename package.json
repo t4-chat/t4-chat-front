@@ -36,6 +36,8 @@
     "preview": "vite preview",
     "format": "biome format --write",
     "lint": "biome lint",
+    "lint:fix-unsafe": "biome lint --write --unsafe ./src",
+    "lint:fix": "biome lint --write ./src",
     "test": "vitest"
   }
 }

@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthContext";
-import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
+import { LoginModal } from "@/components/LoginModal/LoginModal";
 import { ChatInput } from "@/features/chat/components/ChatInput/ChatInput";
 import { ChatMessages } from "@/features/chat/components/ChatMessages/ChatMessages";
 import {
@@ -46,6 +46,7 @@ export const Chat = ({
     modelOptions,
     selectedModel,
     isFetching: isModelLoading,
+    setSelectedModel,
   } = useAIModelsForChat(initialModelId);
 
   // Load chat when chatId changes
@@ -270,7 +271,7 @@ export const Chat = ({
         onSend={handleSendMessage}
         isLoading={isLoading || isModelLoading}
         modelOptions={modelOptions}
-        selectedModel={selectedModel}
+        selectedModel={selectedModel || undefined}
         onModelChange={setSelectedModel}
       />
 

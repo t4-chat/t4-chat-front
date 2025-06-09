@@ -6,7 +6,6 @@ import {
   type ReactNode,
   type FC,
 } from "react";
-import { authService } from "@/features/auth/services/authService";
 import { useNavigate } from "react-router-dom";
 import {
   useAuthenticationServicePostApiAuthGoogle,

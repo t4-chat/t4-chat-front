@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/context/AuthContext";
-import { Modal } from "@/components/ui-kit/Modal/Modal";
+import { Modal } from "@/components/Modal/Modal";
 import "./LoginModal.scss";
 
 interface LoginModalProps {

@@ -5,7 +5,7 @@ import PinIcon from "@/assets/icons/chats/pin.svg?react";
 import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
-import { DropdownMenu } from "@/components/ui-kit/DropdownMenu/DropdownMenu";
+import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
 import type { Chat } from "@/features/chat/types";
 import { useMemo, useState, type FC } from "react";
 import "./ChatSidebar.scss";

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import SendIcon from "@/assets/icons/send.svg?react";
-import { Select, type SelectOption } from "@/components/ui-kit/Select/Select";
-import { FileUpload } from "@/components/ui-kit/FileUpload/FileUpload";
-import { FilePreview } from "@/components/ui-kit/FilePreview/FilePreview";
+import { Select, type SelectOption } from "@/components/Select/Select";
+import { FileUpload } from "@/components/FileUpload/FileUpload";
+import { FilePreview } from "@/components/FilePreview/FilePreview";
 import "./ChatInput.scss";
 
 interface ChatInputProps {

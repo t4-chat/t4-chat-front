@@ -1,5 +1,5 @@
-import { ConfirmationModal } from "@/components/ui-kit/Modal/ConfirmationModal";
-import { TextInputModal } from "@/components/ui-kit/Modal/TextInputModal";
+import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
+import { TextInputModal } from "@/components/Modal/TextInputModal";
 import { Chat } from "@/features/chat/components/Chat/Chat";
 import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
 import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
