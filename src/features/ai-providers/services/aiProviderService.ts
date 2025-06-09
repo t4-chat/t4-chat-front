@@ -2,11 +2,11 @@ import { api } from "@/services/api";
 import { AiProvider } from "@/features/ai-providers/types";
 
 class AIProvidersService {
-	async getProviders(): Promise<AiProvider[]> {
-		const response = await api.get<AiProvider[]>("/api/ai-providers");
+  async getProviders(): Promise<AiProvider[]> {
+    const response = await api.get<AiProvider[]>("/api/ai-providers");
 
-		return response.data;
-	}
+    return response.data;
+  }
 }
 
 export const aiProvidersService = new AIProvidersService();

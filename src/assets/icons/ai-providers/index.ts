@@ -12,13 +12,13 @@ import defaultIcon from "./default.svg";
 
 // This is a mapping from provider names to their SVG file paths
 export const providerIconPaths = {
-	openai: openaiIcon,
-	anthropic: anthropicIcon,
-	grok: grokIcon,
-	meta: metaIcon,
-	mistral: mistralIcon,
-	deepseek: deepseekIcon,
-	gemini: geminiIcon,
-	awsnova: awsnovaIcon,
-	default: defaultIcon,
+  openai: openaiIcon,
+  anthropic: anthropicIcon,
+  grok: grokIcon,
+  meta: metaIcon,
+  mistral: mistralIcon,
+  deepseek: deepseekIcon,
+  gemini: geminiIcon,
+  awsnova: awsnovaIcon,
+  default: defaultIcon,
 };

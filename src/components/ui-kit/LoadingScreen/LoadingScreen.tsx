@@ -2,16 +2,16 @@ import React from "react";
 import "./LoadingScreen.scss";
 
 interface LoadingScreenProps {
-	message?: string;
+  message?: string;
 }
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
-	message = "Loading...",
+  message = "Loading...",
 }) => {
-	return (
-		<div className="loading-screen">
-			<div className="loading-spinner"></div>
-			<p className="loading-message">{message}</p>
-		</div>
-	);
+  return (
+    <div className="loading-screen">
+      <div className="loading-spinner"></div>
+      <p className="loading-message">{message}</p>
+    </div>
+  );
 };

@@ -4,19 +4,19 @@ import { useAuth } from "../context/AuthContext";
 import { LoadingScreen } from "./ui-kit/LoadingScreen/LoadingScreen";
 
 interface ProtectedRouteProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-	const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
-	if (isLoading) {
-		return <LoadingScreen />;
-	}
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
-	if (!isAuthenticated) {
-		return <Navigate to="/login" replace />;
-	}
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-	return <>{children}</>;
+  return <>{children}</>;
 };

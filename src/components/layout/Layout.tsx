@@ -6,20 +6,20 @@ import "@/assets/styles/theme.scss";
 import "./Layout.scss";
 
 export const Layout = () => {
-	const location = useLocation();
-	const showFooter = location.pathname !== "/chat";
+  const location = useLocation();
+  const showFooter = location.pathname !== "/chat";
 
-	return (
-		<ThemeProvider>
-			<div
-				className={`layout flex-col bg-red flex ${!showFooter ? "no-footer" : ""}`}
-			>
-				<Header />
-				<main className="main">
-					<Outlet />
-				</main>
-				{showFooter && <Footer />}
-			</div>
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider>
+      <div
+        className={`layout flex-col bg-red flex ${!showFooter ? "no-footer" : ""}`}
+      >
+        <Header />
+        <main className="main">
+          <Outlet />
+        </main>
+        {showFooter && <Footer />}
+      </div>
+    </ThemeProvider>
+  );
 };

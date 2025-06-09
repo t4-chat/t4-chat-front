@@ -1,21 +1,21 @@
 import "./ChatSidebarBackdrop.scss";
 
 interface ChatSidebarBackdropProps {
-	isVisible: boolean;
-	onClick: () => void;
+  isVisible: boolean;
+  onClick: () => void;
 }
 
 export const ChatSidebarBackdrop = ({
-	isVisible,
-	onClick,
+  isVisible,
+  onClick,
 }: ChatSidebarBackdropProps) => {
-	if (!isVisible) return null;
+  if (!isVisible) return null;
 
-	return (
-		<div
-			className="chat-sidebar-backdrop"
-			onClick={onClick}
-			aria-hidden="true"
-		/>
-	);
+  return (
+    <div
+      className="chat-sidebar-backdrop"
+      onClick={onClick}
+      aria-hidden="true"
+    />
+  );
 };

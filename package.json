@@ -32,6 +32,8 @@
     "start:4200": "vite --port 4200",
     "build": "vite build",
     "preview": "vite preview",
+    "format": "biome format --write",
+    "lint": "biome lint",
     "test": "vitest"
   }
 }

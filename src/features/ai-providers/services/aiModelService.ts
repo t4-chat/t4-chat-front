@@ -2,11 +2,11 @@ import { api } from "@/services/api";
 import { AiModel } from "@/features/ai-providers/types";
 
 class AiModelService {
-	async getAll(): Promise<AiModel[]> {
-		const response = await api.get(`/api/ai-models`);
+  async getAll(): Promise<AiModel[]> {
+    const response = await api.get(`/api/ai-models`);
 
-		return response.data;
-	}
+    return response.data;
+  }
 }
 
 export const aiModelService = new AiModelService();
