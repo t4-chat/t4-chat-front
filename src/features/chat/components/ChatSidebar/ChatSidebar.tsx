@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { ReactComponent as MenuIcon } from 'src/assets/icons/chats/menu.svg';
-import { ReactComponent as SearchIcon } from 'src/assets/icons/chats/search.svg';
-import { ReactComponent as NewChatIcon } from 'src/assets/icons/chats/new-chat.svg';
-import { ReactComponent as TrashIcon } from 'src/assets/icons/chats/trash.svg';
-import { ReactComponent as MoreIcon } from 'src/assets/icons/chats/more.svg';
-import { ReactComponent as PinIcon } from 'src/assets/icons/chats/pin.svg';
-import { ReactComponent as RenameIcon } from 'src/assets/icons/chats/rename.svg';
-import { DropdownMenu } from 'src/components/ui-kit';
+import MenuIcon from '@/assets/icons/chats/menu.svg?react';
+import SearchIcon from '@/assets/icons/chats/search.svg?react';
+import NewChatIcon from '@/assets/icons/chats/new-chat.svg?react';
+import TrashIcon from '@/assets/icons/chats/trash.svg?react';
+import MoreIcon from '@/assets/icons/chats/more.svg?react';
+import PinIcon from '@/assets/icons/chats/pin.svg?react';
+import RenameIcon from '@/assets/icons/chats/rename.svg?react';
+import { DropdownMenu } from '@/components/ui-kit/DropdownMenu/DropdownMenu';
 import './ChatSidebar.scss';
-import { Chat } from 'src/features/chat/types';
+import { Chat } from '@/features/chat/types';
 
 interface ChatSidebarProps {
   isOpen: boolean;

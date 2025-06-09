@@ -1,7 +1,9 @@
-@import 'src/assets/styles/variables.scss';
+@import "@/assets/styles/variables.scss";
 
 .chat-page {
-  height: calc(100vh - 3.75rem); /* Adjust for header (3.75rem) and footer (3.75rem) */
+  height: calc(
+    100vh - 3.75rem
+  ); /* Adjust for header (3.75rem) and footer (3.75rem) */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -13,7 +15,7 @@
   right: 0;
   margin: 0;
   transition: padding-left $transition-normal, bottom $transition-normal;
-  
+
   &.with-sidebar {
     @media (min-width: $breakpoint-md) {
       padding-left: 20rem; /* Add padding equal to sidebar width on larger screens */
@@ -63,7 +65,7 @@
 .chat-header {
   padding: 1rem 1.5rem;
   border-bottom: $border-width solid var(--border-color);
-  
+
   .chat-title {
     font-size: $font-xl;
     font-weight: 500;
@@ -83,4 +85,4 @@
   .chat-page {
     padding: 0;
   }
-} 
+}

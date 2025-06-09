@@ -1,7 +1,9 @@
-import axios, { AxiosInstance } from 'axios';
-import { tokenService } from 'src/services/tokenService';
+import axios, { AxiosInstance } from "axios";
+import { tokenService } from "@/services/tokenService";
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+
+console.log("🚀 ~ API_URL:", API_URL);
 
 const api: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -25,10 +27,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       tokenService.removeToken();
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
 );
 
-export { api }; 
+export { api };

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Chat } from 'src/features/chat/components/Chat';
-import { ChatSidebar } from 'src/features/chat/components/ChatSidebar';
-import { ChatSidebarToggle } from 'src/features/chat/components/ChatSidebarToggle';
-import { ChatSidebarBackdrop } from 'src/features/chat/components/ChatSidebarBackdrop';
-import { ChatService } from 'src/features/chat/services/chatService';
-import { Chat as ChatType } from 'src/features/chat/types';
-import { ConfirmationModal, TextInputModal } from 'src/components/ui-kit';
+import { Chat } from '@/features/chat/components/Chat/Chat';
+import { ChatSidebar } from '@/features/chat/components/ChatSidebar/ChatSidebar';
+import { ChatSidebarToggle } from '@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle';
+import { ChatSidebarBackdrop } from '@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop';
+import { ChatService } from '@/features/chat/services/chatService';
+import { Chat as ChatType } from '@/features/chat/types';
+import { ConfirmationModal } from '@/components/ui-kit/Modal/ConfirmationModal';
+import { TextInputModal } from '@/components/ui-kit/Modal/TextInputModal';
 import './ChatPage.scss';
 
 export const ChatPage = () => {

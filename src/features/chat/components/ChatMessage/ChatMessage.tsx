@@ -3,8 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { ChatMessage as ChatMessageType } from 'src/features/chat/types';
-import { fileService } from 'src/services/fileService';
+import { ChatMessage as ChatMessageType } from '@/features/chat/types';
+import { fileService } from '@/services/fileService';
 import './ChatMessage.scss';
 
 interface ChatMessageProps extends Omit<ChatMessageType, 'id'> {

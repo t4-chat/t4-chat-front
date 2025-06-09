@@ -1,11 +1,11 @@
-@import 'src/assets/styles/variables.scss';
+@import "@/assets/styles/variables.scss";
 
 .footer {
   width: 100%;
   background-color: var(--background-color);
   border-top: $border-width solid var(--border-color);
   transition: background-color $transition-normal;
-  
+
   &__content {
     max-width: $breakpoint-xl;
     margin: 0 auto;
@@ -39,4 +39,4 @@
       background-color: var(--hover-color);
     }
   }
-} 
+}

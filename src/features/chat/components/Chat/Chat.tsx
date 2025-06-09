@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { SelectOption } from 'src/components/ui-kit/Select/Select';
-import { ChatMessages } from 'src/features/chat/components/ChatMessages';
-import { ChatInput } from 'src/features/chat/components/ChatInput';
-import { ChatMessage } from 'src/features/chat/types';
-import { ChatService, ChatMessageRequest, StreamEvent } from 'src/features/chat/services/chatService';
-import { aiModelService } from 'src/features/ai-providers/services/aiModelService';
-import { AiModel } from 'src/features/ai-providers/types';
-import { providerIconPaths } from 'src/assets/icons/ai-providers/index';
-import { useAuth } from 'src/context/AuthContext';
-import { LoginModal } from 'src/features/auth/components/LoginModal/LoginModal';
-import { fileService } from 'src/services/fileService';
+import { SelectOption } from '@/components/ui-kit/Select/Select';
+import { ChatMessages } from '@/features/chat/components/ChatMessages/ChatMessages';
+import { ChatInput } from '@/features/chat/components/ChatInput/ChatInput';
+import { ChatMessage } from '@/features/chat/types';
+import { ChatService, ChatMessageRequest, StreamEvent } from '@/features/chat/services/chatService';
+import { aiModelService } from '@/features/ai-providers/services/aiModelService';
+import { AiModel } from '@/features/ai-providers/types';
+import { providerIconPaths } from '@/assets/icons/ai-providers/index';
+import { useAuth } from '@/context/AuthContext';
+import { LoginModal } from '@/features/auth/components/LoginModal/LoginModal';
+import { fileService } from '@/services/fileService';
 import './Chat.scss';
 
 interface ChatProps {

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from 'src/context/AuthContext';
-import { ReactComponent as Logo } from 'src/assets/icons/logo.svg';
-import { ReactComponent as UserIcon } from 'src/assets/icons/user.svg';
-import { ReactComponent as LogoutIcon } from 'src/assets/icons/logout.svg';
-import { LoginModal } from 'src/features/auth';
-import { DropdownMenu, DropdownMenuItem } from 'src/components/ui-kit/DropdownMenu';
+import { useAuth } from '@/context/AuthContext';
+import  Logo from '@/assets/icons/logo.svg?react';
+import UserIcon from '@/assets/icons/user.svg?react';
+import LogoutIcon from '@/assets/icons/logout.svg?react';
+import { LoginModal } from '@/features/auth/components/LoginModal/LoginModal';
+import { DropdownMenu, DropdownMenuItem } from '@/components/ui-kit/DropdownMenu/DropdownMenu';
 import './Header.scss';
 
 export const Header = () => {

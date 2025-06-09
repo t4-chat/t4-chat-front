@@ -1,4 +1,4 @@
-import { ReactComponent as MenuIcon } from 'src/assets/icons/chats/menu.svg';
+import MenuIcon from '@/assets/icons/chats/menu.svg?react';
 import './ChatSidebarToggle.scss';
 
 interface ChatSidebarToggleProps {

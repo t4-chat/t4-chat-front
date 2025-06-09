@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.scss';
-import { providerIconPaths } from 'src/assets/icons/ai-providers/index';
-import { aiModelService } from 'src/features/ai-providers/services/aiModelService';
-import { AiModel } from 'src/features/ai-providers/types';
-import { ReactComponent as SearchIcon } from 'src/assets/icons/chats/search.svg';
+import { providerIconPaths } from '@/assets/icons/ai-providers/index';
+import { aiModelService } from '@/features/ai-providers/services/aiModelService';
+import { AiModel } from '@/features/ai-providers/types';
+import SearchIcon from '@/assets/icons/chats/search.svg?react';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [displayModels, setDisplayModels] = useState<AiModel[]>([]);
   const [filteredModels, setFilteredModels] = useState<AiModel[]>([]);
+  console.log("🚀 ~ filteredModels:", filteredModels)
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

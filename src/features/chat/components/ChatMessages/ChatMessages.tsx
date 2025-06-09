@@ -1,7 +1,7 @@
 import { useRef, useEffect, useMemo } from 'react';
-import { ChatMessage as ChatMessageType } from 'src/features/chat/types';
-import { ChatMessage } from 'src/features/chat/components/ChatMessage/ChatMessage';
-import { LoadingDots } from 'src/components/ui-kit';
+import { ChatMessage as ChatMessageType } from '@/features/chat/types';
+import { ChatMessage } from '@/features/chat/components/ChatMessage/ChatMessage';
+import { LoadingDots } from '@/components/ui-kit/LoadingDots/LoadingDots';
 import './ChatMessages.scss';
 
 interface ChatMessagesProps {

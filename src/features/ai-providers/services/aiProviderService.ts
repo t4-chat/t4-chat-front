@@ -1,9 +1,9 @@
-import { api } from 'src/services/api';
-import { AiProvider } from "src/features/ai-providers/types";
+import { api } from "@/services/api";
+import { AiProvider } from "@/features/ai-providers/types";
 
 class AIProvidersService {
   async getProviders(): Promise<AiProvider[]> {
-    const response = await api.get<AiProvider[]>('/api/ai-providers');
+    const response = await api.get<AiProvider[]>("/api/ai-providers");
 
     return response.data;
   }

@@ -1,8 +1,8 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { ThemeProvider } from 'src/context/ThemeContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 import { Header } from './header/Header';
 import { Footer } from './footer/Footer';
-import 'src/assets/styles/theme.scss';
+import '@/assets/styles/theme.scss';
 import './Layout.scss';
 
 export const Layout = () => {

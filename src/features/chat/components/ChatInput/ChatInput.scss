@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@import "@/assets/styles/variables.scss";
 
 .chat-input-integrated-wrapper {
   display: flex;
@@ -10,19 +10,19 @@
   border-radius: 1.5rem;
   background-color: var(--background-color);
   transition: border-color 0.2s, box-shadow 0.2s;
-  
+
   &:focus-within {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.125rem rgba(var(--primary-color-rgb), 0.2);
   }
-  
+
   .file-previews {
     display: flex;
     flex-wrap: wrap;
     padding: 0.5rem 1rem 0;
     gap: 8px;
   }
-  
+
   .chat-input {
     flex: 1;
     min-height: 2.75rem;
@@ -35,38 +35,38 @@
     font-size: 0.95rem;
     line-height: 1.5;
     outline: none;
-    
+
     &::placeholder {
       color: var(--text-placeholder-color);
     }
-    
+
     &:disabled {
       opacity: 0.7;
       cursor: not-allowed;
     }
   }
-  
+
   .chat-input-actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.25rem 0.5rem 0.5rem 0.75rem;
     border-top: none;
-    
+
     .model-selector-container {
       position: relative;
-      
+
       .chat-model-select {
         min-width: 7.5rem;
       }
     }
-    
+
     .input-action-buttons {
       display: flex;
       align-items: center;
       gap: 0.25rem;
     }
-    
+
     .send-button {
       display: flex;
       align-items: center;
@@ -79,25 +79,25 @@
       border: none;
       cursor: pointer;
       transition: all 0.2s;
-      
+
       &:hover:not(:disabled) {
         background-color: rgba(var(--primary-color-rgb), 0.1);
         color: var(--primary-color);
       }
-      
+
       &:disabled {
         opacity: 0.4;
         cursor: not-allowed;
       }
-      
+
       &.active {
         background-color: var(--primary-color);
         color: white;
-        
+
         &:hover:not(:disabled) {
           background-color: var(--primary-color-hover);
         }
       }
     }
   }
-} 
+}

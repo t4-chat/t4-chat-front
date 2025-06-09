@@ -1,5 +1,5 @@
-@import './assets/styles/variables';
-@import './assets/styles/theme';
+@import "./assets/styles/variables";
+@import "./assets/styles/theme";
 
 * {
   margin: 0;
@@ -15,6 +15,9 @@ body {
   line-height: 1.5;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
-} 
+}

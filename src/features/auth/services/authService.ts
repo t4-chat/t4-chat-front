@@ -1,5 +1,5 @@
-import { api } from 'src/services/api';
-import { tokenService } from 'src/services/tokenService';
+import { api } from "@/services/api";
+import { tokenService } from "@/services/tokenService";
 
 export interface AuthResponse {
   access_token: string;
@@ -28,12 +28,14 @@ class AuthService {
 
   async loginWithGoogle(googleToken: string): Promise<void> {
     try {
-      const response = await api.post('/api/auth/google', { token: googleToken });
+      const response = await api.post("/api/auth/google", {
+        token: googleToken,
+      });
       const { access_token } = response.data;
-      
+
       this.setToken(access_token);
     } catch (error) {
-      console.error('Google authentication error:', error);
+      console.error("Google authentication error:", error);
       throw error;
     }
   }
@@ -43,4 +45,4 @@ class AuthService {
   }
 }
 
-export const authService = new AuthService(); 
+export const authService = new AuthService();

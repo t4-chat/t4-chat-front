@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Layout } from '../components/layout';
-import { ChatPage, HomePage } from '../pages';
+import { Layout } from '../components/layout/Layout';
+import { ChatPage } from '../pages/ChatPage/ChatPage';
+import { HomePage } from '../pages/HomePage/HomePage';
 import { AuthProvider } from '../context/AuthContext';
 
 export const router = createBrowserRouter([

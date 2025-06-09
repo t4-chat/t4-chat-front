@@ -1,4 +1,4 @@
-@import 'src/assets/styles/variables.scss';
+@import "@/assets/styles/variables.scss";
 
 .header {
   width: 100%;
@@ -8,7 +8,7 @@
   top: 0;
   z-index: 1000;
   transition: background-color $transition-normal;
-  
+
   &__content {
     max-width: $breakpoint-xl;
     margin: 0 auto;
@@ -27,11 +27,11 @@
     color: inherit;
     display: flex;
     transition: opacity $transition-fast;
-    
+
     &:hover {
       opacity: 0.8;
     }
-    
+
     &:focus {
       outline: none;
       opacity: 0.8;
@@ -117,7 +117,7 @@
     padding: $spacing-xs;
     border-radius: 50%;
     transition: background-color $transition-fast;
-    
+
     &:hover {
       background-color: var(--hover-color);
     }

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService } from 'src/features/auth/services/authService';
-import { userService } from 'src/services/userService';
+import { authService } from '@/features/auth/services/authService';
+import { userService } from '@/services/userService';
 import { useNavigate } from 'react-router-dom';
 import { User } from '../models/user';
 

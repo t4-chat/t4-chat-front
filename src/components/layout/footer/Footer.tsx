@@ -1,4 +1,4 @@
-import { useTheme, ThemeType } from 'src/context/ThemeContext';
+import { useTheme, ThemeType } from '@/context/ThemeContext';
 import './Footer.scss';
 
 export const Footer = () => {

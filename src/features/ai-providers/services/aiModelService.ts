@@ -1,5 +1,5 @@
-import { api } from "src/services/api";
-import { AiModel } from "src/features/ai-providers/types";
+import { api } from "@/services/api";
+import { AiModel } from "@/features/ai-providers/types";
 
 class AiModelService {
   async getAll(): Promise<AiModel[]> {
