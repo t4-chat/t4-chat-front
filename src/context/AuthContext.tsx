@@ -1,14 +1,15 @@
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
-  ReactNode,
+  type ReactNode,
+  type FC,
 } from "react";
 import { authService } from "@/features/auth/services/authService";
 import { userService } from "@/services/userService";
 import { useNavigate } from "react-router-dom";
-import { User } from "../models/user";
+import type { User } from "../models/user";
 
 interface AuthContextType {
   user: User | null;
@@ -24,7 +25,7 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();

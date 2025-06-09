@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Modal } from "./Modal";
+import { useEffect, useRef, useState, type FC } from "react";
 import { Button } from "../Button/Button";
+import { Modal } from "./Modal";
 import "./TextInputModal.scss";
 
 interface TextInputModalProps {
@@ -17,7 +17,7 @@ interface TextInputModalProps {
   errorMessage?: string;
 }
 
-export const TextInputModal: React.FC<TextInputModalProps> = ({
+export const TextInputModal: FC<TextInputModalProps> = ({
   isOpen,
   onClose,
   onSave,

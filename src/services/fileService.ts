@@ -62,11 +62,11 @@ export class FileService {
     const contentDisposition = response.headers.get("Content-Disposition");
     if (contentDisposition) {
       const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-      if (filenameMatch && filenameMatch[1]) {
+      if (filenameMatch?.[1]) {
         filename = filenameMatch[1];
       } else {
         const filenameMatch = contentDisposition.match(/filename=([^;]+)/);
-        if (filenameMatch && filenameMatch[1]) {
+        if (filenameMatch?.[1]) {
           filename = filenameMatch[1].trim();
         }
       }
@@ -97,7 +97,7 @@ export class FileService {
 
   // Function to check if a file is an image based on its filename or content type
   isImageFile(filename: string, contentType?: string): boolean {
-    if (contentType && contentType.startsWith("image/")) {
+    if (contentType?.startsWith("image/")) {
       return true;
     }
 

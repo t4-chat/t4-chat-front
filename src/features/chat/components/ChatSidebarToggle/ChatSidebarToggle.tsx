@@ -14,6 +14,7 @@ export const ChatSidebarToggle = ({
 
   return (
     <button
+      type="button"
       className="chat-sidebar-toggle"
       onClick={onClick}
       aria-label="Open sidebar"

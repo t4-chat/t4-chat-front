@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC } from "react";
 import { Modal } from "./Modal";
 import { Button } from "../Button/Button";
 import "./ConfirmationModal.scss";
@@ -14,7 +14,7 @@ interface ConfirmationModalProps {
   isDanger?: boolean;
 }
 
-export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+export const ConfirmationModal: FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,

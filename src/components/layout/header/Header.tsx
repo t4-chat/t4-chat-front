@@ -7,7 +7,7 @@ import LogoutIcon from "@/assets/icons/logout.svg?react";
 import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
 import {
   DropdownMenu,
-  DropdownMenuItem,
+  type DropdownMenuItem,
 } from "@/components/ui-kit/DropdownMenu/DropdownMenu";
 import "./Header.scss";
 
@@ -32,10 +32,10 @@ export const Header = () => {
   ];
 
   const userTrigger = (
-    <button className="header__user-button" title={userName}>
+    <button className="header__user-button" title={userName} type="button">
       {hasProfileImage ? (
         <img
-          src={user!.profile_image_url}
+          src={user.profile_image_url}
           alt={userName}
           className="header__user-profile-img"
         />
@@ -65,7 +65,11 @@ export const Header = () => {
               />
             </div>
           ) : (
-            <button className="header__login-btn" onClick={openLoginModal}>
+            <button
+              className="header__login-btn"
+              onClick={openLoginModal}
+              type="button"
+            >
               Login
             </button>
           )}

@@ -11,9 +11,7 @@ export const Layout = () => {
 
   return (
     <ThemeProvider>
-      <div
-        className={`layout flex-col bg-red flex ${!showFooter ? "no-footer" : ""}`}
-      >
+      <div className={`layout ${!showFooter ? "no-footer" : ""}`}>
         <Header />
         <main className="main">
           <Outlet />

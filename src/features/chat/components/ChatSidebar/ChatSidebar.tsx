@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FC } from "react";
 import MenuIcon from "@/assets/icons/chats/menu.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import NewChatIcon from "@/assets/icons/chats/new-chat.svg?react";
@@ -8,7 +8,7 @@ import PinIcon from "@/assets/icons/chats/pin.svg?react";
 import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import { DropdownMenu } from "@/components/ui-kit/DropdownMenu/DropdownMenu";
 import "./ChatSidebar.scss";
-import { Chat } from "@/features/chat/types";
+import type { Chat } from "@/features/chat/types";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -93,13 +93,13 @@ export const ChatSidebar = ({
         hour: "2-digit",
         minute: "2-digit",
       });
-    } else if (diff < dayInMs * 7) {
+    }
+    if (diff < dayInMs * 7) {
       // This week - show day name
       return date.toLocaleDateString([], { weekday: "short" });
-    } else {
+    }
       // Older - show date
       return date.toLocaleDateString([], { month: "short", day: "numeric" });
-    }
   };
 
   // Split chats into pinned and unpinned
@@ -110,6 +110,7 @@ export const ChatSidebar = ({
     <div className={`chat-sidebar ${isOpen ? "open" : ""}`}>
       <div className="sidebar-header">
         <button
+          type="button"
           className="toggle-button"
           onClick={onToggle}
           aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
@@ -207,7 +208,7 @@ interface ChatListItemProps {
   formatDate: (date: Date) => string;
 }
 
-const ChatListItem: React.FC<ChatListItemProps> = ({
+const ChatListItem: FC<ChatListItemProps> = ({
   chat,
   isActive,
   onSelect,

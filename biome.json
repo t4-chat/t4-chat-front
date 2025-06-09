@@ -20,8 +20,8 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "nursery": {
-        "all": true
+      "complexity": {
+        "noForEach": "off"
       }
     }
   },

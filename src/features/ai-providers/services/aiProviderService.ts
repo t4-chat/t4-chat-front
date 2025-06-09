@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import { AiProvider } from "@/features/ai-providers/types";
+import type { AiProvider } from "@/features/ai-providers/types";
 
 class AIProvidersService {
   async getProviders(): Promise<AiProvider[]> {

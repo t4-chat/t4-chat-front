@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { type FC, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/context/AuthContext";
 import { Modal } from "@/components/ui-kit/Modal/Modal";
@@ -10,7 +10,12 @@ interface LoginModalProps {
   onLoginSuccess?: () => void;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({
+interface GoogleCredentialResponse {
+  credential: string;
+  select_by: string;
+}
+
+export const LoginModal: FC<LoginModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
@@ -18,7 +23,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const { loginWithGoogle, isLoading } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
+  const handleGoogleSuccess = async (
+    credentialResponse: GoogleCredentialResponse,
+  ) => {
     try {
       setError(null);
       await loginWithGoogle(credentialResponse.credential);

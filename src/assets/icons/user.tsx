@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC } from "react";
 
 interface UserIconProps {
   width?: number;
@@ -6,7 +6,7 @@ interface UserIconProps {
   className?: string;
 }
 
-export const UserIcon: React.FC<UserIconProps> = ({
+export const UserIcon: FC<UserIconProps> = ({
   width = 24,
   height = 24,
   className = "",
@@ -19,7 +19,10 @@ export const UserIcon: React.FC<UserIconProps> = ({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      role="img"
+      aria-label="User icon"
     >
+      <title>User icon</title>
       <path
         d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
         stroke="currentColor"

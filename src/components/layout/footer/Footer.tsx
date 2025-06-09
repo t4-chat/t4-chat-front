@@ -1,4 +1,4 @@
-import { useTheme, ThemeType } from "@/context/ThemeContext";
+import { useTheme, type ThemeType } from "@/context/ThemeContext";
 import "./Footer.scss";
 
 export const Footer = () => {
@@ -28,6 +28,7 @@ export const Footer = () => {
           &copy; 2024 AGG AI. All rights reserved.
         </p>
         <button
+          type="button"
           className="footer__theme-toggle"
           onClick={handleThemeChange}
           aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}

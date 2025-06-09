@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import SendIcon from "@/assets/icons/send.svg?react";
-import { Select, SelectOption } from "@/components/ui-kit/Select/Select";
+import { Select, type SelectOption } from "@/components/ui-kit/Select/Select";
 import { FileUpload } from "@/components/ui-kit/FileUpload/FileUpload";
 import { FilePreview } from "@/components/ui-kit/FilePreview/FilePreview";
 import "./ChatInput.scss";

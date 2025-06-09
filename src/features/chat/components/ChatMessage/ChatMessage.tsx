@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { ChatMessage as ChatMessageType } from "@/features/chat/types";
+import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
 import { fileService } from "@/services/fileService";
 import "./ChatMessage.scss";
 
@@ -52,7 +52,7 @@ export const ChatMessage = ({
     if (!hasAttachments) return;
 
     // Initialize attachment info
-    const initialInfo: AttachmentInfo[] = attachments!.map((fileId) => ({
+    const initialInfo: AttachmentInfo[] = attachments.map((fileId) => ({
       fileId,
       isImage: false,
       isLoading: true,
@@ -65,10 +65,10 @@ export const ChatMessage = ({
     const loadAttachmentInfo = async () => {
       const updatedInfo = [...initialInfo];
 
-      for (let i = 0; i < attachments!.length; i++) {
+      for (let i = 0; i < attachments.length; i++) {
         if (!isMountedRef.current) return;
 
-        const fileId = attachments![i];
+        const fileId = attachments[i];
         try {
           const fileInfo = await fileService.getFile(fileId);
           const isImage = fileService.isImageFile(
@@ -78,7 +78,7 @@ export const ChatMessage = ({
 
           if (!isMountedRef.current) return;
 
-          let imageUrl;
+          let imageUrl: string | undefined;
           if (isImage && fileInfo.blob) {
             // Direct approach using blob URL
             imageUrl = URL.createObjectURL(fileInfo.blob);
@@ -209,6 +209,8 @@ export const ChatMessage = ({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        role="img"
+                        aria-label="Download image"
                       >
                         <path
                           d="M12 15V3M12 15L8 11M12 15L16 11M3 17V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V17"
@@ -229,6 +231,8 @@ export const ChatMessage = ({
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        aria-label="Download attachment"
+                        role="img"
                       >
                         <path
                           d="M20 8.5V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2H13.5"
@@ -242,7 +246,7 @@ export const ChatMessage = ({
                     <span className="attachment-label">
                       {isDownloading[info.fileId]
                         ? "Downloading..."
-                        : info.filename || `Attachment`}
+                        : info.filename || "Attachment"}
                     </span>
                   </>
                 )}

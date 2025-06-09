@@ -4,7 +4,7 @@ import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar"
 import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
 import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
 import { ChatService } from "@/features/chat/services/chatService";
-import { Chat as ChatType } from "@/features/chat/types";
+import type { Chat as ChatType } from "@/features/chat/types";
 import { ConfirmationModal } from "@/components/ui-kit/Modal/ConfirmationModal";
 import { TextInputModal } from "@/components/ui-kit/Modal/TextInputModal";
 import "./ChatPage.scss";

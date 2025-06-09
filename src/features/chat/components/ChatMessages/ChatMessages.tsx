@@ -1,5 +1,5 @@
 import { useRef, useEffect, useMemo } from "react";
-import { ChatMessage as ChatMessageType } from "@/features/chat/types";
+import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
 import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage";
 import { LoadingDots } from "@/components/ui-kit/LoadingDots/LoadingDots";
 import "./ChatMessages.scss";

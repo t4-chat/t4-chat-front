@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
+import type { FC, ReactNode } from "react";
 import "./Modal.scss";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   title?: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({
+export const Modal: FC<ModalProps> = ({
   isOpen,
   onClose,
   children,

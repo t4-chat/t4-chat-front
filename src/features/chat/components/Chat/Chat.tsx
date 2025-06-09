@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { SelectOption } from "@/components/ui-kit/Select/Select";
+import type { SelectOption } from "@/components/ui-kit/Select/Select";
 import { ChatMessages } from "@/features/chat/components/ChatMessages/ChatMessages";
 import { ChatInput } from "@/features/chat/components/ChatInput/ChatInput";
-import { ChatMessage } from "@/features/chat/types";
+import type { ChatMessage } from "@/features/chat/types";
 import {
   ChatService,
-  ChatMessageRequest,
-  StreamEvent,
+  type ChatMessageRequest,
+  type StreamEvent,
 } from "@/features/chat/services/chatService";
 import { aiModelService } from "@/features/ai-providers/services/aiModelService";
-import { AiModel } from "@/features/ai-providers/types";
+import type { AiModel } from "@/features/ai-providers/types";
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
 import { useAuth } from "@/context/AuthContext";
 import { LoginModal } from "@/features/auth/components/LoginModal/LoginModal";
@@ -107,7 +107,7 @@ export const Chat = ({
       const chat = await chatServiceRef.current.getChat(id);
       setCurrentChatId(id);
 
-      if (chat && chat.messages) {
+      if (chat?.messages) {
         // Convert string dates to Date objects
         const messagesWithDateObjects = chat.messages.map((msg) => ({
           ...msg,
@@ -183,7 +183,7 @@ export const Chat = ({
 
     abortFunctionRef.current = chatServiceRef.current.streamChat(
       messageHistory,
-      parseInt(selectedModel),
+      Number.parseInt(selectedModel),
       (event: StreamEvent) => onStreamEvent(event),
       (error) => onStreamError(error, assistantMessageIdRef.current),
       () => onStreamDone(),

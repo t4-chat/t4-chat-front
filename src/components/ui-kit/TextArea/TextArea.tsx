@@ -1,4 +1,4 @@
-import React from "react";
+import type { FC } from "react";
 import "./TextArea.scss";
 
 interface TextAreaProps
@@ -7,7 +7,7 @@ interface TextAreaProps
   label?: string;
 }
 
-export const TextArea: React.FC<TextAreaProps> = ({
+export const TextArea: FC<TextAreaProps> = ({
   error,
   label,
   className = "",
@@ -15,7 +15,11 @@ export const TextArea: React.FC<TextAreaProps> = ({
 }) => {
   return (
     <div className="textarea-wrapper">
-      {label && <label className="textarea-label">{label}</label>}
+      {label && (
+        <label className="textarea-label" htmlFor={props.id}>
+          {label}
+        </label>
+      )}
       <textarea
         className={`ui-textarea ${error ? "error" : ""} ${className}`}
         {...props}

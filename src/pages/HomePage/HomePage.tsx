@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
 import { aiModelService } from "@/features/ai-providers/services/aiModelService";
-import { AiModel } from "@/features/ai-providers/types";
+import type { AiModel } from "@/features/ai-providers/types";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 
-export const HomePage: React.FC = () => {
+export const HomePage: FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [displayModels, setDisplayModels] = useState<AiModel[]>([]);

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState, type FC } from "react";
 import "./Select.scss";
 
 export interface SelectOption {
@@ -22,7 +22,7 @@ interface SelectProps {
   dropdownPosition?: "bottom" | "top";
 }
 
-export const Select: React.FC<SelectProps> = ({
+export const Select: FC<SelectProps> = ({
   options,
   value,
   onChange,

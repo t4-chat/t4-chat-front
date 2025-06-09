@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type FC } from "react";
 import "./DropdownMenu.scss";
 
 export interface DropdownMenuItem {
@@ -16,7 +16,7 @@ interface DropdownMenuProps {
   className?: string;
 }
 
-export const DropdownMenu: React.FC<DropdownMenuProps> = ({
+export const DropdownMenu: FC<DropdownMenuProps> = ({
   trigger,
   items,
   position = "right",
@@ -26,7 +26,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
 
-  const toggleMenu = (e: React.MouseEvent) => {
+  const toggleMenu = (e: KeyboardEvent) => {
     e.stopPropagation();
     setIsOpen(!isOpen);
   };
@@ -40,7 +40,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   };
 
   // Prevent click from propagating to underlying elements
-  const handleMenuClick = (e: React.MouseEvent) => {
+  const handleMenuClick = (e: KeyboardEvent) => {
     e.stopPropagation();
   };
 
@@ -101,6 +101,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
             {items.map((item) => (
               <li key={item.id} className="dropdown-menu-item">
                 <button
+                  type="button"
                   className={`dropdown-menu-button ${item.isDanger ? "danger" : ""}`}
                   onClick={(e) => handleItemClick(e, item)}
                 >

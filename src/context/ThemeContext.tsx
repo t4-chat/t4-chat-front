@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { type FC, createContext, useContext, useState, useEffect } from "react";
 
 // Define available themes
 export type ThemeType = "light" | "dark";
@@ -13,7 +13,7 @@ const availableThemes: ThemeType[] = ["light", "dark"];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{
+export const ThemeProvider: FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [currentTheme, setCurrentTheme] = useState<ThemeType>(() => {
