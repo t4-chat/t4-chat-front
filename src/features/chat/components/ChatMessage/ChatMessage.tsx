@@ -1,9 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ChatMessage as ChatMessageType } from 'src/features/chat/types';
 import { fileService } from 'src/services/fileService';
 import './ChatMessage.scss';
 
-interface ChatMessageProps extends Omit<ChatMessageType, 'id'> {}
+interface ChatMessageProps extends Omit<ChatMessageType, 'id'> {
+  disableMarkdown?: boolean;
+}
 
 interface AttachmentInfo {
   fileId: string;
@@ -13,7 +19,7 @@ interface AttachmentInfo {
   isLoading: boolean;
 }
 
-export const ChatMessage = ({ content, role, attachments }: ChatMessageProps) => {
+export const ChatMessage = ({ content, role, attachments, disableMarkdown = false }: ChatMessageProps) => {
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>({});
   const [attachmentInfo, setAttachmentInfo] = useState<AttachmentInfo[]>([]);
@@ -133,7 +139,35 @@ export const ChatMessage = ({ content, role, attachments }: ChatMessageProps) =>
   return (
     <div className={`chat-message ${role}`}>
       <div className="message-content">
-        {content}
+        {disableMarkdown ? (
+          <div>{content}</div>
+        ) : (
+          <ReactMarkdown 
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code: ({ node, inline, className, children, ...props }: any) => {
+                const match = /language-(\w+)/.exec(className || '');
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    // @ts-ignore
+                    style={atomDark}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              }
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        )}
         
         {hasAttachments && (
           <div className="attachments">
