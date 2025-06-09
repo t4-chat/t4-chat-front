@@ -1,5 +1,5 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChats,
@@ -13,39 +13,28 @@ export const getProviderIconPath = (provider: string): string => {
   );
 };
 
-export const useAIModelsForChat = (initialModelId: string | null) => {
+export const useAIModelsForChat = () => {
   const { data: models, ...other } = useAiModelsServiceGetApiAiModels();
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
-  if (!models) {
-    return {
-      ...other,
-      setSelectedModel,
-      modelOptions: [],
-      selectedModel: null,
-    };
-  }
-  const options = models.map((model) => ({
-    value: model.id.toString(),
-    label: model.name,
-    iconPath: getProviderIconPath(model.provider.slug),
-  }));
+  const options =
+    models?.map((model) => ({
+      value: model.id.toString(),
+      label: model.name,
+      iconPath: getProviderIconPath(model.provider.slug),
+    })) || [];
 
-  // Set the initial model if provided, otherwise use the first model
-  if (
-    initialModelId &&
-    options.some((option) => option.value === initialModelId) &&
-    selectedModel !== initialModelId
-  ) {
-    setSelectedModel(initialModelId);
-  } else if (
-    options.length > 0 &&
-    !selectedModel &&
-    selectedModel !== options[0].value
-  ) {
+  useEffect(() => {
+    if (!options?.length || selectedModel) return;
     setSelectedModel(options[0].value);
-  }
-  return { ...other, modelOptions: options, selectedModel, setSelectedModel };
+  }, [selectedModel, options]);
+
+  return {
+    ...other,
+    modelOptions: options,
+    selectedModel,
+    setSelectedModel,
+  };
 };
 
 export const useChats = () => {

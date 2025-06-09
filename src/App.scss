@@ -1,5 +1,21 @@
+@import "tailwindcss";
 @import "./assets/styles/variables";
 @import "./assets/styles/theme";
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: var(--font-family-code);
+}
+
+
+
+
 
 * {
   margin: 0;

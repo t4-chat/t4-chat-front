@@ -3,15 +3,9 @@ import "./ChatSidebarToggle.scss";
 
 interface ChatSidebarToggleProps {
   onClick: () => void;
-  isVisible: boolean;
 }
 
-export const ChatSidebarToggle = ({
-  onClick,
-  isVisible,
-}: ChatSidebarToggleProps) => {
-  if (!isVisible) return null;
-
+export const ChatSidebarToggle = ({ onClick }: ChatSidebarToggleProps) => {
   return (
     <button
       type="button"

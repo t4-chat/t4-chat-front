@@ -6,6 +6,7 @@ import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackd
 import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
 import { useChats } from "@/utils/apiUtils";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useChatsServiceDeleteApiChatsByChatId,
   useChatsServicePatchApiChatsByChatIdPin,
@@ -15,7 +16,8 @@ import "./ChatPage.scss";
 
 export const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const { chatId: activeChatId } = useParams();
+  const navigate = useNavigate();
 
   // Chat action modals
   const [deleteModalState, setDeleteModalState] = useState<{
@@ -60,7 +62,7 @@ export const ChatPage = () => {
   };
 
   const handleChatSelect = async (chatId: string) => {
-    setActiveChatId(chatId);
+    navigate(`/chat/${chatId}`);
 
     // On mobile, close the sidebar after selection
     if (window.innerWidth <= 768) {
@@ -69,7 +71,7 @@ export const ChatPage = () => {
   };
 
   const handleNewChat = () => {
-    setActiveChatId(null);
+    navigate("/chat");
 
     // On mobile, close the sidebar after creating a new chat
     if (window.innerWidth <= 768) {
@@ -89,9 +91,9 @@ export const ChatPage = () => {
     try {
       if (deleteModalState.chatId) {
         await deleteChat({ chatId: deleteModalState.chatId });
-        // If the deleted chat is the active one, clear the active chat
+        // If the deleted chat is the active one, navigate to the chat list
         if (activeChatId === deleteModalState.chatId) {
-          setActiveChatId(null);
+          navigate("/chat");
         }
       }
       setDeleteModalState({ isOpen: false, chatId: null });
@@ -116,7 +118,7 @@ export const ChatPage = () => {
     }
   };
 
-  const handlePinChat = async (chatId: string, pinned: boolean) => {
+  const handlePinChat = async (chatId: string) => {
     try {
       await pinChat({ chatId });
     } catch (error) {
@@ -137,6 +139,7 @@ export const ChatPage = () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isSidebarOpen]);
+
   return (
     <div className={`chat-page ${isSidebarOpen ? "with-sidebar" : ""}`}>
       <ChatSidebar
@@ -145,28 +148,25 @@ export const ChatPage = () => {
         chats={chats}
         onChatSelect={handleChatSelect}
         onNewChat={handleNewChat}
-        activeChat={activeChatId}
+        activeChat={activeChatId || null}
         onDeleteChat={handleDeleteModal}
         onRenameChat={handleRenameModal}
         onPinChat={handlePinChat}
         isLoading={isLoading}
       />
 
-      <ChatSidebarToggle onClick={toggleSidebar} isVisible={!isSidebarOpen} />
-
-      <ChatSidebarBackdrop isVisible={isSidebarOpen} onClick={toggleSidebar} />
-
+      {!isSidebarOpen && <ChatSidebarToggle onClick={toggleSidebar} />}
+      {isSidebarOpen && <ChatSidebarBackdrop onClick={toggleSidebar} />}
       <div className="chat-container">
         <Chat
-          chatId={activeChatId}
+          chatId={activeChatId || null}
           onChatCreated={(newChatId) => {
-            setActiveChatId(newChatId);
+            navigate(`/chat/${newChatId}`);
             refetchChats();
           }}
         />
       </div>
 
-      {/* Modals */}
       <ConfirmationModal
         isOpen={deleteModalState.isOpen}
         onClose={() => setDeleteModalState({ isOpen: false, chatId: null })}

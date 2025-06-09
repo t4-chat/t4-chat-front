@@ -139,6 +139,7 @@ export class ChatService {
 
     return () => controller.abort();
   }
+
   async getChat(id: string): Promise<Chat> {
     const response = await api.get(`/api/chats/${id}`);
 
