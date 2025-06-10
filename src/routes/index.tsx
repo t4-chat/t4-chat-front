@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Layout } from "@/components/Layout/Layout";
 import { ChatPage } from "@/pages/ChatPage/ChatPage";
 import { HomePage } from "@/pages/HomePage/HomePage";
+import { AdminPage } from "@/pages/AdminPage/AdminPage";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const router = createBrowserRouter([
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "chat/:chatId",
         element: <ChatPage />,
+      },
+      {
+        path: "admin",
+        element: <AdminPage />,
       },
     ],
   },
