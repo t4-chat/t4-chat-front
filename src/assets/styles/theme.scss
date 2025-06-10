@@ -1,15 +1,15 @@
-@import './variables.scss';
-@import './fonts.scss';
+@import "./variables.scss";
+@import "./fonts.scss";
 
 html {
-  font-size: 16px;  // Base font size set to 16px (browser default)
+  font-size: 16px; // Base font size set to 16px (browser default)
 
   @media (max-width: $breakpoint-md) {
-    font-size: 15px;  // Slightly smaller for tablets
+    font-size: 15px; // Slightly smaller for tablets
   }
 
   @media (max-width: $breakpoint-sm) {
-    font-size: 14px;  // Smaller for phones
+    font-size: 14px; // Smaller for phones
   }
 }
 
@@ -18,60 +18,104 @@ html {
   // Font
   --font-family: #{$font-primary};
   --font-family-code: #{$font-code};
-  
+
   // Light theme (default)
   --background-color: #{$background};
   --text-color: #{$text};
   --border-color: #{rgba($text, 0.1)};
   --hover-color: #{rgba($text, 0.05)};
-  
+
   // Component colors
   --text-primary-color: #{$text};
   --text-secondary-color: #{$secondary};
   --component-bg-color: #{$assistant-message-bg};
-  
+
+  /* shadcn-ui variables */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--secondary-color);
+  --secondary-foreground: var(--background-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+  --radius: 0.5rem;
+
   // Chat specific variables
   --chat-bg-color: var(--background-color);
   --message-user-bg-color: #{$user-message-bg};
   --message-assistant-bg-color: var(--component-bg-color);
   --primary-color: #{$primary};
   --secondary-color: #{$secondary};
-  --primary-color-rgb: 33, 150, 243;  // RGB values for primary color for rgba usage
+  --primary-color-rgb: 33, 150, 243; // RGB values for primary color for rgba usage
   --primary-color-hover: #{darken($primary, 10%)};
   --text-placeholder-color: #{rgba($text, 0.4)};
-  
+
   // Error, warning, success colors
   --error-color: #{$error};
-  --error-color-rgb: 244, 67, 54;  // RGB values for error color
+  --error-color-rgb: 244, 67, 54; // RGB values for error color
   --success-color: #{$success};
   --warning-color: #{$warning};
 }
 
 // Dark theme
-[data-theme='dark'] {
+[data-theme="dark"] {
   --background-color: #{$dark-background};
   --text-color: #{$dark-text};
   --border-color: #{rgba($dark-text, 0.1)};
   --hover-color: #{rgba($dark-text, 0.05)};
-  
+
   // Component colors
   --text-primary-color: #{$dark-text};
   --text-secondary-color: #{$light-text};
   --component-bg-color: #{$dark-surface};
-  
+
+  /* shadcn-ui variables */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--secondary-color);
+  --secondary-foreground: var(--background-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+  --radius: 0.5rem;
+
   // Chat specific variables
   --chat-bg-color: var(--background-color);
   --message-user-bg-color: #{$dark-user-message-bg};
   --message-assistant-bg-color: #{$dark-assistant-message-bg};
   --primary-color: #{lighten($primary, 10%)};
   --secondary-color: #{$light-text};
-  --primary-color-rgb: 33, 165, 255;  // RGB values for primary color for rgba usage
+  --primary-color-rgb: 33, 165, 255; // RGB values for primary color for rgba usage
   --primary-color-hover: #{lighten($primary, 15%)};
   --text-placeholder-color: #{rgba($dark-text, 0.4)};
-  
+
   // Error, warning, success colors
   --error-color: #{lighten($error, 10%)};
-  --error-color-rgb: 255, 82, 82;  // RGB values for error color
+  --error-color-rgb: 255, 82, 82; // RGB values for error color
   --success-color: #{lighten($success, 10%)};
   --warning-color: #{lighten($warning, 10%)};
 }
