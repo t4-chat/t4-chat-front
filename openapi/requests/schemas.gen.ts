@@ -58,28 +58,11 @@ export const $ChatCompletionRequestSchema = {
     model_id: {
       type: "integer",
       title: "Model Id",
-      description: "The id of the model",
+      description: "The id of the model to generate the response",
     },
-    messages: {
-      items: {
-        $ref: "#/components/schemas/ChatMessageRequestSchema",
-      },
-      type: "array",
-      title: "Messages",
-      description: "The messages of the chat",
-    },
-    chat_id: {
-      anyOf: [
-        {
-          type: "string",
-          format: "uuid",
-        },
-        {
-          type: "null",
-        },
-      ],
-      title: "Chat Id",
-      description: "The id of the chat",
+    message: {
+      $ref: "#/components/schemas/ChatMessageRequestSchema",
+      description: "The message of the chat",
     },
     options: {
       anyOf: [
@@ -94,7 +77,7 @@ export const $ChatCompletionRequestSchema = {
     },
   },
   type: "object",
-  required: ["model_id", "messages"],
+  required: ["model_id", "message"],
   title: "ChatCompletionRequestSchema",
 } as const;
 
@@ -142,11 +125,31 @@ export const $ChatListItemResponseSchema = {
 
 export const $ChatMessageRequestSchema = {
   properties: {
-    role: {
-      type: "string",
-      enum: ["user", "assistant"],
-      title: "Role",
-      description: "The role of the message",
+    id: {
+      anyOf: [
+        {
+          type: "string",
+          format: "uuid",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Id",
+      description: "The id of the message",
+    },
+    chat_id: {
+      anyOf: [
+        {
+          type: "string",
+          format: "uuid",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Chat Id",
+      description: "The id of the chat",
     },
     content: {
       type: "string",
@@ -171,7 +174,7 @@ export const $ChatMessageRequestSchema = {
     },
   },
   type: "object",
-  required: ["role", "content"],
+  required: ["content"],
   title: "ChatMessageRequestSchema",
 } as const;
 
@@ -219,6 +222,22 @@ export const $ChatMessageResponseSchema = {
   type: "object",
   required: ["id", "role", "content", "created_at"],
   title: "ChatMessageResponseSchema",
+} as const;
+
+export const $ChatMessagesResponseSchema = {
+  properties: {
+    messages: {
+      items: {
+        $ref: "#/components/schemas/ChatMessageResponseSchema",
+      },
+      type: "array",
+      title: "Messages",
+      description: "The messages of the chat",
+    },
+  },
+  type: "object",
+  required: ["messages"],
+  title: "ChatMessagesResponseSchema",
 } as const;
 
 export const $ChatResponseSchema = {

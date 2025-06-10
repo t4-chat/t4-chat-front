@@ -26,10 +26,10 @@ import * as Common from "./common";
 export const useHealthServiceGetHealthLive = <
   TData = Common.HealthServiceGetHealthLiveDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(queryKey),
@@ -39,10 +39,10 @@ export const useHealthServiceGetHealthLive = <
 export const useAiProvidersServiceGetApiAiProviders = <
   TData = Common.AiProvidersServiceGetApiAiProvidersDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseAiProvidersServiceGetApiAiProvidersKeyFn(queryKey),
@@ -52,10 +52,10 @@ export const useAiProvidersServiceGetApiAiProviders = <
 export const useChatsServiceGetApiChats = <
   TData = Common.ChatsServiceGetApiChatsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(queryKey),
@@ -65,7 +65,7 @@ export const useChatsServiceGetApiChats = <
 export const useChatsServiceGetApiChatsByChatId = <
   TData = Common.ChatsServiceGetApiChatsByChatIdDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   {
     chatId,
@@ -73,23 +73,45 @@ export const useChatsServiceGetApiChatsByChatId = <
     chatId: string;
   },
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdKeyFn(
       { chatId },
-      queryKey,
+      queryKey
     ),
     queryFn: () => ChatsService.getApiChatsByChatId({ chatId }) as TData,
+    ...options,
+  });
+export const useChatsServiceGetApiChatsByChatIdMessages = <
+  TData = Common.ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[]
+>(
+  {
+    chatId,
+  }: {
+    chatId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseChatsServiceGetApiChatsByChatIdMessagesKeyFn(
+      { chatId },
+      queryKey
+    ),
+    queryFn: () =>
+      ChatsService.getApiChatsByChatIdMessages({ chatId }) as TData,
     ...options,
   });
 export const useUsersServiceGetApiUsersCurrent = <
   TData = Common.UsersServiceGetApiUsersCurrentDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(queryKey),
@@ -99,10 +121,10 @@ export const useUsersServiceGetApiUsersCurrent = <
 export const useAiModelsServiceGetApiAiModels = <
   TData = Common.AiModelsServiceGetApiAiModelsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseAiModelsServiceGetApiAiModelsKeyFn(queryKey),
@@ -112,7 +134,7 @@ export const useAiModelsServiceGetApiAiModels = <
 export const useFilesServiceGetApiFilesByFileId = <
   TData = Common.FilesServiceGetApiFilesByFileIdDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   {
     fileId,
@@ -120,12 +142,12 @@ export const useFilesServiceGetApiFilesByFileId = <
     fileId: string;
   },
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn(
       { fileId },
-      queryKey,
+      queryKey
     ),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }) as TData,
     ...options,
@@ -133,10 +155,10 @@ export const useFilesServiceGetApiFilesByFileId = <
 export const useUtilizationServiceGetApiUtilization = <
   TData = Common.UtilizationServiceGetApiUtilizationDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationKeyFn(queryKey),
@@ -146,10 +168,10 @@ export const useUtilizationServiceGetApiUtilization = <
 export const useUtilizationServiceGetApiUtilizationLimits = <
   TData = Common.UtilizationServiceGetApiUtilizationLimitsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
+  TQueryKey extends Array<unknown> = unknown[]
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
 ) =>
   useQuery<TData, TError>({
     queryKey:
@@ -160,12 +182,12 @@ export const useUtilizationServiceGetApiUtilizationLimits = <
 export const useChatsServicePostApiChats = <
   TData = Common.ChatsServicePostApiChatsMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<TData, TError, void, TContext>,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<TData, TError, void, TContext>({
     mutationFn: () => ChatsService.postApiChats() as unknown as Promise<TData>,
@@ -174,7 +196,7 @@ export const useChatsServicePostApiChats = <
 export const useChatsServicePostApiChatsConversation = <
   TData = Common.ChatsServicePostApiChatsConversationMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -186,7 +208,7 @@ export const useChatsServicePostApiChatsConversation = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,
@@ -205,7 +227,7 @@ export const useChatsServicePostApiChatsConversation = <
 export const useAuthenticationServicePostApiAuthGoogle = <
   TData = Common.AuthenticationServicePostApiAuthGoogleMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -217,7 +239,7 @@ export const useAuthenticationServicePostApiAuthGoogle = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,
@@ -236,7 +258,7 @@ export const useAuthenticationServicePostApiAuthGoogle = <
 export const useFilesServicePostApiFilesUpload = <
   TData = Common.FilesServicePostApiFilesUploadMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -248,7 +270,7 @@ export const useFilesServicePostApiFilesUpload = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,
@@ -267,7 +289,7 @@ export const useFilesServicePostApiFilesUpload = <
 export const useChatsServicePatchApiChatsByChatIdTitle = <
   TData = Common.ChatsServicePatchApiChatsByChatIdTitleMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -280,7 +302,7 @@ export const useChatsServicePatchApiChatsByChatIdTitle = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,
@@ -301,7 +323,7 @@ export const useChatsServicePatchApiChatsByChatIdTitle = <
 export const useChatsServicePatchApiChatsByChatIdPin = <
   TData = Common.ChatsServicePatchApiChatsByChatIdPinMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -313,7 +335,7 @@ export const useChatsServicePatchApiChatsByChatIdPin = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,
@@ -332,7 +354,7 @@ export const useChatsServicePatchApiChatsByChatIdPin = <
 export const useChatsServiceDeleteApiChatsByChatId = <
   TData = Common.ChatsServiceDeleteApiChatsByChatIdMutationResult,
   TError = unknown,
-  TContext = unknown,
+  TContext = unknown
 >(
   options?: Omit<
     UseMutationOptions<
@@ -344,7 +366,7 @@ export const useChatsServiceDeleteApiChatsByChatId = <
       TContext
     >,
     "mutationFn"
-  >,
+  >
 ) =>
   useMutation<
     TData,

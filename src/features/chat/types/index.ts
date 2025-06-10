@@ -1,9 +1,9 @@
 export interface ChatMessage {
-  id: string;
+  id?: string;
   content: string;
-  role: "user" | "assistant";
-  created_at: Date;
-  attachments?: string[] | null;
+  attachments?: string[];
+  created_at?: Date;
+  chat_id?: string;
 }
 
 export interface AIModel {

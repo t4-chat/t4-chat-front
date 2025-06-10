@@ -32,17 +32,13 @@ export type Body_upload_file_api_files_upload_post = {
 
 export type ChatCompletionRequestSchema = {
   /**
-   * The id of the model
+   * The id of the model to generate the response
    */
   model_id: number;
   /**
-   * The messages of the chat
+   * The message of the chat
    */
-  messages: Array<ChatMessageRequestSchema>;
-  /**
-   * The id of the chat
-   */
-  chat_id?: string | null;
+  message: ChatMessageRequestSchema;
   /**
    * The options of the chat
    */
@@ -78,9 +74,13 @@ export type ChatListItemResponseSchema = {
 
 export type ChatMessageRequestSchema = {
   /**
-   * The role of the message
+   * The id of the message
    */
-  role: "user" | "assistant";
+  id?: string | null;
+  /**
+   * The id of the chat
+   */
+  chat_id?: string | null;
   /**
    * The content of the message
    */
@@ -90,11 +90,6 @@ export type ChatMessageRequestSchema = {
    */
   attachments?: Array<string> | null;
 };
-
-/**
- * The role of the message
- */
-export type role = "user" | "assistant";
 
 export type ChatMessageResponseSchema = {
   id: string;
@@ -114,6 +109,18 @@ export type ChatMessageResponseSchema = {
    * The creation date of the message
    */
   created_at: string;
+};
+
+/**
+ * The role of the message
+ */
+export type role = "user" | "assistant";
+
+export type ChatMessagesResponseSchema = {
+  /**
+   * The messages of the chat
+   */
+  messages: Array<ChatMessageResponseSchema>;
 };
 
 export type ChatResponseSchema = {
@@ -294,6 +301,12 @@ export type DeleteApiChatsByChatIdData = {
 
 export type DeleteApiChatsByChatIdResponse = unknown;
 
+export type GetApiChatsByChatIdMessagesData = {
+  chatId: string;
+};
+
+export type GetApiChatsByChatIdMessagesResponse = ChatMessagesResponseSchema;
+
 export type PostApiChatsConversationData = {
   requestBody: ChatCompletionRequestSchema;
 };
@@ -399,6 +412,21 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/chats/{chat_id}/messages": {
+    get: {
+      req: GetApiChatsByChatIdMessagesData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: ChatMessagesResponseSchema;
         /**
          * Validation Error
          */

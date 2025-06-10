@@ -63,6 +63,26 @@ export const UseChatsServiceGetApiChatsByChatIdKeyFn = (
   },
   queryKey?: Array<unknown>,
 ) => [useChatsServiceGetApiChatsByChatIdKey, ...(queryKey ?? [{ chatId }])];
+export type ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse = Awaited<
+  ReturnType<typeof ChatsService.getApiChatsByChatIdMessages>
+>;
+export type ChatsServiceGetApiChatsByChatIdMessagesQueryResult<
+  TData = ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useChatsServiceGetApiChatsByChatIdMessagesKey =
+  "ChatsServiceGetApiChatsByChatIdMessages";
+export const UseChatsServiceGetApiChatsByChatIdMessagesKeyFn = (
+  {
+    chatId,
+  }: {
+    chatId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useChatsServiceGetApiChatsByChatIdMessagesKey,
+  ...(queryKey ?? [{ chatId }]),
+];
 export type UsersServiceGetApiUsersCurrentDefaultResponse = Awaited<
   ReturnType<typeof UsersService.getApiUsersCurrent>
 >;

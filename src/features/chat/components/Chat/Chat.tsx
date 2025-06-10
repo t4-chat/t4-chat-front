@@ -17,6 +17,7 @@ import {
 } from "~/openapi/queries/queries";
 import "./Chat.scss";
 import { ChatService } from "@/services/chatService";
+import { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
 // import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
 interface ChatProps {
@@ -31,7 +32,11 @@ export const Chat = ({
   onChatCreated,
 }: ChatProps) => {
   const { isAuthenticated } = useAuth();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<
+    (Omit<ChatMessageResponseSchema, "created_at" | 'id'> & {
+      created_at: Date;
+    })[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(chatId);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
@@ -107,38 +112,23 @@ export const Chat = ({
       }
     }
 
-    const userMessage: ChatMessage = {
-      id: Date.now().toString(),
+    const userMessage = {
       content,
       role: "user",
-      created_at: new Date(),
       attachments: attachmentIds.length > 0 ? attachmentIds : undefined,
+      chat_id: currentChatId || undefined,
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    const updatedMessages = [...messages, userMessage];
-    const messageHistory = updatedMessages.map((msg) => ({
-      role: msg.role,
-      content: msg.content,
-      attachments: msg.attachments,
-    }));
 
-    // abortFunctionRef.current = chatServiceRef.current.streamChat(
-    //   messageHistory,
-    //   Number.parseInt(selectedModel),
-    //   (event: StreamEvent) => onStreamEvent(event),
-    //   (error) => onStreamError(error, assistantMessageIdRef.current),
-    //   () => onStreamDone(),
-    //   { chatId: currentChatId },
-    // );
-    new ChatService().streamChat(
-      messageHistory,
-      Number.parseInt(selectedModel),
-      (event: StreamEvent) => onStreamEvent(event),
-      (error) => onStreamError(error, assistantMessageIdRef.current),
-      () => onStreamDone(),
-      { chatId: currentChatId },
-    );
+    new ChatService().streamChat({
+      message: userMessage,
+      modelId: Number.parseInt(selectedModel),
+      onEvent: (event: StreamEvent) => onStreamEvent(event),
+      onError: (error) => onStreamError(error, assistantMessageIdRef.current),
+      onDone: () => onStreamDone(),
+      options: { chatId: currentChatId },
+    });
   };
 
   // Handle successful login

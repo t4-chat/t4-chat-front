@@ -1,6 +1,10 @@
 import type { Chat } from "@/features/chat/types";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
 import { api } from "@/services/api";
+import {
+  ChatCompletionRequestSchema,
+  ChatMessageRequestSchema,
+} from "~/openapi/requests/types.gen";
 
 export interface ChatMessageRequest {
   role: string;
@@ -9,7 +13,7 @@ export interface ChatMessageRequest {
 }
 
 export interface StreamRequestBody {
-  messages: ChatMessageRequest[];
+  message: ChatMessageRequest;
   chat_id?: string;
   model_id: number;
 }
@@ -53,27 +57,30 @@ export class ChatService {
     };
   }
 
-  streamChat(
-    messages: ChatMessageRequest[],
-    modelId: number,
-    onEvent: StreamEventCallback,
-    onError: ErrorCallback,
-    onDone: DoneCallback,
+  streamChat({
+    message,
+    modelId,
+    onEvent,
+    onError,
+    onDone,
+    options,
+  }: {
+    message: ChatMessageRequestSchema;
+    modelId: number;
+    onEvent: StreamEventCallback;
+    onError: ErrorCallback;
+    onDone: DoneCallback;
     options?: {
       chatId?: string | null;
       abortSignal?: AbortSignal;
-    },
-  ): () => void {
-    const { chatId, abortSignal } = options || {};
+    };
+  }): () => void {
+    const { abortSignal } = options || {};
 
-    const body: StreamRequestBody = {
-      messages,
+    const body: ChatCompletionRequestSchema = {
+      message,
       model_id: modelId,
     };
-
-    if (chatId) {
-      body.chat_id = chatId;
-    }
 
     const controller = new AbortController();
     const signal = abortSignal || controller.signal;
