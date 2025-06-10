@@ -47,7 +47,7 @@ export class HealthService {
 export class AiProvidersService {
   /**
    * Get Ai Providers
-   * @returns src__api__schemas__ai_provider__AiProviderResponse Successful Response
+   * @returns src__api__schemas__ai_providers__AiProviderResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiAiProviders(): CancelablePromise<GetApiAiProvidersResponse> {
@@ -61,25 +61,25 @@ export class AiProvidersService {
 export class ChatsService {
   /**
    * Get Chats
-   * @returns ChatListItemResponse Successful Response
+   * @returns ChatListItemResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiChats(): CancelablePromise<GetApiChatsResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/chats/",
+      url: "/api/chats",
     });
   }
 
   /**
    * Create Chat
-   * @returns ChatResponse Successful Response
+   * @returns ChatResponseSchema Successful Response
    * @throws ApiError
    */
   public static postApiChats(): CancelablePromise<PostApiChatsResponse> {
     return __request(OpenAPI, {
       method: "POST",
-      url: "/api/chats/",
+      url: "/api/chats",
     });
   }
 
@@ -87,7 +87,7 @@ export class ChatsService {
    * Get Chat
    * @param data The data for the request.
    * @param data.chatId
-   * @returns ChatResponse Successful Response
+   * @returns ChatResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiChatsByChatId(
@@ -201,7 +201,7 @@ export class AuthenticationService {
    * Google Login
    * @param data The data for the request.
    * @param data.requestBody
-   * @returns TokenResponse Successful Response
+   * @returns TokenResponseSchema Successful Response
    * @throws ApiError
    */
   public static postApiAuthGoogle(
@@ -222,7 +222,7 @@ export class AuthenticationService {
 export class UsersService {
   /**
    * Get Current User
-   * @returns UserResponse Successful Response
+   * @returns UserResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiUsersCurrent(): CancelablePromise<GetApiUsersCurrentResponse> {
@@ -236,7 +236,7 @@ export class UsersService {
 export class AiModelsService {
   /**
    * Get Ai Models
-   * @returns AiModelResponse Successful Response
+   * @returns AiModelResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiAiModels(): CancelablePromise<GetApiAiModelsResponse> {
@@ -252,7 +252,7 @@ export class FilesService {
    * Upload File
    * @param data The data for the request.
    * @param data.formData
-   * @returns FileResponse Successful Response
+   * @returns FileResponseSchema Successful Response
    * @throws ApiError
    */
   public static postApiFilesUpload(
@@ -307,7 +307,7 @@ export class UtilizationService {
 
   /**
    * Get Limits
-   * @returns unknown Successful Response
+   * @returns LimitsResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiUtilizationLimits(): CancelablePromise<GetApiUtilizationLimitsResponse> {

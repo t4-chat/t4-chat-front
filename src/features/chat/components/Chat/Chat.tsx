@@ -9,7 +9,6 @@ import {
   type ChatMessageRequest,
   type StreamEvent,
   useAIModelsForChat,
-  useStreamChat,
 } from "@/utils/apiUtils";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -17,6 +16,7 @@ import {
   useFilesServicePostApiFilesUpload,
 } from "~/openapi/queries/queries";
 import "./Chat.scss";
+import { ChatService } from "@/services/chatService";
 // import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
 interface ChatProps {
@@ -41,6 +41,12 @@ export const Chat = ({
   const abortFunctionRef = useRef<(() => void) | null>(null);
   const assistantMessageIdRef = useRef<string | null>(null);
   const messageContentRef = useRef<string>("");
+
+  useEffect(() => {
+    if (chatId) {
+      setCurrentChatId(chatId);
+    }
+  }, [chatId]);
 
   const { data: chat, isLoading: isChatLoading } =
     useChatsServiceGetApiChatsByChatId(
@@ -80,8 +86,6 @@ export const Chat = ({
     await sendMessage(content, files);
   };
 
-  const streamChat = useStreamChat();
-
   const { mutateAsync: uploadFiles } = useFilesServicePostApiFilesUpload();
 
   const sendMessage = async (content: string, files?: File[]) => {
@@ -113,7 +117,7 @@ export const Chat = ({
 
     setMessages((prev) => [...prev, userMessage]);
     const updatedMessages = [...messages, userMessage];
-    const messageHistory: ChatMessageRequest[] = updatedMessages.map((msg) => ({
+    const messageHistory = updatedMessages.map((msg) => ({
       role: msg.role,
       content: msg.content,
       attachments: msg.attachments,
@@ -127,7 +131,7 @@ export const Chat = ({
     //   () => onStreamDone(),
     //   { chatId: currentChatId },
     // );
-    streamChat(
+    new ChatService().streamChat(
       messageHistory,
       Number.parseInt(selectedModel),
       (event: StreamEvent) => onStreamEvent(event),

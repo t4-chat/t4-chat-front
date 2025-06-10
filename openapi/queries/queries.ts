@@ -18,9 +18,9 @@ import {
 } from "../requests/services.gen";
 import type {
   Body_upload_file_api_files_upload_post,
-  ChatCompletionRequest,
-  GoogleAuthRequest,
-  UpdateChatTitleRequest,
+  ChatCompletionRequestSchema,
+  GoogleAuthRequestSchema,
+  UpdateChatTitleRequestSchema,
 } from "../requests/types.gen";
 import * as Common from "./common";
 export const useHealthServiceGetHealthLive = <
@@ -181,7 +181,7 @@ export const useChatsServicePostApiChatsConversation = <
       TData,
       TError,
       {
-        requestBody: ChatCompletionRequest;
+        requestBody: ChatCompletionRequestSchema;
       },
       TContext
     >,
@@ -192,7 +192,7 @@ export const useChatsServicePostApiChatsConversation = <
     TData,
     TError,
     {
-      requestBody: ChatCompletionRequest;
+      requestBody: ChatCompletionRequestSchema;
     },
     TContext
   >({
@@ -212,7 +212,7 @@ export const useAuthenticationServicePostApiAuthGoogle = <
       TData,
       TError,
       {
-        requestBody: GoogleAuthRequest;
+        requestBody: GoogleAuthRequestSchema;
       },
       TContext
     >,
@@ -223,7 +223,7 @@ export const useAuthenticationServicePostApiAuthGoogle = <
     TData,
     TError,
     {
-      requestBody: GoogleAuthRequest;
+      requestBody: GoogleAuthRequestSchema;
     },
     TContext
   >({
@@ -275,7 +275,7 @@ export const useChatsServicePatchApiChatsByChatIdTitle = <
       TError,
       {
         chatId: string;
-        requestBody: UpdateChatTitleRequest;
+        requestBody: UpdateChatTitleRequestSchema;
       },
       TContext
     >,
@@ -287,7 +287,7 @@ export const useChatsServicePatchApiChatsByChatIdTitle = <
     TError,
     {
       chatId: string;
-      requestBody: UpdateChatTitleRequest;
+      requestBody: UpdateChatTitleRequestSchema;
     },
     TContext
   >({
