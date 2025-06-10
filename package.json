@@ -32,6 +32,7 @@
   "scripts": {
     "start": "vite",
     "start:4200": "vite --port 4200",
+    "generate-api": "npx --package @7nohe/openapi-react-query-codegen openapi-rq -i https://dev-agg-ai-api-udpflod4rq-uc.a.run.app/openapi.json",
     "build": "vite build",
     "preview": "vite preview --port 4200",
     "format": "biome format --write",

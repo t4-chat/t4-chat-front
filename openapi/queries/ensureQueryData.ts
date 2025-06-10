@@ -1,7 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import type { QueryClient } from "@tanstack/react-query";
+import { type QueryClient } from "@tanstack/react-query";
 import {
+  AdminService,
   AiModelsService,
   AiProvidersService,
   ChatsService,
@@ -10,6 +11,7 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
+import { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
 export const ensureUseHealthServiceGetHealthLiveData = (
   queryClient: QueryClient
@@ -97,4 +99,44 @@ export const ensureUseUtilizationServiceGetApiUtilizationLimitsData = (
   queryClient.ensureQueryData({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(),
     queryFn: () => UtilizationService.getApiUtilizationLimits(),
+  });
+export const ensureUseAdminServiceGetApiAdminBudgetData = (
+  queryClient: QueryClient
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
+    queryFn: () => AdminService.getApiAdminBudget(),
+  });
+export const ensureUseAdminServiceGetApiAdminUsageData = (
+  queryClient: QueryClient,
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: number;
+    startDate?: string;
+    userId?: string;
+  } = {}
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
+      aggregation,
+      endDate,
+      modelId,
+      startDate,
+      userId,
+    }),
+    queryFn: () =>
+      AdminService.getApiAdminUsage({
+        aggregation,
+        endDate,
+        modelId,
+        startDate,
+        userId,
+      }),
   });

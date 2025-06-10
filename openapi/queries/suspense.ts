@@ -1,7 +1,8 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import { type UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import {
+  AdminService,
   AiModelsService,
   AiProvidersService,
   ChatsService,
@@ -10,6 +11,7 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
+import { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
 export const useHealthServiceGetHealthLiveSuspense = <
   TData = Common.HealthServiceGetHealthLiveDefaultResponse,
@@ -165,5 +167,54 @@ export const useUtilizationServiceGetApiUtilizationLimitsSuspense = <
     queryKey:
       Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(queryKey),
     queryFn: () => UtilizationService.getApiUtilizationLimits() as TData,
+    ...options,
+  });
+export const useAdminServiceGetApiAdminBudgetSuspense = <
+  TData = Common.AdminServiceGetApiAdminBudgetDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[]
+>(
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(queryKey),
+    queryFn: () => AdminService.getApiAdminBudget() as TData,
+    ...options,
+  });
+export const useAdminServiceGetApiAdminUsageSuspense = <
+  TData = Common.AdminServiceGetApiAdminUsageDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[]
+>(
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: number;
+    startDate?: string;
+    userId?: string;
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn(
+      { aggregation, endDate, modelId, startDate, userId },
+      queryKey
+    ),
+    queryFn: () =>
+      AdminService.getApiAdminUsage({
+        aggregation,
+        endDate,
+        modelId,
+        startDate,
+        userId,
+      }) as TData,
     ...options,
   });

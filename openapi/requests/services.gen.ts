@@ -30,6 +30,9 @@ import type {
   GetApiFilesByFileIdResponse,
   GetApiUtilizationResponse,
   GetApiUtilizationLimitsResponse,
+  GetApiAdminBudgetResponse,
+  GetApiAdminUsageData,
+  GetApiAdminUsageResponse,
 } from "./types.gen";
 
 export class HealthService {
@@ -338,6 +341,50 @@ export class UtilizationService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/utilization/limits",
+    });
+  }
+}
+
+export class AdminService {
+  /**
+   * Get Budget
+   * @returns BudgetResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminBudget(): CancelablePromise<GetApiAdminBudgetResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/budget",
+    });
+  }
+
+  /**
+   * Get Usage
+   * @param data The data for the request.
+   * @param data.aggregation How to aggregate the usage data
+   * @param data.startDate Start date for filtering
+   * @param data.endDate End date for filtering
+   * @param data.userId Filter by user ID
+   * @param data.modelId Filter by model ID
+   * @returns UsageAggregationResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminUsage(
+    data: GetApiAdminUsageData = {}
+  ): CancelablePromise<GetApiAdminUsageResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/usage",
+      query: {
+        aggregation: data.aggregation,
+        start_date: data.startDate,
+        end_date: data.endDate,
+        user_id: data.userId,
+        model_id: data.modelId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
     });
   }
 }

@@ -1,12 +1,13 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
 import {
-  type UseMutationOptions,
-  type UseQueryOptions,
+  UseMutationOptions,
+  UseQueryOptions,
   useMutation,
   useQuery,
 } from "@tanstack/react-query";
 import {
+  AdminService,
   AiModelsService,
   AiProvidersService,
   AuthenticationService,
@@ -16,7 +17,8 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
-import type {
+import {
+  AggregationType,
   Body_upload_file_api_files_upload_post,
   ChatCompletionRequestSchema,
   GoogleAuthRequestSchema,
@@ -177,6 +179,55 @@ export const useUtilizationServiceGetApiUtilizationLimits = <
     queryKey:
       Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(queryKey),
     queryFn: () => UtilizationService.getApiUtilizationLimits() as TData,
+    ...options,
+  });
+export const useAdminServiceGetApiAdminBudget = <
+  TData = Common.AdminServiceGetApiAdminBudgetDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[]
+>(
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(queryKey),
+    queryFn: () => AdminService.getApiAdminBudget() as TData,
+    ...options,
+  });
+export const useAdminServiceGetApiAdminUsage = <
+  TData = Common.AdminServiceGetApiAdminUsageDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[]
+>(
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: number;
+    startDate?: string;
+    userId?: string;
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn(
+      { aggregation, endDate, modelId, startDate, userId },
+      queryKey
+    ),
+    queryFn: () =>
+      AdminService.getApiAdminUsage({
+        aggregation,
+        endDate,
+        modelId,
+        startDate,
+        userId,
+      }) as TData,
     ...options,
   });
 export const useChatsServicePostApiChats = <
