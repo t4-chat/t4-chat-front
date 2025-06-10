@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/table";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export const AdminPage = () => {
   const [aggregation, setAggregation] = useState<AggregationType>("day");
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [userId, setUserId] = useState<string>("");
   const [modelId, setModelId] = useState<string>("");
 
@@ -27,8 +28,8 @@ export const AdminPage = () => {
   const { data: usage, isLoading: usageLoading } =
     useAdminServiceGetApiAdminUsage({
       aggregation,
-      startDate: startDate || undefined,
-      endDate: endDate || undefined,
+      startDate: startDate ? startDate.toISOString().split("T")[0] : undefined,
+      endDate: endDate ? endDate.toISOString().split("T")[0] : undefined,
       userId: userId || undefined,
       modelId: modelId ? Number(modelId) : undefined,
     });
@@ -89,25 +90,13 @@ export const AdminPage = () => {
               <label className="block text-sm mb-1" htmlFor="start">
                 Start
               </label>
-              <input
-                id="start"
-                type="date"
-                className="border rounded p-2"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
+              <DatePicker date={startDate} onDateChange={setStartDate} />
             </div>
             <div>
               <label className="block text-sm mb-1" htmlFor="end">
                 End
               </label>
-              <input
-                id="end"
-                type="date"
-                className="border rounded p-2"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+              <DatePicker date={endDate} onDateChange={setEndDate} />
             </div>
             <div>
               <label className="block text-sm mb-1" htmlFor="user">
