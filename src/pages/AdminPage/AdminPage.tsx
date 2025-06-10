@@ -1,11 +1,37 @@
-import { useAdminServiceGetApiAdminBudget, useAdminServiceGetApiAdminUsage } from "~/openapi/queries/queries";
+import {
+  useAdminServiceGetApiAdminBudget,
+  useAdminServiceGetApiAdminUsage,
+} from "~/openapi/queries/queries";
+import type { AggregationType } from "~/openapi/requests/types.gen";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatDate } from "@/utils/date";
+import { useState } from "react";
 
 export const AdminPage = () => {
-  const { data: budget, isLoading: budgetLoading } = useAdminServiceGetApiAdminBudget();
-  const { data: usage, isLoading: usageLoading } = useAdminServiceGetApiAdminUsage();
+  const [aggregation, setAggregation] = useState<AggregationType>("day");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  const [modelId, setModelId] = useState<string>("");
+
+  const { data: budget, isLoading: budgetLoading } =
+    useAdminServiceGetApiAdminBudget();
+  const { data: usage, isLoading: usageLoading } =
+    useAdminServiceGetApiAdminUsage({
+      aggregation,
+      startDate: startDate || undefined,
+      endDate: endDate || undefined,
+      userId: userId || undefined,
+      modelId: modelId ? Number(modelId) : undefined,
+    });
 
   return (
     <div className="p-4 space-y-6">
@@ -30,7 +56,84 @@ export const AdminPage = () => {
         <CardHeader>
           <CardTitle>Usage</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-4">
+            <div>
+              <label className="block text-sm mb-1" htmlFor="aggregation">
+                Aggregation
+              </label>
+              <select
+                id="aggregation"
+                className="border rounded p-2"
+                value={aggregation}
+                onChange={(e) =>
+                  setAggregation(e.target.value as AggregationType)
+                }
+              >
+                {[
+                  "minute",
+                  "hour",
+                  "day",
+                  "week",
+                  "month",
+                  "model",
+                  "user",
+                ].map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm mb-1" htmlFor="start">
+                Start
+              </label>
+              <input
+                id="start"
+                type="date"
+                className="border rounded p-2"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1" htmlFor="end">
+                End
+              </label>
+              <input
+                id="end"
+                type="date"
+                className="border rounded p-2"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1" htmlFor="user">
+                User ID
+              </label>
+              <input
+                id="user"
+                type="text"
+                className="border rounded p-2"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm mb-1" htmlFor="model">
+                Model ID
+              </label>
+              <input
+                id="model"
+                type="number"
+                className="border rounded p-2"
+                value={modelId}
+                onChange={(e) => setModelId(e.target.value)}
+              />
+            </div>
+          </div>
           {usageLoading ? (
             <p>Loading...</p>
           ) : usage ? (
@@ -49,19 +152,39 @@ export const AdminPage = () => {
                 <TableBody>
                   {usage.data.map((row, idx) => (
                     <TableRow key={idx}>
-                      <TableCell>{row.date ? formatDate(new Date(row.date)) : "-"}</TableCell>
-                      <TableCell>{row.user_email || row.user_id || "-"}</TableCell>
-                      <TableCell>{row.model_name || row.model_id || "-"}</TableCell>
-                      <TableCell className="text-right">{row.prompt_tokens}</TableCell>
-                      <TableCell className="text-right">{row.completion_tokens}</TableCell>
-                      <TableCell className="text-right">{row.total_tokens}</TableCell>
+                      <TableCell>
+                        {row.date ? formatDate(new Date(row.date)) : "-"}
+                      </TableCell>
+                      <TableCell>
+                        {row.user_email || row.user_id || "-"}
+                      </TableCell>
+                      <TableCell>
+                        {row.model_name || row.model_id || "-"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {row.prompt_tokens}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {row.completion_tokens}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {row.total_tokens}
+                      </TableCell>
                     </TableRow>
                   ))}
                   <TableRow>
-                    <TableCell colSpan={3} className="font-semibold">Total</TableCell>
-                    <TableCell className="text-right font-semibold">{usage.total.prompt_tokens}</TableCell>
-                    <TableCell className="text-right font-semibold">{usage.total.completion_tokens}</TableCell>
-                    <TableCell className="text-right font-semibold">{usage.total.total_tokens}</TableCell>
+                    <TableCell colSpan={3} className="font-semibold">
+                      Total
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {usage.total.prompt_tokens}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {usage.total.completion_tokens}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {usage.total.total_tokens}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

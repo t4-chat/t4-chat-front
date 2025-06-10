@@ -29,6 +29,28 @@ html {
   --text-primary-color: #{$text};
   --text-secondary-color: #{$secondary};
   --component-bg-color: #{$assistant-message-bg};
+
+  /* shadcn-ui variables */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--secondary-color);
+  --secondary-foreground: var(--background-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+  --radius: 0.5rem;
   
   // Chat specific variables
   --chat-bg-color: var(--background-color);
@@ -58,6 +80,28 @@ html {
   --text-primary-color: #{$dark-text};
   --text-secondary-color: #{$light-text};
   --component-bg-color: #{$dark-surface};
+
+  /* shadcn-ui variables */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--secondary-color);
+  --secondary-foreground: var(--background-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+  --radius: 0.5rem;
   
   // Chat specific variables
   --chat-bg-color: var(--background-color);
