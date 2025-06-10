@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
 
 export default defineConfig({
-  plugins: [tailwindcss(), svgr(), react()],
+  plugins: [react(), tailwindcss(), svgr()],
   base: "/",
   server: {
     port: 4200,

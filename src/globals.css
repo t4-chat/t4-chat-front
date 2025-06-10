@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --background: oklch(1 0 0);
@@ -34,6 +35,27 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Additional variables from theme.scss */
+  --background-color: var(--background);
+  --text-color: var(--foreground);
+  --border-color: var(--border);
+  --hover-color: oklch(0.145 0 0 / 0.05);
+  --text-primary-color: var(--foreground);
+  --text-secondary-color: var(--secondary);
+  --component-bg-color: var(--card);
+  --chat-bg-color: var(--background);
+  --message-user-bg-color: oklch(0.205 0 0 / 0.1);
+  --message-assistant-bg-color: var(--card);
+  --primary-color: var(--primary);
+  --secondary-color: var(--secondary);
+  --primary-color-rgb: 33, 150, 243;
+  --primary-color-hover: oklch(0.205 0 0 / 0.9);
+  --text-placeholder-color: oklch(0.145 0 0 / 0.4);
+  --error-color: var(--destructive);
+  --error-color-rgb: 244, 67, 54;
+  --success-color: oklch(0.577 0.245 142.325);
+  --warning-color: oklch(0.577 0.245 36.325);
 }
 
 .dark {
@@ -69,6 +91,27 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* Additional dark theme variables */
+  --background-color: var(--background);
+  --text-color: var(--foreground);
+  --border-color: var(--border);
+  --hover-color: oklch(0.985 0 0 / 0.05);
+  --text-primary-color: var(--foreground);
+  --text-secondary-color: var(--secondary);
+  --component-bg-color: var(--card);
+  --chat-bg-color: var(--background);
+  --message-user-bg-color: oklch(0.269 0 0 / 0.8);
+  --message-assistant-bg-color: oklch(0.205 0 0);
+  --primary-color: var(--primary);
+  --secondary-color: var(--secondary);
+  --primary-color-rgb: 33, 165, 255;
+  --primary-color-hover: oklch(0.985 0 0 / 0.9);
+  --text-placeholder-color: oklch(0.985 0 0 / 0.4);
+  --error-color: var(--destructive);
+  --error-color-rgb: 255, 82, 82;
+  --success-color: oklch(0.577 0.245 142.325 / 0.9);
+  --warning-color: oklch(0.577 0.245 36.325 / 0.9);
 }
 
 @theme inline {
