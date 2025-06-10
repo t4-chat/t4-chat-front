@@ -1,0 +1,31 @@
+@import "@/assets/styles/variables.scss";
+
+.login-modal {
+  text-align: center;
+
+  .login-description {
+    color: var(--text-color);
+    margin-bottom: $spacing-xl;
+    font-size: 1rem;
+  }
+
+  .error-message {
+    color: $error;
+    margin-bottom: $spacing-lg;
+    padding: $spacing-sm;
+    border-radius: $radius-sm;
+    background-color: rgba($error, 0.1);
+  }
+
+  .login-options {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-md;
+  }
+
+  .loading {
+    margin-top: $spacing-lg;
+    color: var(--text-color);
+    font-size: 0.9rem;
+  }
+}

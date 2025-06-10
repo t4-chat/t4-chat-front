@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
@@ -8,6 +8,6 @@ services:
     ports:
       - "4200:80"
     environment:
-      - REACT_APP_GOOGLE_CLIENT_ID=485345819112-cc79gm8kscqirc6e71bavk1vvat8ov53.apps.googleusercontent.com
-      - REACT_APP_API_URL=http://localhost:9001
+      - VITE_REACT_APP_GOOGLE_CLIENT_ID=485345819112-cc79gm8kscqirc6e71bavk1vvat8ov53.apps.googleusercontent.com
+      - VITE_REACT_APP_API_URL=http://localhost:9001
     restart: unless-stopped

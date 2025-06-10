@@ -1,16 +1,14 @@
-import { ReactComponent as MenuIcon } from 'src/assets/icons/chats/menu.svg';
-import './ChatSidebarToggle.scss';
+import MenuIcon from "@/assets/icons/chats/menu.svg?react";
+import "./ChatSidebarToggle.scss";
 
 interface ChatSidebarToggleProps {
   onClick: () => void;
-  isVisible: boolean;
 }
 
-export const ChatSidebarToggle = ({ onClick, isVisible }: ChatSidebarToggleProps) => {
-  if (!isVisible) return null;
-  
+export const ChatSidebarToggle = ({ onClick }: ChatSidebarToggleProps) => {
   return (
-    <button 
+    <button
+      type="button"
       className="chat-sidebar-toggle"
       onClick={onClick}
       aria-label="Open sidebar"
@@ -18,4 +16,4 @@ export const ChatSidebarToggle = ({ onClick, isVisible }: ChatSidebarToggleProps
       <MenuIcon width={20} height={20} />
     </button>
   );
-}; 
+};

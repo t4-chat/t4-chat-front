@@ -1,11 +1,12 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { Layout } from '../components/layout';
-import { ChatPage, HomePage } from '../pages';
-import { AuthProvider } from '../context/AuthContext';
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Layout } from "@/components/Layout/Layout";
+import { ChatPage } from "@/pages/ChatPage/ChatPage";
+import { HomePage } from "@/pages/HomePage/HomePage";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: (
       <AuthProvider>
         <Layout />
@@ -13,13 +14,17 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: '/',
-        element: <HomePage />
+        path: "/",
+        element: <HomePage />,
       },
       {
-        path: 'chat',
-        element: <ChatPage />
-      }
-    ]
-  }
-]); 
+        path: "chat",
+        element: <ChatPage />,
+      },
+      {
+        path: "chat/:chatId",
+        element: <ChatPage />,
+      },
+    ],
+  },
+]);

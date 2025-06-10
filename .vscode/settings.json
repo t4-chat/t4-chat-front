@@ -1,0 +1,151 @@
+{
+  "tabnine.experimentalAutoImports": true,
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.linkedEditing": true,
+  "terminal.integrated.windowsEnableConpty": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "bracket-pair-colorizer-2.depreciation-notice": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.validate.enable": true,
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "GitLive.Issue tracker integration": "Disabled",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.inlineSuggest.enabled": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": false,
+    "markdown": false
+  },
+  "redhat.telemetry.enabled": true,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "editor.stickyScroll.enabled": true,
+  "peacock.favoriteColors": [
+    {
+      "name": "Angular Red",
+      "value": "#dd0531"
+    },
+    {
+      "name": "Azure Blue",
+      "value": "#007fff"
+    },
+    {
+      "name": "JavaScript Yellow",
+      "value": "#f9e64f"
+    },
+    {
+      "name": "Mandalorian Blue",
+      "value": "#1857a4"
+    },
+    {
+      "name": "Node Green",
+      "value": "#215732"
+    },
+    {
+      "name": "React Blue",
+      "value": "#61dafb"
+    },
+    {
+      "name": "Something Different",
+      "value": "#832561"
+    },
+    {
+      "name": "Svelte Orange",
+      "value": "#ff3d00"
+    },
+    {
+      "name": "Vue Green",
+      "value": "#42b883"
+    },
+    {
+      "name": "nice green",
+      "value": "#42b883"
+    }
+  ],
+  "liveServer.settings.donotShowInfoMsg": true,
+  "snyk.yesWelcomeNotification": false,
+  "snyk.advanced.cliPath": "C:\\Users\\Spylypenko\\AppData\\Local\\snyk-ls\\snyk-win.exe",
+  "editor.accessibilitySupport": "off",
+  "totalTypeScript.hiddenTips": [
+    "typing-function-parameters",
+    "ts-object-type",
+    "passing-generics-to-types",
+    "basic-types",
+    "type-alias-declaration",
+    "optional-object-property",
+    "variable-type-annotation",
+    "union-type",
+    "null-keyword",
+    "array-type",
+    "interface-declaration",
+    "typeof",
+    "literal-type",
+    "undefined-keyword",
+    "partial-utility-type",
+    "in-operator-narrowing",
+    "non-null-expression",
+    "as-const",
+    "omit-utility-type"
+  ],
+  "folderTemplates.fileTemplates": {
+    "Typescript Functional Component": [
+      "import React from 'react';",
+      "",
+      "interface <FTName>Props {",
+      "}",
+      "",
+      "const <FTName> = (props) => {",
+      "  return <div/>;",
+      "};",
+      "",
+      "export default <FTName>;"
+    ]
+  },
+  "totalTypeScript.hideAllTips": false,
+  "totalTypeScript.hideBasicTips": true,
+  "snyk.trustedFolders": [
+    "c:\\Users\\Spylypenko\\Documents\\Work\\readnice",
+    "c:\\Users\\Spylypenko\\Documents\\Work\\FCTG\\superprofilechromeextensions",
+    "c:\\Users\\Spylypenko\\Documents\\Work\\FCTG\\BookingConnect"
+  ],
+  "eslint.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit"
+  },
+  "eslint.validate": ["typescript", "typescriptreact", "javascript"],
+  "editor.tabSize": 2,
+  "svelte.enable-ts-plugin": true,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "CodeGPT.apiKey": "Ollama",
+  "CodeGPT.Autocomplete.enabled": true,
+  "CodeGPT.Autocomplete.provider": "Ollama - llama3:instruct",
+  "aws.telemetry": false,
+  "prisma.showPrismaDataPlatformNotification": false,
+  "github.copilot.editor.enableAutoCompletions": true,
+  "workbench.colorTheme": "Aura Soft Dark (Soft Text)",
+  "cursor.cpp.disabledLanguages": ["plaintext", "markdown"],
+  "GitLive.Special branches": "main|master|trunk|dev|develop|qa|test|release[-/].*",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "cursor.composer.agentLoopOnLints": false,
+  "accessibility.signals.chatResponseReceived": {
+    "sound": "on"
+  },
+  "update.releaseTrack": "prerelease",
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "accessibility.signals.voiceRecordingStarted": {
+    "sound": "auto"
+  },
+  "git.suggestSmartCommit": false,
+  "editor.formatOnSave": true
+}

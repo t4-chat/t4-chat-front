@@ -1,0 +1,94 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import Logo from "@/assets/icons/logo.svg?react";
+import UserIcon from "@/assets/icons/user.svg?react";
+import LogoutIcon from "@/assets/icons/logout.svg?react";
+import { LoginModal } from "@/components/LoginModal/LoginModal";
+import {
+  DropdownMenu,
+  type DropdownMenuItem,
+} from "@/components/DropdownMenu/DropdownMenu";
+import "./Header.scss";
+import { useMinimumLoading } from "@/hooks/useMinimumLoading";
+
+export const Header = () => {
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const openLoginModal = () => setIsLoginModalOpen(true);
+  const closeLoginModal = () => setIsLoginModalOpen(false);
+
+  const userName = user ? `${user.first_name} ${user.last_name}` : "";
+  const hasProfileImage =
+    user?.profile_image_url && user.profile_image_url.trim() !== "";
+
+  const userMenuItems: DropdownMenuItem[] = [
+    {
+      id: "logout",
+      label: "Logout",
+      icon: <LogoutIcon />,
+      onClick: logout,
+    },
+  ];
+
+  const userTrigger = (
+    <button className="header__user-button" title={userName} type="button">
+      {hasProfileImage ? (
+        <img
+          src={user.profile_image_url}
+          alt={userName}
+          className="header__user-profile-img"
+        />
+      ) : (
+        <UserIcon className="header__user-icon" />
+      )}
+    </button>
+  );
+  const { isMinimumLoading } = useMinimumLoading({
+    initialLoading: isLoading,
+  });
+
+  const renderLoginButtonContent = () => {
+    if (isMinimumLoading) {
+      return (
+        <div className="flex justify-center items-center h-10">Loading...</div>
+      );
+    }
+    if (isAuthenticated) {
+      return (
+        <div className="header__user">
+          <DropdownMenu
+            trigger={userTrigger}
+            items={userMenuItems}
+            position="left"
+            className="header__user-dropdown"
+          />
+        </div>
+      );
+    }
+    return (
+      <button
+        className="header__login-btn"
+        onClick={openLoginModal}
+        type="button"
+      >
+        Login
+      </button>
+    );
+  };
+  return (
+    <header className="header">
+      <div className="header__content">
+        <Link to="/" className="header__logo-link">
+          <div className="header__logo">
+            <Logo className="header__logo-img" aria-label="Agg AI Logo" />
+            <span className="header__logo-text">AI Aggregator</span>
+          </div>
+        </Link>
+        <div className="header__actions">{renderLoginButtonContent()}</div>
+      </div>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+    </header>
+  );
+};

@@ -1,15 +1,15 @@
 export interface ChatMessage {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   created_at: Date;
-  attachments?: string[];
+  attachments?: string[] | null;
 }
 
 export interface AIModel {
   value: string;
   label: string;
-} 
+}
 
 export interface Chat {
   id: string;

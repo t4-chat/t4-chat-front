@@ -5,11 +5,11 @@
 export const formatDate = (date: Date): string => {
   const now = new Date();
   const isToday = now.toDateString() === date.toDateString();
-  
+
   if (isToday) {
     return formatTime(date);
   }
-  
+
   return formatDateWithTime(date);
 };
 
@@ -17,10 +17,10 @@ export const formatDate = (date: Date): string => {
  * Format a date as time only (HH:MM)
  */
 const formatTime = (date: Date): string => {
-  return date.toLocaleTimeString(undefined, { 
-    hour: '2-digit', 
-    minute: '2-digit',
-    hour12: true
+  return date.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   });
 };
 
@@ -29,10 +29,10 @@ const formatTime = (date: Date): string => {
  */
 const formatDateWithTime = (date: Date): string => {
   return date.toLocaleString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   });
-}; 
+};

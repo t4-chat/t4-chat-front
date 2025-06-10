@@ -1,12 +1,23 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { authService } from 'src/features/auth/services/authService';
-import { userService } from 'src/services/userService';
-import { useNavigate } from 'react-router-dom';
-import { User } from '../models/user';
-
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+  type FC,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  useAuthenticationServicePostApiAuthGoogle,
+  useUsersServiceGetApiUsersCurrent,
+} from "~/openapi/queries/queries";
+import type { UserResponse } from "~/openapi/requests/types.gen";
+import { useQueryClient } from "@tanstack/react-query";
+import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
+import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserResponse;
   isAuthenticated: boolean;
   isLoading: boolean;
   loginWithGoogle: (googleToken: string) => Promise<void>;
@@ -19,47 +30,35 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const checkAuth = async () => {
-    try {
-      if (authService.isAuthenticated()) {
-        const user = await userService.getCurrentUser();
-        setUser(user);
-      }
-    } catch (error) {
-      console.error('Authentication check failed:', error);
-      authService.logout();
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    error,
+    refetch: refetchUser,
+  } = useUsersServiceGetApiUsersCurrent();
+
+  const { mutateAsync: loginWithGoogle, isPending: isLoginWithGooglePending } =
+    useAuthenticationServicePostApiAuthGoogle({
+      onSuccess: (data) => {
+        tokenService.setToken(data.access_token);
+        refetchUser();
+      },
+    });
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (!error) return;
+    console.error("Authentication check failed:", error);
+    tokenService.removeToken();
+  }, [error]);
 
-  const loginWithGoogle = async (googleToken: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      await authService.loginWithGoogle(googleToken);
-      const user = await userService.getCurrentUser();
-      setUser(user);
-    } catch (error) {
-      console.error('Google login failed:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = (): void => {
-    authService.logout();
-    setUser(null);
-    navigate('/');
+  const logout = () => {
+    tokenService.removeToken();
+    queryClient.setQueryData(UseUsersServiceGetApiUsersCurrentKeyFn(), null);
+    navigate("/");
   };
 
   return (
@@ -67,8 +66,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       value={{
         user,
         isAuthenticated: !!user,
-        isLoading,
-        loginWithGoogle,
+        isLoading: isUserLoading || isLoginWithGooglePending,
+        loginWithGoogle: async (googleToken: string) => {
+          await loginWithGoogle({ requestBody: { token: googleToken } });
+        },
         logout,
       }}
     >
@@ -79,10 +80,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  
+
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  
+
   return context;
-}; 
+};
