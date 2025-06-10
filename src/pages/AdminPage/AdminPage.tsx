@@ -15,6 +15,13 @@ import {
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const AdminPage = () => {
   const [aggregation, setAggregation] = useState<AggregationType>("day");
@@ -63,28 +70,31 @@ export const AdminPage = () => {
               <label className="block text-sm mb-1" htmlFor="aggregation">
                 Aggregation
               </label>
-              <select
-                id="aggregation"
-                className="border rounded p-2"
+              <Select
                 value={aggregation}
-                onChange={(e) =>
-                  setAggregation(e.target.value as AggregationType)
+                onValueChange={(value) =>
+                  setAggregation(value as AggregationType)
                 }
               >
-                {[
-                  "minute",
-                  "hour",
-                  "day",
-                  "week",
-                  "month",
-                  "model",
-                  "user",
-                ].map((a) => (
-                  <option key={a} value={a}>
-                    {a}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    "minute",
+                    "hour",
+                    "day",
+                    "week",
+                    "month",
+                    "model",
+                    "user",
+                  ].map((a) => (
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="block text-sm mb-1" htmlFor="start">
@@ -140,7 +150,9 @@ export const AdminPage = () => {
                 </TableHeader>
                 <TableBody>
                   {usage.data.map((row, idx) => (
-                    <TableRow key={idx}>
+                    <TableRow
+                      key={`${row.date ?? ""}-${row.user_id ?? ""}-${row.model_id ?? ""}-${idx}`}
+                    >
                       <TableCell>
                         {row.date ? formatDate(new Date(row.date)) : "-"}
                       </TableCell>
