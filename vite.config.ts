@@ -5,6 +5,7 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [svgr(), react()],
+  base: "/",
   server: {
     port: 4200,
     open: true,
