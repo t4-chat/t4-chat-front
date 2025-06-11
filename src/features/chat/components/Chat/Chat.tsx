@@ -24,12 +24,14 @@ interface ChatProps {
   className?: string;
   chatId?: string | null;
   onChatCreated?: (chatId: string) => void;
+  initialModelId?: string;
 }
 
 export const Chat = ({
   className = "",
   chatId = null,
   onChatCreated,
+  initialModelId,
 }: ChatProps) => {
   const { isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<
@@ -71,7 +73,7 @@ export const Chat = ({
     selectedModel,
     isLoading: isModelLoading,
     setSelectedModel,
-  } = useAIModelsForChat();
+  } = useAIModelsForChat(initialModelId);
 
   useEffect(() => {
     if (!chat || !chat?.messages) return;
@@ -179,7 +181,7 @@ export const Chat = ({
         break;
 
       default:
-        console.log("Unknown event type:", (event as any).type);
+        console.log("Unknown event type:", (event as { type?: string }).type);
     }
   };
 
@@ -217,7 +219,7 @@ export const Chat = ({
     });
   };
 
-  const onStreamError = (error: any, messageId?: string | null) => {
+  const onStreamError = (error: unknown, messageId?: string | null) => {
     console.log("onStreamError", error);
     if (messageId) {
       setMessages((prev) => {

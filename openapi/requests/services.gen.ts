@@ -96,7 +96,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static getApiChatsByChatId(
-    data: GetApiChatsByChatIdData
+    data: GetApiChatsByChatIdData,
   ): CancelablePromise<GetApiChatsByChatIdResponse> {
     return __request(OpenAPI, {
       method: "GET",
@@ -118,7 +118,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static deleteApiChatsByChatId(
-    data: DeleteApiChatsByChatIdData
+    data: DeleteApiChatsByChatIdData,
   ): CancelablePromise<DeleteApiChatsByChatIdResponse> {
     return __request(OpenAPI, {
       method: "DELETE",
@@ -140,7 +140,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static getApiChatsByChatIdMessages(
-    data: GetApiChatsByChatIdMessagesData
+    data: GetApiChatsByChatIdMessagesData,
   ): CancelablePromise<GetApiChatsByChatIdMessagesResponse> {
     return __request(OpenAPI, {
       method: "GET",
@@ -162,7 +162,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static postApiChatsConversation(
-    data: PostApiChatsConversationData
+    data: PostApiChatsConversationData,
   ): CancelablePromise<PostApiChatsConversationResponse> {
     return __request(OpenAPI, {
       method: "POST",
@@ -184,7 +184,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static patchApiChatsByChatIdTitle(
-    data: PatchApiChatsByChatIdTitleData
+    data: PatchApiChatsByChatIdTitleData,
   ): CancelablePromise<PatchApiChatsByChatIdTitleResponse> {
     return __request(OpenAPI, {
       method: "PATCH",
@@ -208,7 +208,7 @@ export class ChatsService {
    * @throws ApiError
    */
   public static patchApiChatsByChatIdPin(
-    data: PatchApiChatsByChatIdPinData
+    data: PatchApiChatsByChatIdPinData,
   ): CancelablePromise<PatchApiChatsByChatIdPinResponse> {
     return __request(OpenAPI, {
       method: "PATCH",
@@ -232,7 +232,7 @@ export class AuthenticationService {
    * @throws ApiError
    */
   public static postApiAuthGoogle(
-    data: PostApiAuthGoogleData
+    data: PostApiAuthGoogleData,
   ): CancelablePromise<PostApiAuthGoogleResponse> {
     return __request(OpenAPI, {
       method: "POST",
@@ -283,7 +283,7 @@ export class FilesService {
    * @throws ApiError
    */
   public static postApiFilesUpload(
-    data: PostApiFilesUploadData
+    data: PostApiFilesUploadData,
   ): CancelablePromise<PostApiFilesUploadResponse> {
     return __request(OpenAPI, {
       method: "POST",
@@ -304,7 +304,7 @@ export class FilesService {
    * @throws ApiError
    */
   public static getApiFilesByFileId(
-    data: GetApiFilesByFileIdData
+    data: GetApiFilesByFileIdData,
   ): CancelablePromise<GetApiFilesByFileIdResponse> {
     return __request(OpenAPI, {
       method: "GET",
@@ -370,7 +370,7 @@ export class AdminService {
    * @throws ApiError
    */
   public static getApiAdminUsage(
-    data: GetApiAdminUsageData = {}
+    data: GetApiAdminUsageData = {},
   ): CancelablePromise<GetApiAdminUsageResponse> {
     return __request(OpenAPI, {
       method: "GET",

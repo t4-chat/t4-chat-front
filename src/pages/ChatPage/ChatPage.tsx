@@ -6,7 +6,7 @@ import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackd
 import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
 import { useChats } from "@/utils/apiUtils";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   useChatsServiceDeleteApiChatsByChatId,
   useChatsServicePatchApiChatsByChatIdPin,
@@ -18,6 +18,15 @@ export const ChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { chatId: activeChatId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialModelId = (location.state as { selectedModelId?: string } | null)
+    ?.selectedModelId;
+
+  useEffect(() => {
+    if (location.state?.selectedModelId) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   // Chat action modals
   const [deleteModalState, setDeleteModalState] = useState<{
@@ -160,6 +169,7 @@ export const ChatPage = () => {
       <div className="chat-container">
         <Chat
           chatId={activeChatId || null}
+          initialModelId={initialModelId}
           onChatCreated={(newChatId) => {
             navigate(`/chat/${newChatId}`);
             refetchChats();

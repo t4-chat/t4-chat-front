@@ -55,9 +55,11 @@ export const getProviderIconPath = (provider: string): string => {
   );
 };
 
-export const useAIModelsForChat = () => {
+export const useAIModelsForChat = (initialModelId?: string) => {
   const { data: models, ...other } = useAiModelsServiceGetApiAiModels();
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string | null>(
+    initialModelId || null,
+  );
 
   const options =
     models?.map((model) => ({
@@ -67,9 +69,14 @@ export const useAIModelsForChat = () => {
     })) || [];
 
   useEffect(() => {
-    if (!options?.length || selectedModel) return;
-    setSelectedModel(options[0].value);
-  }, [selectedModel, options]);
+    if (!options.length || selectedModel) return;
+
+    if (initialModelId && options.some((opt) => opt.value === initialModelId)) {
+      setSelectedModel(initialModelId);
+    } else {
+      setSelectedModel(options[0].value);
+    }
+  }, [selectedModel, options, initialModelId]);
 
   return {
     ...other,

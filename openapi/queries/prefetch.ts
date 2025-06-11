@@ -1,6 +1,6 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import { type QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import {
   AdminService,
   AiModelsService,
@@ -11,17 +11,17 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
-import { AggregationType } from "../requests/types.gen";
+import type { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
 export const prefetchUseHealthServiceGetHealthLive = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
     queryFn: () => HealthService.getHealthLive(),
   });
 export const prefetchUseAiProvidersServiceGetApiAiProviders = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseAiProvidersServiceGetApiAiProvidersKeyFn(),
@@ -38,7 +38,7 @@ export const prefetchUseChatsServiceGetApiChatsByChatId = (
     chatId,
   }: {
     chatId: string;
-  }
+  },
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdKeyFn({ chatId }),
@@ -50,7 +50,7 @@ export const prefetchUseChatsServiceGetApiChatsByChatIdMessages = (
     chatId,
   }: {
     chatId: string;
-  }
+  },
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdMessagesKeyFn({
@@ -59,14 +59,14 @@ export const prefetchUseChatsServiceGetApiChatsByChatIdMessages = (
     queryFn: () => ChatsService.getApiChatsByChatIdMessages({ chatId }),
   });
 export const prefetchUseUsersServiceGetApiUsersCurrent = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(),
     queryFn: () => UsersService.getApiUsersCurrent(),
   });
 export const prefetchUseAiModelsServiceGetApiAiModels = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseAiModelsServiceGetApiAiModelsKeyFn(),
@@ -78,28 +78,28 @@ export const prefetchUseFilesServiceGetApiFilesByFileId = (
     fileId,
   }: {
     fileId: string;
-  }
+  },
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn({ fileId }),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }),
   });
 export const prefetchUseUtilizationServiceGetApiUtilization = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationKeyFn(),
     queryFn: () => UtilizationService.getApiUtilization(),
   });
 export const prefetchUseUtilizationServiceGetApiUtilizationLimits = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(),
     queryFn: () => UtilizationService.getApiUtilizationLimits(),
   });
 export const prefetchUseAdminServiceGetApiAdminBudget = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
@@ -119,7 +119,7 @@ export const prefetchUseAdminServiceGetApiAdminUsage = (
     modelId?: number;
     startDate?: string;
     userId?: string;
-  } = {}
+  } = {},
 ) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
