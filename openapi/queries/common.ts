@@ -1,7 +1,7 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import { UseQueryResult } from "@tanstack/react-query";
-import {
+import type { UseQueryResult } from "@tanstack/react-query";
+import type {
   AdminService,
   AiModelsService,
   AiProvidersService,
@@ -12,36 +12,36 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
-import { AggregationType } from "../requests/types.gen";
+import type { AggregationType } from "../requests/types.gen";
 export type HealthServiceGetHealthLiveDefaultResponse = Awaited<
   ReturnType<typeof HealthService.getHealthLive>
 >;
 export type HealthServiceGetHealthLiveQueryResult<
   TData = HealthServiceGetHealthLiveDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useHealthServiceGetHealthLiveKey = "HealthServiceGetHealthLive";
 export const UseHealthServiceGetHealthLiveKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useHealthServiceGetHealthLiveKey, ...(queryKey ?? [])];
 export type AiProvidersServiceGetApiAiProvidersDefaultResponse = Awaited<
   ReturnType<typeof AiProvidersService.getApiAiProviders>
 >;
 export type AiProvidersServiceGetApiAiProvidersQueryResult<
   TData = AiProvidersServiceGetApiAiProvidersDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useAiProvidersServiceGetApiAiProvidersKey =
   "AiProvidersServiceGetApiAiProviders";
 export const UseAiProvidersServiceGetApiAiProvidersKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useAiProvidersServiceGetApiAiProvidersKey, ...(queryKey ?? [])];
 export type ChatsServiceGetApiChatsDefaultResponse = Awaited<
   ReturnType<typeof ChatsService.getApiChats>
 >;
 export type ChatsServiceGetApiChatsQueryResult<
   TData = ChatsServiceGetApiChatsDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useChatsServiceGetApiChatsKey = "ChatsServiceGetApiChats";
 export const UseChatsServiceGetApiChatsKeyFn = (queryKey?: Array<unknown>) => [
@@ -53,7 +53,7 @@ export type ChatsServiceGetApiChatsByChatIdDefaultResponse = Awaited<
 >;
 export type ChatsServiceGetApiChatsByChatIdQueryResult<
   TData = ChatsServiceGetApiChatsByChatIdDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useChatsServiceGetApiChatsByChatIdKey =
   "ChatsServiceGetApiChatsByChatId";
@@ -63,14 +63,14 @@ export const UseChatsServiceGetApiChatsByChatIdKeyFn = (
   }: {
     chatId: string;
   },
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useChatsServiceGetApiChatsByChatIdKey, ...(queryKey ?? [{ chatId }])];
 export type ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse = Awaited<
   ReturnType<typeof ChatsService.getApiChatsByChatIdMessages>
 >;
 export type ChatsServiceGetApiChatsByChatIdMessagesQueryResult<
   TData = ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useChatsServiceGetApiChatsByChatIdMessagesKey =
   "ChatsServiceGetApiChatsByChatIdMessages";
@@ -80,7 +80,7 @@ export const UseChatsServiceGetApiChatsByChatIdMessagesKeyFn = (
   }: {
     chatId: string;
   },
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [
   useChatsServiceGetApiChatsByChatIdMessagesKey,
   ...(queryKey ?? [{ chatId }]),
@@ -90,31 +90,31 @@ export type UsersServiceGetApiUsersCurrentDefaultResponse = Awaited<
 >;
 export type UsersServiceGetApiUsersCurrentQueryResult<
   TData = UsersServiceGetApiUsersCurrentDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useUsersServiceGetApiUsersCurrentKey =
   "UsersServiceGetApiUsersCurrent";
 export const UseUsersServiceGetApiUsersCurrentKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useUsersServiceGetApiUsersCurrentKey, ...(queryKey ?? [])];
 export type AiModelsServiceGetApiAiModelsDefaultResponse = Awaited<
   ReturnType<typeof AiModelsService.getApiAiModels>
 >;
 export type AiModelsServiceGetApiAiModelsQueryResult<
   TData = AiModelsServiceGetApiAiModelsDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useAiModelsServiceGetApiAiModelsKey =
   "AiModelsServiceGetApiAiModels";
 export const UseAiModelsServiceGetApiAiModelsKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useAiModelsServiceGetApiAiModelsKey, ...(queryKey ?? [])];
 export type FilesServiceGetApiFilesByFileIdDefaultResponse = Awaited<
   ReturnType<typeof FilesService.getApiFilesByFileId>
 >;
 export type FilesServiceGetApiFilesByFileIdQueryResult<
   TData = FilesServiceGetApiFilesByFileIdDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useFilesServiceGetApiFilesByFileIdKey =
   "FilesServiceGetApiFilesByFileId";
@@ -124,50 +124,50 @@ export const UseFilesServiceGetApiFilesByFileIdKeyFn = (
   }: {
     fileId: string;
   },
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useFilesServiceGetApiFilesByFileIdKey, ...(queryKey ?? [{ fileId }])];
 export type UtilizationServiceGetApiUtilizationDefaultResponse = Awaited<
   ReturnType<typeof UtilizationService.getApiUtilization>
 >;
 export type UtilizationServiceGetApiUtilizationQueryResult<
   TData = UtilizationServiceGetApiUtilizationDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useUtilizationServiceGetApiUtilizationKey =
   "UtilizationServiceGetApiUtilization";
 export const UseUtilizationServiceGetApiUtilizationKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useUtilizationServiceGetApiUtilizationKey, ...(queryKey ?? [])];
 export type UtilizationServiceGetApiUtilizationLimitsDefaultResponse = Awaited<
   ReturnType<typeof UtilizationService.getApiUtilizationLimits>
 >;
 export type UtilizationServiceGetApiUtilizationLimitsQueryResult<
   TData = UtilizationServiceGetApiUtilizationLimitsDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useUtilizationServiceGetApiUtilizationLimitsKey =
   "UtilizationServiceGetApiUtilizationLimits";
 export const UseUtilizationServiceGetApiUtilizationLimitsKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useUtilizationServiceGetApiUtilizationLimitsKey, ...(queryKey ?? [])];
 export type AdminServiceGetApiAdminBudgetDefaultResponse = Awaited<
   ReturnType<typeof AdminService.getApiAdminBudget>
 >;
 export type AdminServiceGetApiAdminBudgetQueryResult<
   TData = AdminServiceGetApiAdminBudgetDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useAdminServiceGetApiAdminBudgetKey =
   "AdminServiceGetApiAdminBudget";
 export const UseAdminServiceGetApiAdminBudgetKeyFn = (
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [useAdminServiceGetApiAdminBudgetKey, ...(queryKey ?? [])];
 export type AdminServiceGetApiAdminUsageDefaultResponse = Awaited<
   ReturnType<typeof AdminService.getApiAdminUsage>
 >;
 export type AdminServiceGetApiAdminUsageQueryResult<
   TData = AdminServiceGetApiAdminUsageDefaultResponse,
-  TError = unknown
+  TError = unknown,
 > = UseQueryResult<TData, TError>;
 export const useAdminServiceGetApiAdminUsageKey =
   "AdminServiceGetApiAdminUsage";
@@ -185,7 +185,7 @@ export const UseAdminServiceGetApiAdminUsageKeyFn = (
     startDate?: string;
     userId?: string;
   } = {},
-  queryKey?: Array<unknown>
+  queryKey?: Array<unknown>,
 ) => [
   useAdminServiceGetApiAdminUsageKey,
   ...(queryKey ?? [{ aggregation, endDate, modelId, startDate, userId }]),

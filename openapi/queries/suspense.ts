@@ -1,6 +1,6 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import { UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { type UseQueryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import {
   AdminService,
   AiModelsService,
@@ -11,15 +11,15 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
-import { AggregationType } from "../requests/types.gen";
+import type { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
 export const useHealthServiceGetHealthLiveSuspense = <
   TData = Common.HealthServiceGetHealthLiveDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(queryKey),
@@ -29,10 +29,10 @@ export const useHealthServiceGetHealthLiveSuspense = <
 export const useAiProvidersServiceGetApiAiProvidersSuspense = <
   TData = Common.AiProvidersServiceGetApiAiProvidersDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseAiProvidersServiceGetApiAiProvidersKeyFn(queryKey),
@@ -42,10 +42,10 @@ export const useAiProvidersServiceGetApiAiProvidersSuspense = <
 export const useChatsServiceGetApiChatsSuspense = <
   TData = Common.ChatsServiceGetApiChatsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(queryKey),
@@ -55,7 +55,7 @@ export const useChatsServiceGetApiChatsSuspense = <
 export const useChatsServiceGetApiChatsByChatIdSuspense = <
   TData = Common.ChatsServiceGetApiChatsByChatIdDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   {
     chatId,
@@ -63,12 +63,12 @@ export const useChatsServiceGetApiChatsByChatIdSuspense = <
     chatId: string;
   },
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdKeyFn(
       { chatId },
-      queryKey
+      queryKey,
     ),
     queryFn: () => ChatsService.getApiChatsByChatId({ chatId }) as TData,
     ...options,
@@ -76,7 +76,7 @@ export const useChatsServiceGetApiChatsByChatIdSuspense = <
 export const useChatsServiceGetApiChatsByChatIdMessagesSuspense = <
   TData = Common.ChatsServiceGetApiChatsByChatIdMessagesDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   {
     chatId,
@@ -84,12 +84,12 @@ export const useChatsServiceGetApiChatsByChatIdMessagesSuspense = <
     chatId: string;
   },
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdMessagesKeyFn(
       { chatId },
-      queryKey
+      queryKey,
     ),
     queryFn: () =>
       ChatsService.getApiChatsByChatIdMessages({ chatId }) as TData,
@@ -98,10 +98,10 @@ export const useChatsServiceGetApiChatsByChatIdMessagesSuspense = <
 export const useUsersServiceGetApiUsersCurrentSuspense = <
   TData = Common.UsersServiceGetApiUsersCurrentDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(queryKey),
@@ -111,10 +111,10 @@ export const useUsersServiceGetApiUsersCurrentSuspense = <
 export const useAiModelsServiceGetApiAiModelsSuspense = <
   TData = Common.AiModelsServiceGetApiAiModelsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseAiModelsServiceGetApiAiModelsKeyFn(queryKey),
@@ -124,7 +124,7 @@ export const useAiModelsServiceGetApiAiModelsSuspense = <
 export const useFilesServiceGetApiFilesByFileIdSuspense = <
   TData = Common.FilesServiceGetApiFilesByFileIdDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   {
     fileId,
@@ -132,12 +132,12 @@ export const useFilesServiceGetApiFilesByFileIdSuspense = <
     fileId: string;
   },
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn(
       { fileId },
-      queryKey
+      queryKey,
     ),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }) as TData,
     ...options,
@@ -145,10 +145,10 @@ export const useFilesServiceGetApiFilesByFileIdSuspense = <
 export const useUtilizationServiceGetApiUtilizationSuspense = <
   TData = Common.UtilizationServiceGetApiUtilizationDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationKeyFn(queryKey),
@@ -158,10 +158,10 @@ export const useUtilizationServiceGetApiUtilizationSuspense = <
 export const useUtilizationServiceGetApiUtilizationLimitsSuspense = <
   TData = Common.UtilizationServiceGetApiUtilizationLimitsDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey:
@@ -172,10 +172,10 @@ export const useUtilizationServiceGetApiUtilizationLimitsSuspense = <
 export const useAdminServiceGetApiAdminBudgetSuspense = <
   TData = Common.AdminServiceGetApiAdminBudgetDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(queryKey),
@@ -185,7 +185,7 @@ export const useAdminServiceGetApiAdminBudgetSuspense = <
 export const useAdminServiceGetApiAdminUsageSuspense = <
   TData = Common.AdminServiceGetApiAdminUsageDefaultResponse,
   TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[]
+  TQueryKey extends Array<unknown> = unknown[],
 >(
   {
     aggregation,
@@ -201,12 +201,12 @@ export const useAdminServiceGetApiAdminUsageSuspense = <
     userId?: string;
   } = {},
   queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
 ) =>
   useSuspenseQuery<TData, TError>({
     queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn(
       { aggregation, endDate, modelId, startDate, userId },
-      queryKey
+      queryKey,
     ),
     queryFn: () =>
       AdminService.getApiAdminUsage({

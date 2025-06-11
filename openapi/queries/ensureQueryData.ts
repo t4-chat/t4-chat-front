@@ -1,6 +1,6 @@
 // generated with @7nohe/openapi-react-query-codegen@1.6.2
 
-import { type QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import {
   AdminService,
   AiModelsService,
@@ -11,24 +11,24 @@ import {
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
-import { AggregationType } from "../requests/types.gen";
+import type { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
 export const ensureUseHealthServiceGetHealthLiveData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
     queryFn: () => HealthService.getHealthLive(),
   });
 export const ensureUseAiProvidersServiceGetApiAiProvidersData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseAiProvidersServiceGetApiAiProvidersKeyFn(),
     queryFn: () => AiProvidersService.getApiAiProviders(),
   });
 export const ensureUseChatsServiceGetApiChatsData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(),
@@ -40,7 +40,7 @@ export const ensureUseChatsServiceGetApiChatsByChatIdData = (
     chatId,
   }: {
     chatId: string;
-  }
+  },
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdKeyFn({ chatId }),
@@ -52,7 +52,7 @@ export const ensureUseChatsServiceGetApiChatsByChatIdMessagesData = (
     chatId,
   }: {
     chatId: string;
-  }
+  },
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseChatsServiceGetApiChatsByChatIdMessagesKeyFn({
@@ -61,14 +61,14 @@ export const ensureUseChatsServiceGetApiChatsByChatIdMessagesData = (
     queryFn: () => ChatsService.getApiChatsByChatIdMessages({ chatId }),
   });
 export const ensureUseUsersServiceGetApiUsersCurrentData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(),
     queryFn: () => UsersService.getApiUsersCurrent(),
   });
 export const ensureUseAiModelsServiceGetApiAiModelsData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseAiModelsServiceGetApiAiModelsKeyFn(),
@@ -80,28 +80,28 @@ export const ensureUseFilesServiceGetApiFilesByFileIdData = (
     fileId,
   }: {
     fileId: string;
-  }
+  },
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn({ fileId }),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }),
   });
 export const ensureUseUtilizationServiceGetApiUtilizationData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationKeyFn(),
     queryFn: () => UtilizationService.getApiUtilization(),
   });
 export const ensureUseUtilizationServiceGetApiUtilizationLimitsData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(),
     queryFn: () => UtilizationService.getApiUtilizationLimits(),
   });
 export const ensureUseAdminServiceGetApiAdminBudgetData = (
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
@@ -121,7 +121,7 @@ export const ensureUseAdminServiceGetApiAdminUsageData = (
     modelId?: number;
     startDate?: string;
     userId?: string;
-  } = {}
+  } = {},
 ) =>
   queryClient.ensureQueryData({
     queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({

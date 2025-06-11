@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import Logo from "@/assets/icons/logo.svg?react";
+import Logo from "@/assets/icons/logo.png";
 import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
 import { Shield } from "lucide-react";
@@ -94,7 +94,7 @@ export const Header = () => {
       <div className="header__content">
         <Link to="/" className="header__logo-link">
           <div className="header__logo">
-            <Logo className="header__logo-img" aria-label="Agg AI Logo" />
+            <img src={Logo} alt="Agg AI Logo" className="header__logo-img" />
             <span className="header__logo-text">AI Aggregator</span>
           </div>
         </Link>

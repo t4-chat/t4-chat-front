@@ -8,6 +8,7 @@ import mistralIcon from "./mistral.svg";
 import deepseekIcon from "./deepseek.svg";
 import geminiIcon from "./gemini.svg";
 import awsnovaIcon from "./awsnova.svg";
+import llamaIcon from "./llama.svg";
 import defaultIcon from "./default.svg";
 
 // This is a mapping from provider names to their SVG file paths
@@ -20,5 +21,7 @@ export const providerIconPaths = {
   deepseek: deepseekIcon,
   gemini: geminiIcon,
   awsnova: awsnovaIcon,
+  llama: llamaIcon,
+  ollama: llamaIcon,
   default: defaultIcon,
 };

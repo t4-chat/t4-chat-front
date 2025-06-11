@@ -207,13 +207,8 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 50%;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.3) 0%,
-        rgba(255, 255, 255, 0.1) 100%
-      );
-      border-bottom: $border-width solid rgba(255, 255, 255, 0.2);
+      height: 100%;
+      background: white;
       z-index: 1;
     }
 
@@ -233,7 +228,6 @@
     height: 100%;
     position: relative;
     z-index: 2;
-    object-fit: contain;
   }
 
   &__tile-name {
