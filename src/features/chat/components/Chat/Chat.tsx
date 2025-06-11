@@ -17,7 +17,7 @@ import {
 } from "~/openapi/queries/queries";
 import "./Chat.scss";
 import { ChatService } from "@/services/chatService";
-import { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
+import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
 // import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
 interface ChatProps {
@@ -33,7 +33,7 @@ export const Chat = ({
 }: ChatProps) => {
   const { isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<
-    (Omit<ChatMessageResponseSchema, "created_at" | 'id'> & {
+    (Omit<ChatMessageResponseSchema, "created_at" | "id"> & {
       created_at: Date;
     })[]
   >([]);
@@ -48,8 +48,14 @@ export const Chat = ({
   const messageContentRef = useRef<string>("");
 
   useEffect(() => {
+    // Update current chat ID whenever the prop changes. If no chatId is
+    // provided (e.g., navigating back to the chat index), clear the current
+    // chat state so the previous chat does not remain visible.
     if (chatId) {
       setCurrentChatId(chatId);
+    } else {
+      setCurrentChatId(null);
+      setMessages([]);
     }
   }, [chatId]);
 
