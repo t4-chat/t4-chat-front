@@ -6,6 +6,7 @@ import {
   type ReactNode,
   type FC,
 } from "react";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import {
   useAuthenticationServicePostApiAuthGoogle,
@@ -16,10 +17,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
+interface TokenPayload {
+  admin?: boolean;
+}
+
 interface AuthContextType {
   user: UserResponse;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isAdmin: boolean;
   loginWithGoogle: (googleToken: string) => Promise<void>;
   logout: () => void;
 }
@@ -34,6 +40,20 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const getIsAdminFromToken = (): boolean => {
+    const token = tokenService.getToken();
+    if (!token) return false;
+    try {
+      const decoded = jwtDecode<TokenPayload>(token);
+      return !!decoded.admin;
+    } catch (e) {
+      console.error("Failed to decode token", e);
+      return false;
+    }
+  };
+
+  const [isAdmin, setIsAdmin] = useState<boolean>(getIsAdminFromToken());
+
   const {
     data: user,
     isLoading: isUserLoading,
@@ -45,6 +65,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     useAuthenticationServicePostApiAuthGoogle({
       onSuccess: (data) => {
         tokenService.setToken(data.access_token);
+        setIsAdmin(getIsAdminFromToken());
         refetchUser();
       },
     });
@@ -57,6 +78,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     tokenService.removeToken();
+    setIsAdmin(false);
     queryClient.setQueryData(UseUsersServiceGetApiUsersCurrentKeyFn(), null);
     navigate("/");
   };
@@ -67,6 +89,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         user,
         isAuthenticated: !!user,
         isLoading: isUserLoading || isLoginWithGooglePending,
+        isAdmin,
         loginWithGoogle: async (googleToken: string) => {
           await loginWithGoogle({ requestBody: { token: googleToken } });
         },

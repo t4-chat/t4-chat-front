@@ -4,6 +4,7 @@ import { ChatPage } from "@/pages/ChatPage/ChatPage";
 import { HomePage } from "@/pages/HomePage/HomePage";
 import { AdminPage } from "@/pages/AdminPage/AdminPage";
 import { AuthProvider } from "@/context/AuthContext";
+import { AdminRoute } from "@/components/AdminRoute/AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "admin",
-        element: <AdminPage />,
+        element: (
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
+        ),
       },
     ],
   },
