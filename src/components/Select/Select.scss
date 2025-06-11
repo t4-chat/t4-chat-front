@@ -167,7 +167,7 @@
 
   .select-option {
     display: flex;
-    color: white;
+    color: var(--text-primary-color);
     align-items: center;
     gap: $spacing-sm;
     padding: $spacing-md;
