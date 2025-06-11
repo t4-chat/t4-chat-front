@@ -15,7 +15,7 @@ import defaultIcon from "./default.svg";
 export const providerIconPaths = {
   openai: openaiIcon,
   anthropic: anthropicIcon,
-  grok: grokIcon,
+  xai: grokIcon,
   meta: metaIcon,
   mistral: mistralIcon,
   deepseek: deepseekIcon,
