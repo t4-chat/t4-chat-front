@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Logo from "@/assets/icons/logo.svg?react";
 import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
+import { Shield } from "lucide-react";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
 import {
   DropdownMenu,
@@ -13,7 +14,8 @@ import "./Header.scss";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 
 export const Header = () => {
-  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const { isAuthenticated, user, logout, isLoading, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -24,6 +26,16 @@ export const Header = () => {
     user?.profile_image_url && user.profile_image_url.trim() !== "";
 
   const userMenuItems: DropdownMenuItem[] = [
+    ...(isAdmin
+      ? [
+          {
+            id: "admin",
+            label: "Admin",
+            icon: <Shield size={16} />,
+            onClick: () => navigate("/admin"),
+          } as DropdownMenuItem,
+        ]
+      : []),
     {
       id: "logout",
       label: "Logout",
