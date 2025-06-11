@@ -2,6 +2,7 @@ import {
   useAdminServiceGetApiAdminBudget,
   useAdminServiceGetApiAdminUsage,
 } from "~/openapi/queries/queries";
+import { LoadingOverlay } from "@/components/LoadingOverlay/LoadingOverlay";
 import type { AggregationType } from "~/openapi/requests/types.gen";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,14 +33,29 @@ export const AdminPage = () => {
 
   const { data: budget, isLoading: budgetLoading } =
     useAdminServiceGetApiAdminBudget();
-  const { data: usage, isLoading: usageLoading } =
-    useAdminServiceGetApiAdminUsage({
+  const {
+    data: usage,
+    isLoading: usageLoading,
+    isFetching: usageFetching,
+  } = useAdminServiceGetApiAdminUsage(
+    {
       aggregation,
       startDate: startDate ? startDate.toISOString().split("T")[0] : undefined,
       endDate: endDate ? endDate.toISOString().split("T")[0] : undefined,
       userId: userId || undefined,
       modelId: modelId ? Number(modelId) : undefined,
-    });
+    },
+    undefined,
+    { keepPreviousData: true },
+  );
+
+  const usageKey = JSON.stringify({
+    aggregation,
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+    userId,
+    modelId,
+  });
 
   return (
     <div className="p-4 space-y-6">
@@ -133,62 +149,68 @@ export const AdminPage = () => {
               />
             </div>
           </div>
-          {usageLoading ? (
+          {usageLoading && !usage ? (
             <p>Loading...</p>
           ) : usage ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>User</TableHead>
-                    <TableHead>Model</TableHead>
-                    <TableHead className="text-right">Prompt</TableHead>
-                    <TableHead className="text-right">Completion</TableHead>
-                    <TableHead className="text-right">Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {usage.data.map((row, idx) => (
-                    <TableRow
-                      key={`${row.date ?? ""}-${row.user_id ?? ""}-${row.model_id ?? ""}-${idx}`}
-                    >
-                      <TableCell>
-                        {row.date ? formatDate(new Date(row.date)) : "-"}
+            <div className="relative">
+              {usageFetching && <LoadingOverlay />}
+              <div
+                key={usageKey}
+                className="overflow-x-auto animate-in fade-in duration-300"
+              >
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>User</TableHead>
+                      <TableHead>Model</TableHead>
+                      <TableHead className="text-right">Prompt</TableHead>
+                      <TableHead className="text-right">Completion</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {usage.data.map((row, idx) => (
+                      <TableRow
+                        key={`${row.date ?? ""}-${row.user_id ?? ""}-${row.model_id ?? ""}-${idx}`}
+                      >
+                        <TableCell>
+                          {row.date ? formatDate(new Date(row.date)) : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {row.user_email || row.user_id || "-"}
+                        </TableCell>
+                        <TableCell>
+                          {row.model_name || row.model_id || "-"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {row.prompt_tokens}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {row.completion_tokens}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {row.total_tokens}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    <TableRow>
+                      <TableCell colSpan={3} className="font-semibold">
+                        Total
                       </TableCell>
-                      <TableCell>
-                        {row.user_email || row.user_id || "-"}
+                      <TableCell className="text-right font-semibold">
+                        {usage.total.prompt_tokens}
                       </TableCell>
-                      <TableCell>
-                        {row.model_name || row.model_id || "-"}
+                      <TableCell className="text-right font-semibold">
+                        {usage.total.completion_tokens}
                       </TableCell>
-                      <TableCell className="text-right">
-                        {row.prompt_tokens}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {row.completion_tokens}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {row.total_tokens}
+                      <TableCell className="text-right font-semibold">
+                        {usage.total.total_tokens}
                       </TableCell>
                     </TableRow>
-                  ))}
-                  <TableRow>
-                    <TableCell colSpan={3} className="font-semibold">
-                      Total
-                    </TableCell>
-                    <TableCell className="text-right font-semibold">
-                      {usage.total.prompt_tokens}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold">
-                      {usage.total.completion_tokens}
-                    </TableCell>
-                    <TableCell className="text-right font-semibold">
-                      {usage.total.total_tokens}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           ) : (
             <p>No usage data.</p>
