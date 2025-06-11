@@ -119,8 +119,8 @@
   border-radius: $radius-md;
   box-shadow: 0 $spacing-sm $spacing-lg rgba(0, 0, 0, 0.1);
   z-index: 10;
-  max-height: 15rem;
-  overflow-y: auto;
+  max-height: none;
+  overflow: visible;
 
   // Position dropdown below the select (default)
   &.bottom {
@@ -161,7 +161,7 @@
   }
 
   .options-list {
-    max-height: 12.5rem;
+    max-height: 20rem;
     overflow-y: auto;
   }
 
