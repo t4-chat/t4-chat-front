@@ -38,7 +38,20 @@ export const HomePage: FC = () => {
         model.provider.name.toLowerCase().includes(query),
     );
   }, [models, query]);
-  console.log("🚀 ~ filteredModels ~ filteredModels:", filteredModels);
+
+  const groupedModels = useMemo(() => {
+    return filteredModels.reduce<Record<string, AiModelResponse[]>>(
+      (acc, model) => {
+        const providerName = model.provider.name;
+        if (!acc[providerName]) {
+          acc[providerName] = [];
+        }
+        acc[providerName].push(model);
+        return acc;
+      },
+      {},
+    );
+  }, [filteredModels]);
 
   const handleTileClick = (model: AiModelResponse): void => {
     navigate("/chat", {
@@ -90,24 +103,36 @@ export const HomePage: FC = () => {
           No models found matching "{searchQuery}"
         </p>
       ) : (
-        <div className="home-page__grid">
-          {filteredModels.map((model) => (
-            <button
-              type="button"
-              key={model.id}
-              className="home-page__tile"
-              onClick={() => handleTileClick(model)}
-            >
-              <div className="home-page__tile-icon">
-                <img
-                  src={getProviderIconPath(model.provider.slug)}
-                  alt={`${model.provider} icon`}
-                  className="home-page__tile-svg"
-                />
-              </div>
-              <div className="home-page__tile-name">{model.name}</div>
-            </button>
-          ))}
+        <div className="home-page__providers-grid">
+          {Object.entries(groupedModels).map(
+            ([providerName, providerModels]) => (
+              <section
+                key={providerName}
+                className="home-page__provider-section"
+              >
+                <h2 className="home-page__provider-title">{providerName}</h2>
+                <div className="home-page__grid">
+                  {providerModels.map((model) => (
+                    <button
+                      type="button"
+                      key={model.id}
+                      className="home-page__tile"
+                      onClick={() => handleTileClick(model)}
+                    >
+                      <div className="home-page__tile-icon">
+                        <img
+                          src={getProviderIconPath(model.provider.slug)}
+                          alt={`${model.provider} icon`}
+                          className="home-page__tile-svg"
+                        />
+                      </div>
+                      <div className="home-page__tile-name">{model.name}</div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ),
+          )}
         </div>
       )}
     </div>

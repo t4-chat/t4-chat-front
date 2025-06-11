@@ -143,13 +143,37 @@
     font-style: italic;
   }
 
+  &__providers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-xl;
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto $spacing-xl;
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // &__provider-section {
+  //   width: 100%;
+  // }
+
+  &__provider-title {
+    font-size: $font-lg;
+    font-weight: 600;
+    margin-bottom: $spacing-md;
+    color: var(--text-primary-color);
+  }
+
   // iPad-style grid layout
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
     gap: $spacing-lg * 1.5;
-    width: 100%;
-    max-width: 75rem; // 1200px
+    // width: 100%;
+    // max-width: 75rem; // 1200px
     justify-items: center;
     margin-bottom: $spacing-lg;
 
