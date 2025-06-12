@@ -18,6 +18,8 @@ import {
 import "./Chat.scss";
 import { ChatService } from "@/services/chatService";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
+import { useQueryClient } from "@tanstack/react-query";
+import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
 // import { useChatsServiceGetApiChatsByChatId } from "../../../../../openapi/queries/queries";
 
 interface ChatProps {
@@ -34,6 +36,7 @@ export const Chat = ({
   initialModelId,
 }: ChatProps) => {
   const { isAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
   const [messages, setMessages] = useState<
     (Omit<ChatMessageResponseSchema, "created_at" | "id"> & {
       created_at: Date;
@@ -168,6 +171,10 @@ export const Chat = ({
           // Notify parent about new chat created
           if (!currentChatId && onChatCreated) {
             onChatCreated(event.chat.id);
+            // Invalidate chats query immediately when new chat is created
+            queryClient.invalidateQueries({
+              queryKey: [UseChatsServiceGetApiChatsKeyFn()],
+            });
           }
         }
         break;
