@@ -52,14 +52,34 @@ export const Chat = ({
   useEffect(() => {
     // Update current chat ID whenever the prop changes. If no chatId is
     // provided (e.g., navigating back to the chat index), clear the current
-    // chat state so the previous chat does not remain visible.
+    // chat state so the previous chat does not remain visible. Additionally,
+    // clear messages when switching between chats so the previous chat's
+    // conversation does not briefly appear in the new chat.
     if (chatId) {
+      // If switching to a different chat, clear existing messages first
+      setMessages([]);
       setCurrentChatId(chatId);
     } else {
       setCurrentChatId(null);
       setMessages([]);
     }
+    // Abort any pending streaming requests when leaving a chat
+    if (abortFunctionRef.current) {
+      abortFunctionRef.current();
+      abortFunctionRef.current = null;
+      setIsLoading(false);
+    }
   }, [chatId]);
+
+  // Ensure any active stream is cancelled when the component unmounts
+  useEffect(() => {
+    return () => {
+      if (abortFunctionRef.current) {
+        abortFunctionRef.current();
+        abortFunctionRef.current = null;
+      }
+    };
+  }, []);
 
   const { data: chat, isLoading: isChatLoading } =
     useChatsServiceGetApiChatsByChatId(
@@ -129,7 +149,7 @@ export const Chat = ({
 
     setMessages((prev) => [...prev, userMessage]);
 
-    new ChatService().streamChat({
+    abortFunctionRef.current = new ChatService().streamChat({
       message: userMessage,
       modelId: Number.parseInt(selectedModel),
       onEvent: (event: StreamEvent) => onStreamEvent(event),
