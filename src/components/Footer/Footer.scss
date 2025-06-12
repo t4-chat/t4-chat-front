@@ -15,8 +15,7 @@
     align-items: center;
 
     @media (max-width: $breakpoint-sm) {
-      padding: $spacing-sm;
-      flex-direction: column;
+      padding: $spacing-sm $spacing-md;
       gap: $spacing-md;
     }
   }
