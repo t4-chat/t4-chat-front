@@ -37,6 +37,7 @@ export const ChatMessage = ({
   const [placement, setPlacement] = useState<"top" | "bottom" | "side">(
     "bottom",
   );
+  const [sideOffset, setSideOffset] = useState(8);
   const [copied, setCopied] = useState(false);
 
   // Reset on unmount
@@ -161,6 +162,8 @@ export const ChatMessage = ({
         setPlacement("bottom");
       } else if (!topVisible && !bottomVisible) {
         setPlacement("side");
+        const visibleTop = Math.max(containerRect.top, rect.top);
+        setSideOffset(visibleTop - rect.top + 32);
       } else {
         setPlacement("bottom");
       }
@@ -205,12 +208,13 @@ export const ChatMessage = ({
     <div className={`chat-message ${role}`} ref={messageRef}>
       <button
         className={`copy-button ${placement}`}
+        style={placement === "side" ? { top: sideOffset } : undefined}
         onClick={handleCopy}
         aria-label="Copy message"
         type="button"
       >
         {copied ? (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 copied">
             <p className="text-xs">Copied</p>
             <Check size={16} />
           </div>

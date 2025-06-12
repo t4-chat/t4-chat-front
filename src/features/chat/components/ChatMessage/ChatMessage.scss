@@ -50,6 +50,10 @@ $message-radius: $radius-lg;
     opacity: 1;
   }
 
+  .copy-button:hover {
+    opacity: 1;
+  }
+
   &.user {
     background-color: var(--message-user-bg-color);
     margin-left: auto;
@@ -60,7 +64,8 @@ $message-radius: $radius-lg;
       right: -8px;
 
       &.side {
-        left: -$spacing-lg;
+        right: unset;
+        left: -32px;
       }
     }
 
@@ -86,7 +91,12 @@ $message-radius: $radius-lg;
       left: 0;
 
       &.side {
-        right: -$spacing-lg;
+        left: unset;
+        right: -32px;
+        .copied {
+          position: relative;
+          left: 40px;
+        }
       }
     }
 
