@@ -48,6 +48,20 @@ export const ChatPage = () => {
 
   const { chats, refetch: refetchChats, isLoading } = useChats();
 
+  useEffect(() => {
+    const baseTitle = "Agg AI";
+    if (activeChatId) {
+      const chatTitle = chats.find((c) => c.id === activeChatId)?.title;
+      document.title = chatTitle ? `${chatTitle} - ${baseTitle}` : baseTitle;
+    } else {
+      document.title = baseTitle;
+    }
+
+    return () => {
+      document.title = baseTitle;
+    };
+  }, [activeChatId, chats]);
+
   const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin({
     onSuccess: () => {
       refetchChats();
