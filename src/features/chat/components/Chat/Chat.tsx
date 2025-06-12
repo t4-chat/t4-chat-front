@@ -67,6 +67,7 @@ export const Chat = ({
     if (abortFunctionRef.current) {
       abortFunctionRef.current();
       abortFunctionRef.current = null;
+      setIsLoading(false);
     }
   }, [chatId]);
 
