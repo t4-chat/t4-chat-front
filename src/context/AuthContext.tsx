@@ -79,6 +79,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     tokenService.removeToken();
     setIsAdmin(false);
+    queryClient.clear();
     queryClient.setQueryData(UseUsersServiceGetApiUsersCurrentKeyFn(), null);
     navigate("/");
   };
