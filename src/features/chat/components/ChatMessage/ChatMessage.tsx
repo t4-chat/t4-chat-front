@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Copy, Check } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -32,6 +33,11 @@ export const ChatMessage = ({
   const [attachmentInfo, setAttachmentInfo] = useState<AttachmentInfo[]>([]);
   const imageUrlsRef = useRef<string[]>([]);
   const isMountedRef = useRef(true);
+  const messageRef = useRef<HTMLDivElement>(null);
+  const [placement, setPlacement] = useState<"top" | "bottom" | "side">(
+    "bottom",
+  );
+  const [copied, setCopied] = useState(false);
 
   // Reset on unmount
   useEffect(() => {
@@ -131,6 +137,45 @@ export const ChatMessage = ({
     loadAttachmentInfo();
   }, [attachments, hasAttachments]);
 
+  useEffect(() => {
+    const el = messageRef.current;
+    if (!el) return;
+
+    const scrollContainer = el.closest(".chat-messages") as HTMLElement | null;
+
+    const updatePosition = () => {
+      const rect = el.getBoundingClientRect();
+      const containerRect = scrollContainer?.getBoundingClientRect() ?? {
+        top: 0,
+        bottom: window.innerHeight,
+      };
+
+      const topVisible =
+        rect.top >= containerRect.top && rect.top < containerRect.bottom;
+      const bottomVisible =
+        rect.bottom > containerRect.top && rect.bottom <= containerRect.bottom;
+
+      if (!bottomVisible && topVisible) {
+        setPlacement("top");
+      } else if (!topVisible && bottomVisible) {
+        setPlacement("bottom");
+      } else if (!topVisible && !bottomVisible) {
+        setPlacement("side");
+      } else {
+        setPlacement("bottom");
+      }
+    };
+
+    updatePosition();
+    scrollContainer?.addEventListener("scroll", updatePosition);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      scrollContainer?.removeEventListener("scroll", updatePosition);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, []);
+
   const downloadFile = async (fileId: string) => {
     if (isDownloading[fileId]) return;
 
@@ -146,8 +191,35 @@ export const ChatMessage = ({
     }
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    } catch (error) {
+      // Silent error handling
+    }
+  };
+
   return (
-    <div className={`chat-message ${role}`}>
+    <div className={`chat-message ${role}`} ref={messageRef}>
+      <button
+        className={`copy-button ${placement}`}
+        onClick={handleCopy}
+        aria-label="Copy message"
+        type="button"
+      >
+        {copied ? (
+          <div className="flex items-center gap-1">
+            <p className="text-xs">Copied</p>
+            <Check size={16} />
+          </div>
+        ) : (
+          <div className="copy-button-icon">
+            <Copy size={16} />
+          </div>
+        )}
+      </button>
       <div className="message-content">
         {disableMarkdown ? (
           <div>{content}</div>
@@ -155,7 +227,16 @@ export const ChatMessage = ({
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              code: ({ node, inline, className, children, ...props }: any) => {
+              code: ({
+                inline,
+                className,
+                children,
+                ...props
+              }: {
+                inline?: boolean;
+                className?: string;
+                children?: React.ReactNode;
+              }) => {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
                   <SyntaxHighlighter
@@ -186,6 +267,14 @@ export const ChatMessage = ({
                 key={info.fileId}
                 className={`attachment-item ${isDownloading[info.fileId] ? "downloading" : ""} ${info.isImage ? "image-attachment" : ""}`}
                 onClick={() => !info.isImage && downloadFile(info.fileId)}
+                role={!info.isImage ? "button" : undefined}
+                tabIndex={!info.isImage ? 0 : undefined}
+                onKeyDown={(e) => {
+                  if (!info.isImage && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault();
+                    downloadFile(info.fileId);
+                  }
+                }}
               >
                 {info.isLoading ? (
                   <div className="attachment-loading">Loading...</div>
@@ -196,6 +285,7 @@ export const ChatMessage = ({
                       alt={info.filename || "Image attachment"}
                     />
                     <button
+                      type="button"
                       className="download-button"
                       onClick={(e) => {
                         e.stopPropagation();

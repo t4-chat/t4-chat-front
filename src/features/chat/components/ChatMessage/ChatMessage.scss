@@ -17,11 +17,52 @@ $message-radius: $radius-lg;
   @include message-base;
   position: relative;
 
+  .copy-button {
+    position: absolute;
+    background: none;
+    border: none;
+    color: var(--text-secondary-color);
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: $radius-sm;
+    opacity: 0;
+    transition: opacity $transition-fast;
+
+    &.top {
+      top: -32px;
+    }
+
+    &.bottom {
+      bottom: -32px;
+    }
+
+    &.side {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &:hover .copy-button {
+    opacity: 1;
+  }
+
   &.user {
     background-color: var(--message-user-bg-color);
     margin-left: auto;
     margin-right: $spacing-lg;
     border-bottom-right-radius: $spacing-xs;
+
+    .copy-button {
+      right: -8px;
+
+      &.side {
+        left: -$spacing-lg;
+      }
+    }
 
     &::after {
       content: "";
@@ -40,6 +81,14 @@ $message-radius: $radius-lg;
     margin-right: auto;
     margin-left: $spacing-lg;
     border-bottom-left-radius: $spacing-xs;
+
+    .copy-button {
+      left: 0;
+
+      &.side {
+        right: -$spacing-lg;
+      }
+    }
 
     &::after {
       content: "";
