@@ -86,12 +86,12 @@ export const TextInputModal: FC<TextInputModalProps> = ({
             maxLength={maxLength}
           />
           {error && <p className="error-message">{error}</p>}
-          <p className="character-count">
+          <p className="mb-2 character-count">
             {value.length} / {maxLength}
           </p>
         </div>
 
-        <div className="input-modal-actions">
+        <div className="mt-8 input-modal-actions">
           <Button onClick={onClose} variant="secondary">
             {cancelLabel}
           </Button>
