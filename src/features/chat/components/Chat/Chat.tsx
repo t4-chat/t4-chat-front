@@ -27,6 +27,7 @@ interface ChatProps {
   chatId?: string | null;
   onChatCreated?: (chatId: string) => void;
   initialModelId?: string;
+  setIsStreaming: (streaming: boolean) => void;
 }
 
 export const Chat = ({
@@ -34,6 +35,7 @@ export const Chat = ({
   chatId = null,
   onChatCreated,
   initialModelId,
+  setIsStreaming,
 }: ChatProps) => {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -132,6 +134,7 @@ export const Chat = ({
 
     setMessages((prev) => [...prev, userMessage]);
 
+    setIsStreaming(true);
     new ChatService().streamChat({
       message: userMessage,
       modelId: Number.parseInt(selectedModel),
@@ -251,12 +254,14 @@ export const Chat = ({
         },
       ]);
     }
+    setIsStreaming(false);
   };
 
   const onStreamDone = () => {
     setIsLoading(false);
     abortFunctionRef.current = null;
     assistantMessageIdRef.current = null;
+    setIsStreaming(false);
   };
 
   return (

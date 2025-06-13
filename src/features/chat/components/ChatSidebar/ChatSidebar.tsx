@@ -9,6 +9,7 @@ import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
 import type { Chat } from "@/features/chat/types";
 import { useMemo, useState, type FC } from "react";
 import "./ChatSidebar.scss";
+import { cn } from "@/lib/utils";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface ChatSidebarProps {
   onPinChat?: (chatId: string, pinned: boolean) => void;
   activeChat?: string | null;
   isLoading?: boolean;
+  isStreaming?: boolean;
 }
 
 export const ChatSidebar = ({
@@ -31,6 +33,7 @@ export const ChatSidebar = ({
   onNewChat,
   onDeleteChat,
   onRenameChat,
+  isStreaming,
   onPinChat,
   activeChat,
   isLoading = false,
@@ -101,7 +104,12 @@ export const ChatSidebar = ({
   const unpinnedChats = filteredChats.filter((chat) => !chat.pinned);
 
   return (
-    <div className={`chat-sidebar ${isOpen ? "open" : ""}`}>
+    <div
+      className={cn("chat-sidebar", {
+        "pointer-events-none cursor-not-allowed": isStreaming,
+        open: isOpen,
+      })}
+    >
       <div className="sidebar-header">
         <button
           type="button"

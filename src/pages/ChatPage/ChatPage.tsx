@@ -27,7 +27,7 @@ export const ChatPage = () => {
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
-
+  const [isStreaming, setIsStreaming] = useState(false);
   // Chat action modals
   const [deleteModalState, setDeleteModalState] = useState<{
     isOpen: boolean;
@@ -176,6 +176,7 @@ export const ChatPage = () => {
         onRenameChat={handleRenameModal}
         onPinChat={handlePinChat}
         isLoading={isLoading}
+        isStreaming={isStreaming}
       />
 
       {!isSidebarOpen && <ChatSidebarToggle onClick={toggleSidebar} />}
@@ -184,6 +185,7 @@ export const ChatPage = () => {
         <Chat
           chatId={activeChatId || null}
           initialModelId={initialModelId}
+          setIsStreaming={setIsStreaming}
           onChatCreated={(newChatId) => {
             navigate(`/chat/${newChatId}`);
             refetchChats();
