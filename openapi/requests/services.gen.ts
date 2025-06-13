@@ -9,10 +9,10 @@ import type {
   GetApiAiProvidersResponse,
   GetApiChatsResponse,
   PostApiChatsResponse,
+  DeleteApiChatsData,
+  DeleteApiChatsResponse,
   GetApiChatsByChatIdData,
   GetApiChatsByChatIdResponse,
-  DeleteApiChatsByChatIdData,
-  DeleteApiChatsByChatIdResponse,
   GetApiChatsByChatIdMessagesData,
   GetApiChatsByChatIdMessagesResponse,
   PostApiChatsConversationData,
@@ -21,6 +21,8 @@ import type {
   PatchApiChatsByChatIdTitleResponse,
   PatchApiChatsByChatIdPinData,
   PatchApiChatsByChatIdPinResponse,
+  PatchApiChatsByChatIdMessagesByMessageIdSelectData,
+  PatchApiChatsByChatIdMessagesByMessageIdSelectResponse,
   PostApiAuthGoogleData,
   PostApiAuthGoogleResponse,
   GetApiUsersCurrentResponse,
@@ -102,6 +104,27 @@ export class ChatsService {
   }
 
   /**
+   * Delete Chats
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiChats(
+    data: DeleteApiChatsData,
+  ): CancelablePromise<DeleteApiChatsResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/chats",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
    * Get Chat
    * @param data The data for the request.
    * @param data.chatId
@@ -113,28 +136,6 @@ export class ChatsService {
   ): CancelablePromise<GetApiChatsByChatIdResponse> {
     return __request(OpenAPI, {
       method: "GET",
-      url: "/api/chats/{chat_id}",
-      path: {
-        chat_id: data.chatId,
-      },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Delete Chat
-   * @param data The data for the request.
-   * @param data.chatId
-   * @returns unknown Successful Response
-   * @throws ApiError
-   */
-  public static deleteApiChatsByChatId(
-    data: DeleteApiChatsByChatIdData,
-  ): CancelablePromise<DeleteApiChatsByChatIdResponse> {
-    return __request(OpenAPI, {
-      method: "DELETE",
       url: "/api/chats/{chat_id}",
       path: {
         chat_id: data.chatId,
@@ -228,6 +229,30 @@ export class ChatsService {
       url: "/api/chats/{chat_id}/pin",
       path: {
         chat_id: data.chatId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Select Message
+   * @param data The data for the request.
+   * @param data.chatId
+   * @param data.messageId
+   * @returns ChatMessageResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static patchApiChatsByChatIdMessagesByMessageIdSelect(
+    data: PatchApiChatsByChatIdMessagesByMessageIdSelectData,
+  ): CancelablePromise<PatchApiChatsByChatIdMessagesByMessageIdSelectResponse> {
+    return __request(OpenAPI, {
+      method: "PATCH",
+      url: "/api/chats/{chat_id}/messages/{message_id}/select",
+      path: {
+        chat_id: data.chatId,
+        message_id: data.messageId,
       },
       errors: {
         422: "Validation Error",

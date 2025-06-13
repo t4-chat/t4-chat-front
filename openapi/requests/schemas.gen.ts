@@ -103,34 +103,6 @@ export const $BudgetResponseSchema = {
   title: "BudgetResponseSchema",
 } as const;
 
-export const $ChatCompletionRequestSchema = {
-  properties: {
-    model_id: {
-      type: "integer",
-      title: "Model Id",
-      description: "The id of the model to generate the response",
-    },
-    message: {
-      $ref: "#/components/schemas/ChatMessageRequestSchema",
-      description: "The message of the chat",
-    },
-    options: {
-      anyOf: [
-        {
-          $ref: "#/components/schemas/DefaultResponseGenerationOptionsDTO",
-        },
-        {
-          type: "null",
-        },
-      ],
-      description: "The options of the chat",
-    },
-  },
-  type: "object",
-  required: ["model_id", "message"],
-  title: "ChatCompletionRequestSchema",
-} as const;
-
 export const $ChatListItemResponseSchema = {
   properties: {
     id: {
@@ -246,6 +218,23 @@ export const $ChatMessageResponseSchema = {
       title: "Content",
       description: "The content of the message",
     },
+    selected: {
+      type: "boolean",
+      title: "Selected",
+      description: "Whether the message is selected",
+    },
+    model_id: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Model Id",
+      description: "The id of the model",
+    },
     attachments: {
       anyOf: [
         {
@@ -262,6 +251,19 @@ export const $ChatMessageResponseSchema = {
       title: "Attachments",
       description: "The attachments of the message",
     },
+    previous_message_id: {
+      anyOf: [
+        {
+          type: "string",
+          format: "uuid",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Previous Message Id",
+      description: "The ID of the previous message in the conversation chain",
+    },
     created_at: {
       type: "string",
       format: "date-time",
@@ -270,7 +272,7 @@ export const $ChatMessageResponseSchema = {
     },
   },
   type: "object",
-  required: ["id", "role", "content", "created_at"],
+  required: ["id", "role", "content", "selected", "created_at"],
   title: "ChatMessageResponseSchema",
 } as const;
 
@@ -348,20 +350,21 @@ export const $ChatResponseSchema = {
   title: "ChatResponseSchema",
 } as const;
 
-export const $DefaultResponseGenerationOptionsDTO = {
+export const $DeleteChatsRequestSchema = {
   properties: {
-    temperature: {
-      type: "number",
-      title: "Temperature",
-    },
-    max_tokens: {
-      type: "integer",
-      title: "Max Tokens",
+    chat_ids: {
+      items: {
+        type: "string",
+        format: "uuid",
+      },
+      type: "array",
+      title: "Chat Ids",
+      description: "The ids of the chats to delete",
     },
   },
   type: "object",
-  required: ["temperature", "max_tokens"],
-  title: "DefaultResponseGenerationOptionsDTO",
+  required: ["chat_ids"],
+  title: "DeleteChatsRequestSchema",
 } as const;
 
 export const $FileResponseSchema = {
@@ -447,6 +450,26 @@ export const $LimitsResponseSchema = {
   type: "object",
   required: ["limits"],
   title: "LimitsResponseSchema",
+} as const;
+
+export const $MultiModelCompletionRequestSchema = {
+  properties: {
+    model_ids: {
+      items: {
+        type: "integer",
+      },
+      type: "array",
+      title: "Model Ids",
+      description: "The ids of the models to compare (minimum 2)",
+    },
+    message: {
+      $ref: "#/components/schemas/ChatMessageRequestSchema",
+      description: "The message of the chat",
+    },
+  },
+  type: "object",
+  required: ["model_ids", "message"],
+  title: "MultiModelCompletionRequestSchema",
 } as const;
 
 export const $TokenResponseSchema = {

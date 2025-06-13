@@ -1,5 +1,8 @@
 import { useTheme, type ThemeType } from "@/context/ThemeContext";
 import "./Footer.scss";
+import { cn } from "@/lib/utils";
+import { useContext } from "react";
+import { SidebarContext } from "../Layout/Layout";
 
 export const Footer = () => {
   const { currentTheme, setTheme } = useTheme();
@@ -20,9 +23,9 @@ export const Footer = () => {
         return "⚙️";
     }
   };
-
+  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
   return (
-    <footer className="footer">
+    <footer className={cn("footer", { "with-sidebar": isSidebarOpen })}>
       <div className="footer__content">
         <p className="footer__copyright">
           &copy; 2025 AGG AI. All rights reserved.

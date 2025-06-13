@@ -58,7 +58,7 @@ $message-radius: $radius-lg;
     background-color: var(--message-user-bg-color);
     margin-left: auto;
     margin-right: $spacing-lg;
-    border-bottom-right-radius: $spacing-xs;
+    border-bottom-right-radius: 0;
 
     .copy-button {
       right: -8px;
@@ -73,7 +73,7 @@ $message-radius: $radius-lg;
       content: "";
       position: absolute;
       bottom: 0;
-      right: -$spacing-sm;
+      right: -0.4rem;
       width: $spacing-sm;
       height: $spacing-sm;
       background-color: var(--message-user-bg-color);
@@ -104,7 +104,7 @@ $message-radius: $radius-lg;
       content: "";
       position: absolute;
       bottom: 0;
-      left: -$spacing-sm;
+      left: -0.4rem;
       width: $spacing-sm;
       height: $spacing-sm;
       background-color: var(--message-assistant-bg-color);
@@ -149,9 +149,6 @@ $message-radius: $radius-lg;
       font-size: 1em;
     }
 
-    p {
-      margin-bottom: $spacing-sm;
-    }
 
     ul,
     ol {
@@ -332,6 +329,29 @@ $message-radius: $radius-lg;
           font-weight: 500;
           color: var(--text-secondary-color);
         }
+      }
+    }
+
+    .model-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      margin-top: $spacing-md;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-color);
+      opacity: 0.7;
+
+      .model-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: $spacing-sm;
+        object-fit: contain;
+      }
+
+      .model-name {
+        font-size: $font-xs;
+        color: var(--text-secondary-color);
+        font-weight: 500;
       }
     }
   }

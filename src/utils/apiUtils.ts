@@ -1,26 +1,14 @@
-import { providerIconPaths } from "@/assets/icons/ai-providers";
-import { type SetStateAction, useEffect, useState } from "react";
-import {
-  useAiModelsServiceGetApiAiModels,
-  useChatsServiceGetApiChats,
-  useChatsServicePostApiChatsConversation,
-} from "~/openapi/queries/queries";
-
-export interface ChatMessageRequest {
-  role: "user" | "assistant";
-  content: string;
-  attachments?: string[];
-}
-
-export interface StreamRequestBody {
-  messages: ChatMessageRequest[];
-  chat_id?: string;
-  model_id: number;
-}
+import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
 
 export interface MessageStartEvent {
   type: "message_start";
-  message: { id: string; role: string };
+  message: {
+    id: string;
+    role: string;
+    model_id: number;
+    model_name: string;
+    reply_to: string;
+  };
 }
 
 export interface MessageContentEvent {
@@ -37,55 +25,27 @@ export interface DoneEvent {
   type: "done";
 }
 
+export interface MessageStopEvent {
+  type: "message_stop";
+  message: { id: string };
+}
+
+export interface MessageContentStopEvent {
+  type: "message_content_stop";
+  message: { id: string; model_id: number; model_name: string };
+}
+
 export type StreamEvent =
   | MessageStartEvent
   | MessageContentEvent
+  | MessageContentStopEvent
   | ChatMetadataEvent
+  | MessageStopEvent
   | DoneEvent;
 
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;
 export type DoneCallback = () => void;
-
-export const getProviderIconPath = (provider: string): string => {
-  return (
-    providerIconPaths[
-      provider.toLowerCase() as keyof typeof providerIconPaths
-    ] || providerIconPaths.default
-  );
-};
-
-export const useAIModelsForChat = (initialModelId?: string) => {
-  const { data: models, ...other } = useAiModelsServiceGetApiAiModels();
-  const [selectedModel, setSelectedModel] = useState<string | null>(
-    initialModelId || null,
-  );
-
-  const options =
-    models?.map((model) => ({
-      value: model.id.toString(),
-      label: model.name,
-      iconPath: getProviderIconPath(model.provider.slug),
-    })) || [];
-
-  useEffect(() => {
-    if (!options.length || selectedModel) return;
-
-    if (initialModelId && options.some((opt) => opt.value === initialModelId)) {
-      setSelectedModel(initialModelId);
-    } else {
-      setSelectedModel(options[0].value);
-    }
-  }, [selectedModel, options, initialModelId]);
-
-  return {
-    ...other,
-    modelOptions: options,
-    selectedModel,
-    setSelectedModel,
-  };
-};
-
 export const useChats = () => {
   const { data: chats, ...other } = useChatsServiceGetApiChats();
 

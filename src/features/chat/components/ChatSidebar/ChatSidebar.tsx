@@ -6,39 +6,113 @@ import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
+import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
+import { TextInputModal } from "@/components/Modal/TextInputModal";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { Chat } from "@/features/chat/types";
-import { useMemo, useState, type FC } from "react";
-import "./ChatSidebar.scss";
+import { useHotkey } from "@/hooks/general";
 import { cn } from "@/lib/utils";
+import { useChats } from "@/utils/apiUtils";
+import { useQueryClient } from "@tanstack/react-query";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
+import {
+  useChatsServiceDeleteApiChats,
+  useChatsServicePatchApiChatsByChatIdPin,
+  useChatsServicePatchApiChatsByChatIdTitle,
+} from "~/openapi/queries/queries";
+import "./ChatSidebar.scss";
 
 interface ChatSidebarProps {
   isOpen: boolean;
   onToggle: () => void;
-  chats?: Chat[];
-  onChatSelect?: (chatId: string) => void;
-  onNewChat?: () => void;
-  onDeleteChat?: (chatId: string) => void;
-  onRenameChat?: (chatId: string, currentTitle: string) => void;
-  onPinChat?: (chatId: string, pinned: boolean) => void;
   activeChat?: string | null;
-  isLoading?: boolean;
   isStreaming?: boolean;
 }
+
+const useUpdateBrowserTitle = ({
+  chats,
+}: {
+  chats: { title: string; id: string }[];
+}) => {
+  const { chatId: activeChatId } = useParams();
+
+  useEffect(() => {
+    const baseTitle = "Agg AI";
+    if (activeChatId) {
+      const chatTitle = chats.find((c) => c.id === activeChatId)?.title;
+      document.title = chatTitle ? `${chatTitle} - ${baseTitle}` : baseTitle;
+    } else {
+      document.title = baseTitle;
+    }
+
+    return () => {
+      document.title = baseTitle;
+    };
+  }, [activeChatId, chats]);
+};
 
 export const ChatSidebar = ({
   isOpen,
   onToggle,
-  chats = [],
-  onChatSelect,
-  onNewChat,
-  onDeleteChat,
-  onRenameChat,
   isStreaming,
-  onPinChat,
-  activeChat,
-  isLoading = false,
 }: ChatSidebarProps) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { chatId: activeChatId } = useParams();
+  const [renameModalState, setRenameModalState] = useState<{
+    isOpen: boolean;
+    chatId: string | null;
+    currentTitle: string;
+  }>({
+    isOpen: false,
+    chatId: null,
+    currentTitle: "",
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    chatIds: string[];
+  }>({
+    isOpen: false,
+    chatIds: [],
+  });
+
+  const toggleSidebar = useCallback(() => {
+    if (isOpen) {
+      onToggle();
+    }
+  }, [isOpen, onToggle]);
+  useHotkey("Escape", toggleSidebar);
+
+  const { chats, isLoading } = useChats();
+  useUpdateBrowserTitle({ chats });
+
+  const { mutateAsync: updateChatTitle } =
+    useChatsServicePatchApiChatsByChatIdTitle({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsKeyFn(),
+        });
+      },
+    });
+  const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: UseChatsServiceGetApiChatsKeyFn(),
+      });
+    },
+  });
+  const { mutateAsync: deleteChats } = useChatsServiceDeleteApiChats({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: UseChatsServiceGetApiChatsKeyFn(),
+      });
+    },
+  });
 
   const filteredChats = useMemo(() => {
     if (searchTerm.trim() === "") {
@@ -74,9 +148,84 @@ export const ChatSidebar = ({
       )
       .sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
   }, [searchTerm, chats]);
+  const pinnedChats = filteredChats.filter((chat) => chat.pinned);
+  const unpinnedChats = filteredChats.filter((chat) => !chat.pinned);
+  const isAllSelected =
+    filteredChats.length > 0 && selectedChatIds.length === filteredChats.length;
 
+  const handleNewChat = () => {
+    navigate("/chat");
+
+    // On mobile, close the sidebar after creating a new chat
+    if (window.innerWidth <= 768) {
+      onToggle();
+    }
+  };
+  const handleRenameChat = async (newTitle: string) => {
+    try {
+      if (renameModalState.chatId) {
+        await updateChatTitle({
+          chatId: renameModalState.chatId,
+          requestBody: { title: newTitle },
+        });
+      }
+      setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
+    } catch (error) {
+      console.error("Failed to rename chat:", error);
+      setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
+    }
+  };
+  const handleChatSelect = async (chatId: string) => {
+    if (chatId === activeChatId) {
+      return;
+    }
+    navigate(`/chat/${chatId}`);
+
+    // On mobile, close the sidebar after selection
+    if (window.innerWidth <= 768) {
+      onToggle();
+    }
+  };
+  const handleRenameModal = (chatId: string, currentTitle: string) => {
+    setRenameModalState({ isOpen: true, chatId, currentTitle });
+  };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+  };
+  const handleDeleteModal = (chatIds: string | string[]) => {
+    const ids = Array.isArray(chatIds) ? chatIds : [chatIds];
+    setDeleteModalState({ isOpen: true, chatIds: ids });
+  };
+  const handleDeleteChat = async () => {
+    try {
+      if (deleteModalState.chatIds.length > 0) {
+        await deleteChats({
+          requestBody: { chat_ids: deleteModalState.chatIds },
+        });
+        if (deleteModalState.chatIds.includes(activeChatId || "")) {
+          navigate("/chat");
+        }
+      }
+      setDeleteModalState({ isOpen: false, chatIds: [] });
+    } catch (error) {
+      console.error("Failed to delete chat:", error);
+      setDeleteModalState({ isOpen: false, chatIds: [] });
+    }
+  };
+  const toggleChatSelection = (chatId: string, selected: boolean) => {
+    setSelectedChatIds((prev) => {
+      if (selected) {
+        return [...prev, chatId];
+      }
+      return prev.filter((id) => id !== chatId);
+    });
+  };
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedChatIds(filteredChats.map((chat) => chat.id));
+    } else {
+      setSelectedChatIds([]);
+    }
   };
 
   const formatDate = (date: Date) => {
@@ -99,10 +248,6 @@ export const ChatSidebar = ({
     return date.toLocaleDateString([], { month: "short", day: "numeric" });
   };
 
-  // Split chats into pinned and unpinned
-  const pinnedChats = filteredChats.filter((chat) => chat.pinned);
-  const unpinnedChats = filteredChats.filter((chat) => !chat.pinned);
-
   return (
     <div
       className={cn("chat-sidebar", {
@@ -121,8 +266,9 @@ export const ChatSidebar = ({
         </button>
         <h2 className="sidebar-title">Chats</h2>
         <button
+          type="button"
           className="new-chat-button"
-          onClick={onNewChat}
+          onClick={handleNewChat}
           aria-label="New chat"
         >
           <NewChatIcon width={20} height={20} />
@@ -141,6 +287,40 @@ export const ChatSidebar = ({
           />
         </div>
       </div>
+
+      {filteredChats.length > 0 && (
+        <div className="select-all-container">
+          <div className="select-all-controls">
+            <Checkbox
+              checked={isAllSelected}
+              onCheckedChange={handleSelectAll}
+            />
+            <button
+              type="button"
+              className="py-2! select-all-label"
+              onClick={() => handleSelectAll(!isAllSelected)}
+              aria-label={
+                isAllSelected ? "Deselect all chats" : "Select all chats"
+              }
+            >
+              {isAllSelected ? "Deselect all" : "Select all"}
+            </button>
+          </div>
+          {selectedChatIds.length > 0 && (
+            <button
+              type="button"
+              className="bulk-delete-button-inline"
+              onClick={() => {
+                handleDeleteModal(selectedChatIds);
+                setSelectedChatIds([]);
+              }}
+              aria-label={`Delete ${selectedChatIds.length} selected chats`}
+            >
+              Delete ({selectedChatIds.length})
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="chats-list">
         {isLoading ? (
@@ -163,11 +343,15 @@ export const ChatSidebar = ({
                   <ChatListItem
                     key={chat.id}
                     chat={chat}
-                    isActive={activeChat === chat.id}
-                    onSelect={() => onChatSelect?.(chat.id)}
-                    onDelete={() => onDeleteChat?.(chat.id)}
-                    onRename={() => onRenameChat?.(chat.id, chat.title)}
-                    onTogglePin={() => onPinChat?.(chat.id, !chat.pinned)}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRename={() => handleRenameModal(chat.id, chat.title)}
+                    onTogglePin={() => pinChat({ chatId: chat.id })}
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
                     formatDate={formatDate}
                   />
                 ))}
@@ -182,11 +366,15 @@ export const ChatSidebar = ({
                   <ChatListItem
                     key={chat.id}
                     chat={chat}
-                    isActive={activeChat === chat.id}
-                    onSelect={() => onChatSelect?.(chat.id)}
-                    onDelete={() => onDeleteChat?.(chat.id)}
-                    onRename={() => onRenameChat?.(chat.id, chat.title)}
-                    onTogglePin={() => onPinChat?.(chat.id, !chat.pinned)}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRename={() => handleRenameModal(chat.id, chat.title)}
+                    onTogglePin={() => pinChat({ chatId: chat.id })}
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
                     formatDate={formatDate}
                   />
                 ))}
@@ -195,6 +383,34 @@ export const ChatSidebar = ({
           </>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, chatIds: [] })}
+        onConfirm={handleDeleteChat}
+        title="Delete chat"
+        message="Are you sure you want to delete the selected chat(s)? This action cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        isDanger={true}
+      />
+
+      <TextInputModal
+        isOpen={renameModalState.isOpen}
+        onClose={() =>
+          setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" })
+        }
+        onSave={handleRenameChat}
+        title="Rename chat"
+        initialValue={renameModalState.currentTitle}
+        placeholder="Enter a new name for this chat"
+        saveLabel="Save"
+        cancelLabel="Cancel"
+        maxLength={50}
+        validator={(value) =>
+          value.trim().length > 0 && value.trim().length <= 50
+        }
+        errorMessage="Chat name must be between 1 and 50 characters"
+      />
     </div>
   );
 };
@@ -203,20 +419,24 @@ export const ChatSidebar = ({
 interface ChatListItemProps {
   chat: Chat;
   isActive: boolean;
+  isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
   onRename: () => void;
   onTogglePin: () => void;
+  onSelectChange: (checked: boolean) => void;
   formatDate: (date: Date) => string;
 }
 
 const ChatListItem: FC<ChatListItemProps> = ({
   chat,
   isActive,
+  isSelected,
   onSelect,
   onDelete,
   onRename,
   onTogglePin,
+  onSelectChange,
   formatDate,
 }) => {
   const stopPropagation = (e: React.MouseEvent) => {
@@ -224,11 +444,39 @@ const ChatListItem: FC<ChatListItemProps> = ({
   };
 
   return (
-    <div className={`chat-item ${isActive ? "active" : ""}`} onClick={onSelect}>
-      <div className="chat-item-title">
-        {chat.pinned && <PinIcon className="pin-icon" width={14} height={14} />}
-        {chat.title}
-      </div>
+    <div
+      className={`chat-item flex gap-2 ${isActive ? "active" : ""}`}
+      onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          onSelect();
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Select chat: ${chat.title}`}
+    >
+      <Checkbox
+        checked={isSelected}
+        onCheckedChange={onSelectChange}
+        onClick={stopPropagation}
+        className="cursor-pointer"
+      />
+
+      <button
+        type="button"
+        className="flex items-center gap-1 text-left line-clamp-1 cursor-pointer"
+        aria-label={`Select chat: ${chat.title}`}
+      >
+        {chat.pinned && (
+          <PinIcon
+            className="text-(--primary) pin-icon"
+            width={14}
+            height={14}
+          />
+        )}
+        <div className="truncate chat-item-title">{chat.title}</div>
+      </button>
 
       <DropdownMenu
         className="chat-item-menu"

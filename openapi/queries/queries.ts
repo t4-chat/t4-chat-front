@@ -20,8 +20,9 @@ import {
 import type {
   AggregationType,
   Body_upload_file_api_files_upload_post,
-  ChatCompletionRequestSchema,
+  DeleteChatsRequestSchema,
   GoogleAuthRequestSchema,
+  MultiModelCompletionRequestSchema,
   UpdateChatTitleRequestSchema,
 } from "../requests/types.gen";
 import * as Common from "./common";
@@ -267,7 +268,7 @@ export const useChatsServicePostApiChatsConversation = <
       TData,
       TError,
       {
-        requestBody: ChatCompletionRequestSchema;
+        requestBody: MultiModelCompletionRequestSchema;
       },
       TContext
     >,
@@ -278,7 +279,7 @@ export const useChatsServicePostApiChatsConversation = <
     TData,
     TError,
     {
-      requestBody: ChatCompletionRequestSchema;
+      requestBody: MultiModelCompletionRequestSchema;
     },
     TContext
   >({
@@ -415,8 +416,8 @@ export const useChatsServicePatchApiChatsByChatIdPin = <
       }) as unknown as Promise<TData>,
     ...options,
   });
-export const useChatsServiceDeleteApiChatsByChatId = <
-  TData = Common.ChatsServiceDeleteApiChatsByChatIdMutationResult,
+export const useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect = <
+  TData = Common.ChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelectMutationResult,
   TError = unknown,
   TContext = unknown,
 >(
@@ -426,6 +427,7 @@ export const useChatsServiceDeleteApiChatsByChatId = <
       TError,
       {
         chatId: string;
+        messageId: string;
       },
       TContext
     >,
@@ -437,12 +439,43 @@ export const useChatsServiceDeleteApiChatsByChatId = <
     TError,
     {
       chatId: string;
+      messageId: string;
     },
     TContext
   >({
-    mutationFn: ({ chatId }) =>
-      ChatsService.deleteApiChatsByChatId({
+    mutationFn: ({ chatId, messageId }) =>
+      ChatsService.patchApiChatsByChatIdMessagesByMessageIdSelect({
         chatId,
+        messageId,
       }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useChatsServiceDeleteApiChats = <
+  TData = Common.ChatsServiceDeleteApiChatsMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: DeleteChatsRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: DeleteChatsRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      ChatsService.deleteApiChats({ requestBody }) as unknown as Promise<TData>,
     ...options,
   });

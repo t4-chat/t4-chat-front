@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import type * as React from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
@@ -29,7 +29,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 w-4 h-4" />
@@ -45,5 +45,5 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         />
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};

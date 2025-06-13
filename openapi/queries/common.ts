@@ -219,6 +219,12 @@ export type ChatsServicePatchApiChatsByChatIdTitleMutationResult = Awaited<
 export type ChatsServicePatchApiChatsByChatIdPinMutationResult = Awaited<
   ReturnType<typeof ChatsService.patchApiChatsByChatIdPin>
 >;
-export type ChatsServiceDeleteApiChatsByChatIdMutationResult = Awaited<
-  ReturnType<typeof ChatsService.deleteApiChatsByChatId>
+export type ChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelectMutationResult =
+  Awaited<
+    ReturnType<
+      typeof ChatsService.patchApiChatsByChatIdMessagesByMessageIdSelect
+    >
+  >;
+export type ChatsServiceDeleteApiChatsMutationResult = Awaited<
+  ReturnType<typeof ChatsService.deleteApiChats>
 >;

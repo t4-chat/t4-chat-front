@@ -10,7 +10,7 @@ class TokenService {
 
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
-    this.openApiConfig.TOKEN = `Bearer ${token}`;
+    this.openApiConfig.TOKEN = token;
   }
 
   getToken(): string | null {

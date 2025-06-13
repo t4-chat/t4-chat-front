@@ -1,5 +1,62 @@
 @import "@/assets/styles/variables.scss";
 
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: var(--chat-bg-color);
+  position: relative;
+  overflow: visible;
+  min-height: 0;
+
+  .chat-input-integrated-wrapper {
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    width: calc(100% - 2rem);
+  }
+}
+
+.chat-model-selector {
+  border-bottom: $border-width solid var(--border-color);
+  border-radius: $radius-md;
+  backdrop-filter: blur(10px);
+  
+
+  .model-select {
+    max-width: 12rem;
+  }
+
+  &.chat-model-top-left {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    border: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+}
+
+.with-model-selector-top {
+  lef
+  .chat-messages {
+    padding-top: 4.5rem; // ensure messages don't overlap model picker
+  }
+}
+
+.chat-header {
+  padding: $spacing-lg;
+  border-bottom: $border-width solid var(--border-color);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 @mixin scrollbar {
   &::-webkit-scrollbar {
     width: $spacing-sm;

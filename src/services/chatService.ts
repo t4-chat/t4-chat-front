@@ -1,51 +1,17 @@
 import type { Chat } from "@/features/chat/types";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
 import { api } from "@/services/api";
-import {
-  ChatCompletionRequestSchema,
+import type {
+  MultiModelCompletionRequestSchema,
   ChatMessageRequestSchema,
 } from "~/openapi/requests/types.gen";
-
-export interface ChatMessageRequest {
-  role: string;
-  content: string;
-  attachments?: string[];
-}
-
-export interface StreamRequestBody {
-  message: ChatMessageRequest;
-  chat_id?: string;
-  model_id: number;
-}
-
-export interface MessageStartEvent {
-  type: "message_start";
-  message: { id: string; role: string };
-}
-
-export interface MessageContentEvent {
-  type: "message_content";
-  content: { text: string; type: string };
-}
-
-export interface ChatMetadataEvent {
-  type: "chat_metadata";
-  chat: { id: string };
-}
-
-export interface DoneEvent {
-  type: "done";
-}
-
-export type StreamEvent =
-  | MessageStartEvent
-  | MessageContentEvent
-  | ChatMetadataEvent
-  | DoneEvent;
-
-export type StreamEventCallback = (event: StreamEvent) => void;
-export type ErrorCallback = (error: Error) => void;
-export type DoneCallback = () => void;
+import { queryClient } from "@/App";
+import { UseChatsServiceGetApiChatsByChatIdMessagesKeyFn } from "~/openapi/queries/common";
+import type {
+  DoneCallback,
+  StreamEvent,
+  StreamEventCallback,
+} from "@/utils/apiUtils";
 
 export class ChatService {
   private baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
@@ -59,14 +25,14 @@ export class ChatService {
 
   streamChat({
     message,
-    modelId,
+    modelIds,
     onEvent,
     onError,
     onDone,
     options,
   }: {
     message: ChatMessageRequestSchema;
-    modelId: number;
+    modelIds: (number | string)[];
     onEvent: StreamEventCallback;
     onError: ErrorCallback;
     onDone: DoneCallback;
@@ -77,9 +43,9 @@ export class ChatService {
   }): () => void {
     const { abortSignal } = options || {};
 
-    const body: ChatCompletionRequestSchema = {
+    const body: MultiModelCompletionRequestSchema = {
       message,
-      model_id: modelId,
+      model_ids: modelIds,
     };
 
     const controller = new AbortController();
@@ -128,7 +94,13 @@ export class ChatService {
                 onEvent(data as StreamEvent);
 
                 if (data.type === "done") {
+                  queryClient.invalidateQueries({
+                    queryKey: UseChatsServiceGetApiChatsByChatIdMessagesKeyFn({
+                      chatId: options?.chatId || "",
+                    }),
+                  });
                   onDone();
+
                   return;
                 }
               } catch (error) {
@@ -137,9 +109,10 @@ export class ChatService {
             }
           }
         }
-      } catch (error: any) {
-        if (error.name !== "AbortError") {
-          onError(error instanceof Error ? error : new Error(String(error)));
+      } catch (error: unknown) {
+        const e = error as Error & { name?: string };
+        if (e.name !== "AbortError") {
+          onError(e instanceof Error ? e : new Error(String(error)));
         }
       }
     })();

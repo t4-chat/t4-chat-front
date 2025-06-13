@@ -4,7 +4,7 @@
   width: 100%;
   background-color: var(--background-color);
   border-top: $border-width solid var(--border-color);
-  transition: background-color $transition-normal;
+  transition: background-color $transition-normal, padding $transition-fast;
 
   &__content {
     max-width: $breakpoint-xl;

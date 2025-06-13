@@ -1,9 +1,13 @@
 export interface ChatMessage {
   id?: string;
+  role?: "user" | "assistant";
   content: string;
-  attachments?: string[];
+  attachments?: string[] | null;
+  previous_message_id?: string;
   created_at?: Date;
   chat_id?: string;
+  model_id?: number;
+  selected?: boolean;
 }
 
 export interface AIModel {

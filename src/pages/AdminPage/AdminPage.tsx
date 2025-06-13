@@ -58,7 +58,7 @@ export const AdminPage = () => {
   });
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="space-y-6 p-4">
       <Card>
         <CardHeader>
           <CardTitle>Budget</CardTitle>
@@ -67,7 +67,7 @@ export const AdminPage = () => {
           {budgetLoading ? (
             <p>Loading...</p>
           ) : budget ? (
-            <p className="text-lg font-medium">
+            <p className="font-medium text-lg">
               {budget.usage} used of {budget.budget}
             </p>
           ) : (
@@ -83,7 +83,7 @@ export const AdminPage = () => {
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-4">
             <div>
-              <label className="block text-sm mb-1" htmlFor="aggregation">
+              <label className="block mb-1 text-sm" htmlFor="aggregation">
                 Aggregation
               </label>
               <Select
@@ -113,37 +113,37 @@ export const AdminPage = () => {
               </Select>
             </div>
             <div>
-              <label className="block text-sm mb-1" htmlFor="start">
+              <label className="block mb-1 text-sm" htmlFor="start">
                 Start
               </label>
               <DatePicker date={startDate} onDateChange={setStartDate} />
             </div>
             <div>
-              <label className="block text-sm mb-1" htmlFor="end">
+              <label className="block mb-1 text-sm" htmlFor="end">
                 End
               </label>
               <DatePicker date={endDate} onDateChange={setEndDate} />
             </div>
             <div>
-              <label className="block text-sm mb-1" htmlFor="user">
+              <label className="block mb-1 text-sm" htmlFor="user">
                 User ID
               </label>
               <input
                 id="user"
                 type="text"
-                className="border rounded p-2"
+                className="p-2 border rounded"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm mb-1" htmlFor="model">
+              <label className="block mb-1 text-sm" htmlFor="model">
                 Model ID
               </label>
               <input
                 id="model"
                 type="number"
-                className="border rounded p-2"
+                className="p-2 border rounded"
                 value={modelId}
                 onChange={(e) => setModelId(e.target.value)}
               />
@@ -156,7 +156,7 @@ export const AdminPage = () => {
               {usageFetching && <LoadingOverlay />}
               <div
                 key={usageKey}
-                className="overflow-x-auto animate-in fade-in duration-300"
+                className="overflow-x-auto animate-in duration-300 fade-in"
               >
                 <Table>
                   <TableHeader>
@@ -198,13 +198,13 @@ export const AdminPage = () => {
                       <TableCell colSpan={3} className="font-semibold">
                         Total
                       </TableCell>
-                      <TableCell className="text-right font-semibold">
+                      <TableCell className="font-semibold text-right">
                         {usage.total.prompt_tokens}
                       </TableCell>
-                      <TableCell className="text-right font-semibold">
+                      <TableCell className="font-semibold text-right">
                         {usage.total.completion_tokens}
                       </TableCell>
-                      <TableCell className="text-right font-semibold">
+                      <TableCell className="font-semibold text-right">
                         {usage.total.total_tokens}
                       </TableCell>
                     </TableRow>

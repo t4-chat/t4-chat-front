@@ -10,6 +10,8 @@ import "./ChatMessage.scss";
 
 interface ChatMessageProps extends Omit<ChatMessageType, "id"> {
   disableMarkdown?: boolean;
+  modelName?: string;
+  modelIconPath?: string;
 }
 
 interface AttachmentInfo {
@@ -25,6 +27,8 @@ export const ChatMessage = ({
   role,
   attachments,
   disableMarkdown = false,
+  modelName,
+  modelIconPath,
 }: ChatMessageProps) => {
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
@@ -346,6 +350,19 @@ export const ChatMessage = ({
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {role === "assistant" && (modelName || modelIconPath) && (
+          <div className="model-info">
+            {modelIconPath && (
+              <img
+                src={modelIconPath}
+                alt={modelName || "AI Model"}
+                className="model-icon"
+              />
+            )}
+            {modelName && <span className="model-name">{modelName}</span>}
           </div>
         )}
       </div>

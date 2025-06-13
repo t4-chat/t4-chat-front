@@ -1,13 +1,15 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
-import { useMemo, useState, type FC } from "react";
+import { useContext, useMemo, useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
 import "./HomePage.scss";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { SidebarContext } from "@/components/Layout/Layout";
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -87,17 +89,17 @@ export const HomePage: FC = () => {
   }, [filteredModels, categorizationMode]);
 
   const handleTileClick = (model: AiModelResponseSchema): void => {
-    navigate("/chat", {
-      state: { selectedModelId: model.id.toString() },
-    });
+    navigate(`/chat?modelIds=${model.id}&panes=1`);
   };
 
   const handleClearSearch = (): void => {
     setSearchQuery("");
   };
 
+  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
+
   return (
-    <div className="home-page">
+    <div className={cn("home-page", { "with-sidebar": isSidebarOpen })}>
       <header className="home-page__header">
         <h1 className="home-page__main-title">
           Access the best AI models in one place
@@ -157,47 +159,76 @@ export const HomePage: FC = () => {
           No models found matching "{searchQuery}"
         </p>
       ) : (
-        <div
-          className={cn("home-page__providers-grid", {
-            "home-page__providers-grid--usage": categorizationMode === "usage",
-          })}
-        >
-          {Object.entries(groupedModels).map(
-            ([categoryName, categoryModels]) => (
-              <section
-                key={categoryName}
-                className="home-page__provider-section"
-              >
-                {categorizationMode === "usage" ? (
-                  <h2 className="home-page__provider-title">
-                    {getCategoryDisplayName(categoryName)}
-                  </h2>
-                ) : (
-                  <h2 className="home-page__provider-title">{categoryName}</h2>
-                )}
-                <div className="home-page__grid">
-                  {categoryModels.map((model) => (
-                    <button
-                      type="button"
-                      key={model.id}
-                      className="home-page__tile"
-                      onClick={() => handleTileClick(model)}
-                    >
-                      <div className="home-page__tile-icon">
-                        <img
-                          src={getProviderIconPath(model.provider.slug)}
-                          alt={`${model.provider} icon`}
-                          className="home-page__tile-svg"
-                        />
-                      </div>
-                      <div className="home-page__tile-name">{model.name}</div>
-                    </button>
-                  ))}
-                </div>
-              </section>
-            ),
-          )}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={categorizationMode}
+            className={cn("home-page__providers-grid", {
+              "home-page__providers-grid--usage":
+                categorizationMode === "usage",
+            })}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            {Object.entries(groupedModels).map(
+              ([categoryName, categoryModels]) => (
+                <motion.section
+                  key={categoryName}
+                  className="home-page__provider-section"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.1,
+                    ease: "easeOut",
+                  }}
+                >
+                  {categorizationMode === "usage" ? (
+                    <h2 className="home-page__provider-title">
+                      {getCategoryDisplayName(categoryName)}
+                    </h2>
+                  ) : (
+                    <h2 className="home-page__provider-title">
+                      {categoryName}
+                    </h2>
+                  )}
+                  <div className="home-page__grid">
+                    {categoryModels.map((model, index) => (
+                      <motion.button
+                        type="button"
+                        key={model.id}
+                        className="home-page__tile"
+                        onClick={() => handleTileClick(model)}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.3,
+                          delay: 0.2 + index * 0.05,
+                          ease: "easeOut",
+                        }}
+                        whileHover={{
+                          scale: 1.02,
+                          transition: { duration: 0.2 },
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <div className="home-page__tile-icon">
+                          <img
+                            src={getProviderIconPath(model.provider.slug)}
+                            alt={`${model.provider} icon`}
+                            className="home-page__tile-svg"
+                          />
+                        </div>
+                        <div className="home-page__tile-name">{model.name}</div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.section>
+              ),
+            )}
+          </motion.div>
+        </AnimatePresence>
       )}
     </div>
   );

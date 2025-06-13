@@ -12,7 +12,7 @@ import {
   useAuthenticationServicePostApiAuthGoogle,
   useUsersServiceGetApiUsersCurrent,
 } from "~/openapi/queries/queries";
-import type { UserResponse } from "~/openapi/requests/types.gen";
+import type { UserResponseSchema } from "~/openapi/requests/types.gen";
 import { useQueryClient } from "@tanstack/react-query";
 import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
@@ -22,7 +22,7 @@ interface TokenPayload {
 }
 
 interface AuthContextType {
-  user: UserResponse;
+  user: UserResponseSchema | undefined;
   isAuthenticated: boolean;
   isLoading: boolean;
   isAdmin: boolean;

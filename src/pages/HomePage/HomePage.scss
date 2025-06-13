@@ -8,6 +8,7 @@
   min-height: calc(100vh - 8.5rem);
   padding: $spacing-xl $spacing-lg;
   background-color: var(--background-color);
+  transition: padding $transition-fast;
   background-image: linear-gradient(
       120deg,
       rgba(33, 150, 243, 0.05) 0%,

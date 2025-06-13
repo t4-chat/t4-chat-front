@@ -40,6 +40,7 @@ export const Select: FC<SelectProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const selectRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const selectId = useRef(`select-${Math.random().toString(36).substr(2, 9)}`);
 
   // Get the selected option
   const selectedOption = options.find((option) => option.value === value);
@@ -64,8 +65,15 @@ export const Select: FC<SelectProps> = ({
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -89,13 +97,63 @@ export const Select: FC<SelectProps> = ({
     setSearchTerm("");
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (disabled) return;
+
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        toggleDropdown();
+        break;
+      case "ArrowDown":
+        event.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+        }
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+        }
+        break;
+    }
+  };
+
+  const handleOptionKeyDown = (
+    event: React.KeyboardEvent,
+    optionValue: string,
+  ) => {
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        handleOptionSelect(optionValue);
+        break;
+    }
+  };
+
   return (
     <div className={`select-wrapper ${className}`} ref={selectRef}>
-      {label && <label className="select-label">{label}</label>}
+      {label && (
+        <label htmlFor={selectId.current} className="select-label">
+          {label}
+        </label>
+      )}
 
       <div
+        id={selectId.current}
         className={`enhanced-select ${isOpen ? "open" : ""} ${error ? "error" : ""} ${disabled ? "disabled" : ""} ${variant}`}
         onClick={toggleDropdown}
+        onKeyDown={handleKeyDown}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-controls={`${selectId.current}-listbox`}
+        aria-labelledby={label ? undefined : selectId.current}
+        aria-describedby={error ? `${selectId.current}-error` : undefined}
+        tabIndex={disabled ? -1 : 0}
       >
         <div className="selected-option">
           {selectedOption ? (
@@ -117,7 +175,12 @@ export const Select: FC<SelectProps> = ({
         </div>
 
         {isOpen && (
-          <div className={`select-dropdown ${dropdownPosition}`}>
+          <div
+            id={`${selectId.current}-listbox`}
+            className={`select-dropdown ${dropdownPosition}`}
+            role="listbox"
+            tabIndex={-1}
+          >
             {searchable && (
               <div className="search-container">
                 <input
@@ -128,6 +191,7 @@ export const Select: FC<SelectProps> = ({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
+                  aria-label={searchPlaceholder}
                 />
               </div>
             )}
@@ -142,6 +206,10 @@ export const Select: FC<SelectProps> = ({
                       e.stopPropagation();
                       handleOptionSelect(option.value);
                     }}
+                    onKeyDown={(e) => handleOptionKeyDown(e, option.value)}
+                    role="option"
+                    aria-selected={option.value === value}
+                    tabIndex={0}
                   >
                     {option.iconPath && (
                       <span className="option-icon">
@@ -163,7 +231,11 @@ export const Select: FC<SelectProps> = ({
         )}
       </div>
 
-      {error && <span className="select-error">{error}</span>}
+      {error && (
+        <span id={`${selectId.current}-error`} className="select-error">
+          {error}
+        </span>
+      )}
     </div>
   );
 };

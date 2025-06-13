@@ -3,12 +3,15 @@
 .chat-sidebar {
   position: fixed;
   top: 3.75rem; // Match header offset from ChatPage.scss
+  @media (max-width: $breakpoint-md) {
+    top: 3rem;
+  }
   left: 0;
   bottom: 0;
   width: 20rem; // 320px
   background-color: var(--component-bg-color);
   border-right: $border-width solid var(--border-color);
-  transition: transform $transition-normal, box-shadow $transition-normal;
+  transition: transform $transition-fast, box-shadow $transition-fast;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -102,6 +105,50 @@
     }
   }
 
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md $spacing-lg;
+    border-bottom: $border-width solid var(--border-color);
+    background-color: var(--component-bg-color);
+
+    .select-all-controls {
+      display: flex;
+      align-items: center;
+    }
+
+    .select-all-label {
+      margin-left: $spacing-sm;
+      font-size: $font-sm;
+      color: var(--text-secondary-color);
+      cursor: pointer;
+      user-select: none;
+      background: none;
+      border: none;
+      padding: 0;
+
+      &:hover {
+        color: var(--text-primary-color);
+      }
+    }
+
+    .bulk-delete-button-inline {
+      background-color: var(--error-color);
+      color: white;
+      border: none;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-sm;
+      font-size: $font-xs;
+      cursor: pointer;
+      transition: background-color $transition-fast;
+
+      &:hover {
+        background-color: darken($error, 10%);
+      }
+    }
+  }
+
   .chats-list {
     flex: 1;
     overflow-y: auto;
@@ -147,6 +194,10 @@
       display: flex;
       align-items: center;
 
+      .chat-select-checkbox {
+        margin-right: $spacing-sm;
+      }
+
       &:hover {
         background-color: var(--hover-color);
       }
@@ -163,7 +214,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: calc(100% - 3rem); /* Reserve space for menu icon */
         display: flex;
         align-items: center;
         flex: 1;
@@ -177,7 +227,7 @@
 
       .chat-item-menu {
         flex-shrink: 0;
-        margin-left: $spacing-md;
+        margin-left:auto;
         z-index: 100;
 
         &.menu-open {
@@ -221,6 +271,8 @@
       }
     }
   }
+
+
 }
 
 // Mobile styles

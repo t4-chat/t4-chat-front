@@ -54,21 +54,6 @@ export type BudgetResponseSchema = {
   usage: number;
 };
 
-export type ChatCompletionRequestSchema = {
-  /**
-   * The id of the model to generate the response
-   */
-  model_id: number;
-  /**
-   * The message of the chat
-   */
-  message: ChatMessageRequestSchema;
-  /**
-   * The options of the chat
-   */
-  options?: DefaultResponseGenerationOptionsDTO | null;
-};
-
 export type ChatListItemResponseSchema = {
   /**
    * The id of the chat
@@ -126,9 +111,21 @@ export type ChatMessageResponseSchema = {
    */
   content: string;
   /**
+   * Whether the message is selected
+   */
+  selected: boolean | null;
+  /**
+   * The id of the model
+   */
+  model_id?: number | null;
+  /**
    * The attachments of the message
    */
   attachments?: Array<string> | null;
+  /**
+   * The ID of the previous message in the conversation chain
+   */
+  previous_message_id?: string | null;
   /**
    * The creation date of the message
    */
@@ -178,9 +175,11 @@ export type ChatResponseSchema = {
   messages: Array<ChatMessageResponseSchema>;
 };
 
-export type DefaultResponseGenerationOptionsDTO = {
-  temperature: number;
-  max_tokens: number;
+export type DeleteChatsRequestSchema = {
+  /**
+   * The ids of the chats to delete
+   */
+  chat_ids: Array<string>;
 };
 
 export type FileResponseSchema = {
@@ -225,6 +224,17 @@ export type LimitsResponseSchema = {
    * The list of limits
    */
   limits: Array<LimitResponseSchema>;
+};
+
+export type MultiModelCompletionRequestSchema = {
+  /**
+   * The ids of the models to compare (minimum 2)
+   */
+  model_ids: Array<number>;
+  /**
+   * The message of the chat
+   */
+  message: ChatMessageRequestSchema;
 };
 
 export type TokenResponseSchema = {
@@ -334,17 +344,17 @@ export type GetApiChatsResponse = Array<ChatListItemResponseSchema>;
 
 export type PostApiChatsResponse = ChatResponseSchema;
 
+export type DeleteApiChatsData = {
+  requestBody: DeleteChatsRequestSchema;
+};
+
+export type DeleteApiChatsResponse = unknown;
+
 export type GetApiChatsByChatIdData = {
   chatId: string;
 };
 
 export type GetApiChatsByChatIdResponse = ChatResponseSchema;
-
-export type DeleteApiChatsByChatIdData = {
-  chatId: string;
-};
-
-export type DeleteApiChatsByChatIdResponse = unknown;
 
 export type GetApiChatsByChatIdMessagesData = {
   chatId: string;
@@ -353,7 +363,7 @@ export type GetApiChatsByChatIdMessagesData = {
 export type GetApiChatsByChatIdMessagesResponse = ChatMessagesResponseSchema;
 
 export type PostApiChatsConversationData = {
-  requestBody: ChatCompletionRequestSchema;
+  requestBody: MultiModelCompletionRequestSchema;
 };
 
 export type PostApiChatsConversationResponse = unknown;
@@ -370,6 +380,14 @@ export type PatchApiChatsByChatIdPinData = {
 };
 
 export type PatchApiChatsByChatIdPinResponse = unknown;
+
+export type PatchApiChatsByChatIdMessagesByMessageIdSelectData = {
+  chatId: string;
+  messageId: string;
+};
+
+export type PatchApiChatsByChatIdMessagesByMessageIdSelectResponse =
+  ChatMessageResponseSchema;
 
 export type PostApiAuthGoogleData = {
   requestBody: GoogleAuthRequestSchema;
@@ -472,6 +490,19 @@ export type $OpenApiTs = {
         200: ChatResponseSchema;
       };
     };
+    delete: {
+      req: DeleteApiChatsData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
   };
   "/api/chats/{chat_id}": {
     get: {
@@ -481,19 +512,6 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: ChatResponseSchema;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
-      };
-    };
-    delete: {
-      req: DeleteApiChatsByChatIdData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: unknown;
         /**
          * Validation Error
          */
@@ -554,6 +572,21 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/chats/{chat_id}/messages/{message_id}/select": {
+    patch: {
+      req: PatchApiChatsByChatIdMessagesByMessageIdSelectData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: ChatMessageResponseSchema;
         /**
          * Validation Error
          */

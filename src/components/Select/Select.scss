@@ -11,8 +11,6 @@
     .select-dropdown {
       min-width: 15rem;
       width: auto;
-      left: 0;
-      right: auto;
     }
   }
 }
@@ -22,6 +20,7 @@
   color: var(--text-primary-color);
 }
 
+// Radix UI Select Trigger styling
 .enhanced-select {
   position: relative;
   display: flex;
@@ -50,23 +49,23 @@
     font-size: $font-sm;
     color: var(--text-secondary-color);
 
-    &:hover:not(.disabled) {
+    &:hover:not([data-disabled]) {
       background-color: rgba(var(--primary-color-rgb), 0.1);
       color: var(--primary-color);
       border-color: rgba(var(--primary-color-rgb), 0.2);
     }
 
-    &.open {
+    &[data-state="open"] {
       box-shadow: none;
       border-color: var(--primary-color);
     }
   }
 
-  &:hover:not(.disabled) {
+  &:hover:not([data-disabled]) {
     border-color: var(--primary-color);
   }
 
-  &.open {
+  &[data-state="open"] {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.125rem rgba(var(--primary-color-rgb), 0.1);
   }
@@ -75,7 +74,7 @@
     border-color: var(--error-color);
   }
 
-  &.disabled {
+  &[data-disabled] {
     opacity: 0.6;
     cursor: not-allowed;
     background-color: var(--component-bg-color);
@@ -100,6 +99,11 @@
   .placeholder {
     color: var(--text-placeholder-color);
   }
+
+  // Hide the default Radix chevron icon when we have our own styling
+  svg {
+    display: none;
+  }
 }
 
 .model-icon {
@@ -108,32 +112,27 @@
   height: 1.25rem;
   object-fit: contain;
   vertical-align: middle;
-  margin-right: $spacing-xs;
+  margin-right: 0; // Remove margin since we use gap in flex containers
 }
 
+// Radix UI Select Content styling
 .select-dropdown {
-  position: absolute;
-  width: 100%;
   background-color: var(--component-bg-color);
   border: $border-width solid var(--border-color);
   border-radius: $radius-md;
   box-shadow: 0 $spacing-sm $spacing-lg rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  max-height: none;
-  overflow: visible;
+  z-index: 50;
+  min-width: var(--radix-select-trigger-width);
+  max-height: 20rem;
+  overflow: hidden;
 
-  // Position dropdown below the select (default)
-  &.bottom {
-    top: 100%;
-    left: 0;
-    margin-top: $spacing-xs;
+  // Override Radix default styles
+  &[data-state="open"] {
+    animation: dropdown-slide-down $transition-fast both;
   }
 
-  // Position dropdown above the select
-  &.top {
-    bottom: 100%;
-    left: 0;
-    margin-bottom: $spacing-xs;
+  &[data-state="closed"] {
+    animation: dropdown-slide-up $transition-fast both;
   }
 
   .search-container {
@@ -164,41 +163,99 @@
     max-height: 20rem;
     overflow-y: auto;
   }
+}
 
-  .select-option {
+// Radix UI Select Item styling
+.select-option {
+  display: flex !important;
+  flex-direction: row !important;
+  color: var(--text-primary-color);
+  align-items: center !important;
+  gap: $spacing-sm;
+  padding: $spacing-md !important;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+  border-bottom: $border-width solid var(--border-color);
+  position: relative;
+  outline: none;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover,
+  &[data-highlighted] {
+    background-color: rgba(var(--primary-color-rgb), 0.05);
+  }
+
+  &[data-state="checked"] {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    font-weight: 500;
+    color: var(--primary-color);
+  }
+
+  // Hide the default Radix check icon
+  .absolute {
+    display: none !important;
+  }
+
+  // Override Radix default padding for the left space
+  padding-left: $spacing-md !important;
+
+  .option-icon {
     display: flex;
-    color: var(--text-primary-color);
     align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .option-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  // Ensure the SelectItem content is displayed in a row
+  > span {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
     gap: $spacing-sm;
-    padding: $spacing-md;
-    cursor: pointer;
-    transition: background-color $transition-fast;
-    border-bottom: $border-width solid var(--border-color);
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    &:hover {
-      background-color: rgba(var(--primary-color-rgb), 0.05);
-    }
-
-    &.selected {
-      background-color: rgba(var(--primary-color-rgb), 0.1);
-      font-weight: 500;
-      color: var(--primary-color);
-    }
+    width: 100%;
   }
+}
 
-  .no-results {
-    padding: $spacing-md;
-    text-align: center;
-    color: var(--text-secondary-color);
-    font-size: $font-sm;
-  }
+.no-results {
+  padding: $spacing-md;
+  text-align: center;
+  color: var(--text-secondary-color);
+  font-size: $font-sm;
 }
 
 .select-error {
   color: var(--error-color);
   font-size: $font-xs;
+}
+
+@keyframes dropdown-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
