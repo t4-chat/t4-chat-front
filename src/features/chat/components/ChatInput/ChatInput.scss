@@ -10,6 +10,7 @@
   border-radius: 1.5rem;
   background-color: var(--background-color);
   transition: border-color 0.2s, box-shadow 0.2s;
+  padding-bottom: env(safe-area-inset-bottom); /* Ensure visibility on devices with display cutouts */
 
   &:focus-within {
     border-color: var(--primary-color);
