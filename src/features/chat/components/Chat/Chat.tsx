@@ -175,9 +175,6 @@ export const Chat = ({
           if (!currentChatId && onChatCreated) {
             onChatCreated(event.chat.id);
             // Invalidate chats query immediately when new chat is created
-            queryClient.invalidateQueries({
-              queryKey: [UseChatsServiceGetApiChatsKeyFn()],
-            });
           }
         }
         break;
@@ -188,6 +185,10 @@ export const Chat = ({
           abortFunctionRef.current = null;
         }
         setIsLoading(false);
+
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsKeyFn(),
+        });
         break;
 
       default:
