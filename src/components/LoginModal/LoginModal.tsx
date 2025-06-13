@@ -47,7 +47,7 @@ export const LoginModal: FC<LoginModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Sign In">
       <div className="login-modal">
-        <p className="login-description">Sign in to continue to AGG AI</p>
+        <p className="login-description">Sign in to continue to T4 Chat</p>
 
         {error && <div className="error-message">{error}</div>}
 

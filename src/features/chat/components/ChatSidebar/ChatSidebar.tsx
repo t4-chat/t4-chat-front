@@ -40,7 +40,7 @@ const useUpdateBrowserTitle = ({
   const { chatId: activeChatId } = useParams();
 
   useEffect(() => {
-    const baseTitle = "Agg AI";
+    const baseTitle = "T4 Chat";
     if (activeChatId) {
       const chatTitle = chats.find((c) => c.id === activeChatId)?.title;
       document.title = chatTitle ? `${chatTitle} - ${baseTitle}` : baseTitle;

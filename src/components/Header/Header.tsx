@@ -94,8 +94,8 @@ export const Header = () => {
       <div className="header__content">
         <Link to="/" className="header__logo-link">
           <div className="header__logo">
-            <img src={Logo} alt="Agg AI Logo" className="header__logo-img" />
-            <span className="header__logo-text">AI Aggregator</span>
+            <img src={Logo} alt="T4 Chat Logo" className="header__logo-img" />
+            <span className="header__logo-text">T4 Chat </span>
           </div>
         </Link>
         <div className="header__actions">{renderLoginButtonContent()}</div>

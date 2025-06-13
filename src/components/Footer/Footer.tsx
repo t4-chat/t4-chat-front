@@ -28,7 +28,7 @@ export const Footer = () => {
     <footer className={cn("footer", { "with-sidebar": isSidebarOpen })}>
       <div className="footer__content">
         <p className="footer__copyright">
-          &copy; 2025 AGG AI. All rights reserved.
+          &copy; 2025 T4 Chat. All rights reserved.
         </p>
         <button
           type="button"
