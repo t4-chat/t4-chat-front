@@ -47,26 +47,25 @@ type PaneProps = {
 const useScrollToBottom = (messages: ChatMessageWithDate[]) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  // Scroll to bottom when messages change
+
+  const lastMessageKey =
+    messages.length > 0
+      ? `${messages[messages.length - 1].id}-${messages[messages.length - 1].content.length}-${messages[messages.length - 1].done}`
+      : "";
+
+  // Scroll to bottom when the last message changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to react to last message updates
   useEffect(() => {
     if (messagesEndRef.current) {
       // Use a small timeout to ensure DOM has updated
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }, 100);
+      // setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+      // }, 100);
     }
-  }, [messages]);
-
-  // Initial scroll to bottom
-  useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  }, []);
+  }, [lastMessageKey]);
 
   return { messagesEndRef, messagesContainerRef };
 };
