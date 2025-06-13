@@ -5,7 +5,7 @@ import ModelSelect, {
 // import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
 import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage";
 import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
-import { type FC, useEffect, useMemo, useRef } from "react";
+import { type FC, memo, useEffect, useMemo, useRef } from "react";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
 import "./Pane.scss";
 
@@ -165,4 +165,4 @@ const Pane: FC<PaneProps> = ({
   );
 };
 
-export default Pane;
+export default memo(Pane);
