@@ -8,33 +8,23 @@ import type {
   AuthenticationService,
   ChatsService,
   FilesService,
-  HealthService,
+  HealthChecksService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
 import type { AggregationType } from "../requests/types.gen";
-export type HealthServiceGetHealthLiveDefaultResponse = Awaited<
-  ReturnType<typeof HealthService.getHealthLive>
+export type HealthChecksServiceGetHealthLiveDefaultResponse = Awaited<
+  ReturnType<typeof HealthChecksService.getHealthLive>
 >;
-export type HealthServiceGetHealthLiveQueryResult<
-  TData = HealthServiceGetHealthLiveDefaultResponse,
+export type HealthChecksServiceGetHealthLiveQueryResult<
+  TData = HealthChecksServiceGetHealthLiveDefaultResponse,
   TError = unknown,
 > = UseQueryResult<TData, TError>;
-export const useHealthServiceGetHealthLiveKey = "HealthServiceGetHealthLive";
-export const UseHealthServiceGetHealthLiveKeyFn = (
+export const useHealthChecksServiceGetHealthLiveKey =
+  "HealthChecksServiceGetHealthLive";
+export const UseHealthChecksServiceGetHealthLiveKeyFn = (
   queryKey?: Array<unknown>,
-) => [useHealthServiceGetHealthLiveKey, ...(queryKey ?? [])];
-export type HealthServiceGetHealthLogsDefaultResponse = Awaited<
-  ReturnType<typeof HealthService.getHealthLogs>
->;
-export type HealthServiceGetHealthLogsQueryResult<
-  TData = HealthServiceGetHealthLogsDefaultResponse,
-  TError = unknown,
-> = UseQueryResult<TData, TError>;
-export const useHealthServiceGetHealthLogsKey = "HealthServiceGetHealthLogs";
-export const UseHealthServiceGetHealthLogsKeyFn = (
-  queryKey?: Array<unknown>,
-) => [useHealthServiceGetHealthLogsKey, ...(queryKey ?? [])];
+) => [useHealthChecksServiceGetHealthLiveKey, ...(queryKey ?? [])];
 export type AiProvidersServiceGetApiAiProvidersDefaultResponse = Awaited<
   ReturnType<typeof AiProvidersService.getApiAiProviders>
 >;
@@ -108,6 +98,110 @@ export const useUsersServiceGetApiUsersCurrentKey =
 export const UseUsersServiceGetApiUsersCurrentKeyFn = (
   queryKey?: Array<unknown>,
 ) => [useUsersServiceGetApiUsersCurrentKey, ...(queryKey ?? [])];
+export type AdminServiceGetApiAdminAiModelsDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminAiModels>
+>;
+export type AdminServiceGetApiAdminAiModelsQueryResult<
+  TData = AdminServiceGetApiAdminAiModelsDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminAiModelsKey =
+  "AdminServiceGetApiAdminAiModels";
+export const UseAdminServiceGetApiAdminAiModelsKeyFn = (
+  queryKey?: Array<unknown>,
+) => [useAdminServiceGetApiAdminAiModelsKey, ...(queryKey ?? [])];
+export type AdminServiceGetApiAdminAiModelsByAiModelIdDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminAiModelsByAiModelId>
+>;
+export type AdminServiceGetApiAdminAiModelsByAiModelIdQueryResult<
+  TData = AdminServiceGetApiAdminAiModelsByAiModelIdDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminAiModelsByAiModelIdKey =
+  "AdminServiceGetApiAdminAiModelsByAiModelId";
+export const UseAdminServiceGetApiAdminAiModelsByAiModelIdKeyFn = (
+  {
+    aiModelId,
+  }: {
+    aiModelId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useAdminServiceGetApiAdminAiModelsByAiModelIdKey,
+  ...(queryKey ?? [{ aiModelId }]),
+];
+export type AdminServiceGetApiAdminModelHostsDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminModelHosts>
+>;
+export type AdminServiceGetApiAdminModelHostsQueryResult<
+  TData = AdminServiceGetApiAdminModelHostsDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminModelHostsKey =
+  "AdminServiceGetApiAdminModelHosts";
+export const UseAdminServiceGetApiAdminModelHostsKeyFn = (
+  queryKey?: Array<unknown>,
+) => [useAdminServiceGetApiAdminModelHostsKey, ...(queryKey ?? [])];
+export type AdminServiceGetApiAdminModelHostsByHostIdDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminModelHostsByHostId>
+>;
+export type AdminServiceGetApiAdminModelHostsByHostIdQueryResult<
+  TData = AdminServiceGetApiAdminModelHostsByHostIdDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminModelHostsByHostIdKey =
+  "AdminServiceGetApiAdminModelHostsByHostId";
+export const UseAdminServiceGetApiAdminModelHostsByHostIdKeyFn = (
+  {
+    hostId,
+  }: {
+    hostId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useAdminServiceGetApiAdminModelHostsByHostIdKey,
+  ...(queryKey ?? [{ hostId }]),
+];
+export type AdminServiceGetApiAdminBudgetDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminBudget>
+>;
+export type AdminServiceGetApiAdminBudgetQueryResult<
+  TData = AdminServiceGetApiAdminBudgetDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminBudgetKey =
+  "AdminServiceGetApiAdminBudget";
+export const UseAdminServiceGetApiAdminBudgetKeyFn = (
+  queryKey?: Array<unknown>,
+) => [useAdminServiceGetApiAdminBudgetKey, ...(queryKey ?? [])];
+export type AdminServiceGetApiAdminUsageDefaultResponse = Awaited<
+  ReturnType<typeof AdminService.getApiAdminUsage>
+>;
+export type AdminServiceGetApiAdminUsageQueryResult<
+  TData = AdminServiceGetApiAdminUsageDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useAdminServiceGetApiAdminUsageKey =
+  "AdminServiceGetApiAdminUsage";
+export const UseAdminServiceGetApiAdminUsageKeyFn = (
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: string;
+    startDate?: string;
+    userId?: string;
+  } = {},
+  queryKey?: Array<unknown>,
+) => [
+  useAdminServiceGetApiAdminUsageKey,
+  ...(queryKey ?? [{ aggregation, endDate, modelId, startDate, userId }]),
+];
 export type AiModelsServiceGetApiAiModelsDefaultResponse = Awaited<
   ReturnType<typeof AiModelsService.getApiAiModels>
 >;
@@ -161,46 +255,6 @@ export const useUtilizationServiceGetApiUtilizationLimitsKey =
 export const UseUtilizationServiceGetApiUtilizationLimitsKeyFn = (
   queryKey?: Array<unknown>,
 ) => [useUtilizationServiceGetApiUtilizationLimitsKey, ...(queryKey ?? [])];
-export type AdminServiceGetApiAdminBudgetDefaultResponse = Awaited<
-  ReturnType<typeof AdminService.getApiAdminBudget>
->;
-export type AdminServiceGetApiAdminBudgetQueryResult<
-  TData = AdminServiceGetApiAdminBudgetDefaultResponse,
-  TError = unknown,
-> = UseQueryResult<TData, TError>;
-export const useAdminServiceGetApiAdminBudgetKey =
-  "AdminServiceGetApiAdminBudget";
-export const UseAdminServiceGetApiAdminBudgetKeyFn = (
-  queryKey?: Array<unknown>,
-) => [useAdminServiceGetApiAdminBudgetKey, ...(queryKey ?? [])];
-export type AdminServiceGetApiAdminUsageDefaultResponse = Awaited<
-  ReturnType<typeof AdminService.getApiAdminUsage>
->;
-export type AdminServiceGetApiAdminUsageQueryResult<
-  TData = AdminServiceGetApiAdminUsageDefaultResponse,
-  TError = unknown,
-> = UseQueryResult<TData, TError>;
-export const useAdminServiceGetApiAdminUsageKey =
-  "AdminServiceGetApiAdminUsage";
-export const UseAdminServiceGetApiAdminUsageKeyFn = (
-  {
-    aggregation,
-    endDate,
-    modelId,
-    startDate,
-    userId,
-  }: {
-    aggregation?: AggregationType;
-    endDate?: string;
-    modelId?: number;
-    startDate?: string;
-    userId?: string;
-  } = {},
-  queryKey?: Array<unknown>,
-) => [
-  useAdminServiceGetApiAdminUsageKey,
-  ...(queryKey ?? [{ aggregation, endDate, modelId, startDate, userId }]),
-];
 export type ChatsServicePostApiChatsMutationResult = Awaited<
   ReturnType<typeof ChatsService.postApiChats>
 >;
@@ -210,8 +264,20 @@ export type ChatsServicePostApiChatsConversationMutationResult = Awaited<
 export type AuthenticationServicePostApiAuthGoogleMutationResult = Awaited<
   ReturnType<typeof AuthenticationService.postApiAuthGoogle>
 >;
+export type AdminServicePostApiAdminAiModelsMutationResult = Awaited<
+  ReturnType<typeof AdminService.postApiAdminAiModels>
+>;
+export type AdminServicePostApiAdminModelHostsMutationResult = Awaited<
+  ReturnType<typeof AdminService.postApiAdminModelHosts>
+>;
 export type FilesServicePostApiFilesUploadMutationResult = Awaited<
   ReturnType<typeof FilesService.postApiFilesUpload>
+>;
+export type AdminServicePutApiAdminAiModelsByAiModelIdMutationResult = Awaited<
+  ReturnType<typeof AdminService.putApiAdminAiModelsByAiModelId>
+>;
+export type AdminServicePutApiAdminModelHostsByHostIdMutationResult = Awaited<
+  ReturnType<typeof AdminService.putApiAdminModelHostsByHostId>
 >;
 export type ChatsServicePatchApiChatsByChatIdTitleMutationResult = Awaited<
   ReturnType<typeof ChatsService.patchApiChatsByChatIdTitle>
@@ -228,3 +294,7 @@ export type ChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelectMutationRe
 export type ChatsServiceDeleteApiChatsMutationResult = Awaited<
   ReturnType<typeof ChatsService.deleteApiChats>
 >;
+export type AdminServiceDeleteApiAdminAiModelsByAiModelIdMutationResult =
+  Awaited<ReturnType<typeof AdminService.deleteApiAdminAiModelsByAiModelId>>;
+export type AdminServiceDeleteApiAdminModelHostsByHostIdMutationResult =
+  Awaited<ReturnType<typeof AdminService.deleteApiAdminModelHostsByHostId>>;

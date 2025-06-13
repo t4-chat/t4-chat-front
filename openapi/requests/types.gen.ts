@@ -9,11 +9,85 @@ export type AggregationType =
   | "model"
   | "user";
 
+export type AiModelHostResponseSchema = {
+  /**
+   * The id of the host
+   */
+  id: string;
+  /**
+   * The name of the host
+   */
+  name: string;
+  /**
+   * The slug of the host
+   */
+  slug: string;
+  /**
+   * The priority of the host
+   */
+  priority?: number | null;
+  /**
+   * Whether the host is active
+   */
+  is_active: boolean;
+  /**
+   * The model associations of the host
+   */
+  model_associations?: Array<HostAiModelAssociationSchema>;
+};
+
+export type AiModelResponseForAdminSchema = {
+  /**
+   * The id of the model
+   */
+  id: string;
+  /**
+   * The name of the model
+   */
+  name: string;
+  /**
+   * The slug of the model
+   */
+  slug: string;
+  /**
+   * The path to the prompt
+   */
+  prompt_path: string;
+  /**
+   * The price of the input token
+   */
+  price_input_token: number;
+  /**
+   * The price of the output token
+   */
+  price_output_token: number;
+  /**
+   * The context length
+   */
+  context_length: number;
+  /**
+   * Whether the model is active
+   */
+  is_active: boolean;
+  /**
+   * The tags of the model
+   */
+  tags: Array<string>;
+  /**
+   * The provider of the model
+   */
+  provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;
+  /**
+   * The hosts of the model
+   */
+  hosts?: Array<AiModelHostResponseSchema>;
+};
+
 export type AiModelResponseSchema = {
   /**
    * The id of the model
    */
-  id: number;
+  id: string;
   /**
    * The name of the model
    */
@@ -25,14 +99,14 @@ export type AiModelResponseSchema = {
   /**
    * The provider of the model
    */
-  provider: src__api__schemas__ai_models__AiProviderResponseSchema;
+  provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;
 };
 
 export type AiProviderModelResponseSchema = {
   /**
    * The id of the model
    */
-  id: number;
+  id: string;
   /**
    * The name of the model
    */
@@ -113,11 +187,11 @@ export type ChatMessageResponseSchema = {
   /**
    * Whether the message is selected
    */
-  selected: boolean | null;
+  selected?: boolean | null;
   /**
    * The id of the model
    */
-  model_id?: number | null;
+  model_id?: string | null;
   /**
    * The attachments of the message
    */
@@ -182,6 +256,68 @@ export type DeleteChatsRequestSchema = {
   chat_ids: Array<string>;
 };
 
+export type EditAiModelHostRequestSchema = {
+  /**
+   * The name of the host
+   */
+  name: string;
+  /**
+   * The slug of the host
+   */
+  slug: string;
+  /**
+   * Whether the host is active
+   */
+  is_active: boolean;
+  /**
+   * The model associations of the host
+   */
+  model_associations: Array<HostAiModelAssociationSchema>;
+};
+
+export type EditAiModelRequestSchema = {
+  /**
+   * The name of the model
+   */
+  name: string;
+  /**
+   * The slug of the model
+   */
+  slug: string;
+  /**
+   * The id of the provider
+   */
+  provider_id: string;
+  /**
+   * The path to the prompt
+   */
+  prompt_path: string;
+  /**
+   * The price of the input token
+   */
+  price_input_token: number;
+  /**
+   * The price of the output token
+   */
+  price_output_token: number;
+  /**
+   * The context length
+   */
+  context_length: number;
+  /**
+   * Whether the model is active
+   */
+  is_active: boolean;
+  /**
+   * The tags of the model
+   */
+  tags: Array<string>;
+  /**
+   * The model host associations of the model
+   */
+  host_associations: Array<ModelHostAssociationSchema>;
+};
+
 export type FileResponseSchema = {
   /**
    * The id of the file
@@ -208,11 +344,22 @@ export type HTTPValidationError = {
   detail?: Array<ValidationError>;
 };
 
+export type HostAiModelAssociationSchema = {
+  /**
+   * The id of the model
+   */
+  model_id: string;
+  /**
+   * The priority of the model
+   */
+  priority: number;
+};
+
 export type LimitResponseSchema = {
   /**
    * The id of the model used
    */
-  model_id: number;
+  model_id: string;
   /**
    * The maximum number of tokens allowed
    */
@@ -226,11 +373,22 @@ export type LimitsResponseSchema = {
   limits: Array<LimitResponseSchema>;
 };
 
+export type ModelHostAssociationSchema = {
+  /**
+   * The id of the host
+   */
+  host_id: string;
+  /**
+   * The priority of the host
+   */
+  priority: number;
+};
+
 export type MultiModelCompletionRequestSchema = {
   /**
    * The ids of the models to compare (minimum 2)
    */
-  model_ids: Array<number>;
+  model_ids: Array<string>;
   /**
    * The message of the chat
    */
@@ -249,7 +407,7 @@ export type UnifiedAggregatedUsage = {
   completion_tokens: number;
   total_tokens: number;
   date?: string | null;
-  model_id?: number | null;
+  model_id?: string | null;
   model_name?: string | null;
   user_id?: string | null;
   user_email?: string | null;
@@ -303,7 +461,7 @@ export type src__api__schemas__ai_models__AiProviderResponseSchema = {
   /**
    * The id of the provider
    */
-  id: number;
+  id: string;
   /**
    * The name of the provider
    */
@@ -318,7 +476,7 @@ export type src__api__schemas__ai_providers__AiProviderResponseSchema = {
   /**
    * The id of the provider
    */
-  id: number;
+  id: string;
   /**
    * The name of the provider
    */
@@ -334,8 +492,6 @@ export type src__api__schemas__ai_providers__AiProviderResponseSchema = {
 };
 
 export type GetHealthLiveResponse = unknown;
-
-export type GetHealthLogsResponse = unknown;
 
 export type GetApiAiProvidersResponse =
   Array<src__api__schemas__ai_providers__AiProviderResponseSchema>;
@@ -397,6 +553,89 @@ export type PostApiAuthGoogleResponse = TokenResponseSchema;
 
 export type GetApiUsersCurrentResponse = UserResponseSchema;
 
+export type GetApiAdminAiModelsResponse = Array<AiModelResponseForAdminSchema>;
+
+export type PostApiAdminAiModelsData = {
+  requestBody: EditAiModelRequestSchema;
+};
+
+export type PostApiAdminAiModelsResponse = AiModelResponseForAdminSchema;
+
+export type GetApiAdminAiModelsByAiModelIdData = {
+  aiModelId: string;
+};
+
+export type GetApiAdminAiModelsByAiModelIdResponse =
+  AiModelResponseForAdminSchema;
+
+export type PutApiAdminAiModelsByAiModelIdData = {
+  aiModelId: string;
+  requestBody: EditAiModelRequestSchema;
+};
+
+export type PutApiAdminAiModelsByAiModelIdResponse =
+  AiModelResponseForAdminSchema;
+
+export type DeleteApiAdminAiModelsByAiModelIdData = {
+  aiModelId: string;
+};
+
+export type DeleteApiAdminAiModelsByAiModelIdResponse = unknown;
+
+export type GetApiAdminModelHostsResponse = Array<AiModelHostResponseSchema>;
+
+export type PostApiAdminModelHostsData = {
+  requestBody: EditAiModelHostRequestSchema;
+};
+
+export type PostApiAdminModelHostsResponse = AiModelHostResponseSchema;
+
+export type GetApiAdminModelHostsByHostIdData = {
+  hostId: string;
+};
+
+export type GetApiAdminModelHostsByHostIdResponse = AiModelHostResponseSchema;
+
+export type PutApiAdminModelHostsByHostIdData = {
+  hostId: string;
+  requestBody: EditAiModelHostRequestSchema;
+};
+
+export type PutApiAdminModelHostsByHostIdResponse = AiModelHostResponseSchema;
+
+export type DeleteApiAdminModelHostsByHostIdData = {
+  hostId: string;
+};
+
+export type DeleteApiAdminModelHostsByHostIdResponse = unknown;
+
+export type GetApiAdminBudgetResponse = BudgetResponseSchema;
+
+export type GetApiAdminUsageData = {
+  /**
+   * How to aggregate the usage data
+   */
+  aggregation?: AggregationType;
+  /**
+   * End date for filtering
+   */
+  endDate?: string | null;
+  /**
+   * Filter by model ID
+   */
+  modelId?: string | null;
+  /**
+   * Start date for filtering
+   */
+  startDate?: string | null;
+  /**
+   * Filter by user ID
+   */
+  userId?: string | null;
+};
+
+export type GetApiAdminUsageResponse = UsageAggregationResponseSchema;
+
 export type GetApiAiModelsResponse = Array<AiModelResponseSchema>;
 
 export type PostApiFilesUploadData = {
@@ -415,45 +654,8 @@ export type GetApiUtilizationResponse = unknown;
 
 export type GetApiUtilizationLimitsResponse = LimitsResponseSchema;
 
-export type GetApiAdminBudgetResponse = BudgetResponseSchema;
-
-export type GetApiAdminUsageData = {
-  /**
-   * How to aggregate the usage data
-   */
-  aggregation?: AggregationType;
-  /**
-   * End date for filtering
-   */
-  endDate?: string | null;
-  /**
-   * Filter by model ID
-   */
-  modelId?: number | null;
-  /**
-   * Start date for filtering
-   */
-  startDate?: string | null;
-  /**
-   * Filter by user ID
-   */
-  userId?: string | null;
-};
-
-export type GetApiAdminUsageResponse = UsageAggregationResponseSchema;
-
 export type $OpenApiTs = {
   "/health/live": {
-    get: {
-      res: {
-        /**
-         * Successful Response
-         */
-        200: unknown;
-      };
-    };
-  };
-  "/health/logs": {
     get: {
       res: {
         /**
@@ -619,6 +821,159 @@ export type $OpenApiTs = {
       };
     };
   };
+  "/api/admin/ai-models": {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<AiModelResponseForAdminSchema>;
+      };
+    };
+    post: {
+      req: PostApiAdminAiModelsData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelResponseForAdminSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/admin/ai-models/{ai_model_id}": {
+    get: {
+      req: GetApiAdminAiModelsByAiModelIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelResponseForAdminSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    put: {
+      req: PutApiAdminAiModelsByAiModelIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelResponseForAdminSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    delete: {
+      req: DeleteApiAdminAiModelsByAiModelIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/admin/model-hosts": {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<AiModelHostResponseSchema>;
+      };
+    };
+    post: {
+      req: PostApiAdminModelHostsData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelHostResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/admin/model-hosts/{host_id}": {
+    get: {
+      req: GetApiAdminModelHostsByHostIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelHostResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    put: {
+      req: PutApiAdminModelHostsByHostIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: AiModelHostResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    delete: {
+      req: DeleteApiAdminModelHostsByHostIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/admin/budget": {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: BudgetResponseSchema;
+      };
+    };
+  };
+  "/api/admin/usage": {
+    get: {
+      req: GetApiAdminUsageData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: UsageAggregationResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
   "/api/ai-models": {
     get: {
       res: {
@@ -676,31 +1031,6 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: LimitsResponseSchema;
-      };
-    };
-  };
-  "/api/admin/budget": {
-    get: {
-      res: {
-        /**
-         * Successful Response
-         */
-        200: BudgetResponseSchema;
-      };
-    };
-  };
-  "/api/admin/usage": {
-    get: {
-      req: GetApiAdminUsageData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: UsageAggregationResponseSchema;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
       };
     };
   };

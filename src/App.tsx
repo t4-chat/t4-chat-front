@@ -1,5 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Toaster } from "sonner";
 import { router } from "./routes";
 import "./globals.css";
 import "./App.scss";
@@ -24,6 +25,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />
         <RouterProvider router={router} />
+        <Toaster richColors closeButton />
       </QueryClientProvider>
     </GoogleOAuthProvider>
   );

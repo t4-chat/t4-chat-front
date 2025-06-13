@@ -1,6 +1,7 @@
 import { useFilesServicePostApiFilesUpload } from "~/openapi/queries/queries";
 import { ChatService } from "@/services/chatService";
 import type { StreamEvent } from "@/utils/apiUtils";
+import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 
 interface UseChatSenderOptions {
   onEvent: (
@@ -15,7 +16,11 @@ export const useChatSender = ({
   onError,
   onDone,
 }: UseChatSenderOptions) => {
-  const { mutateAsync: upload } = useFilesServicePostApiFilesUpload();
+  const { handleError, handleSuccess } = useMutationErrorHandler();
+  const { mutateAsync: upload } = useFilesServicePostApiFilesUpload({
+    onSuccess: () => handleSuccess("File uploaded successfully"),
+    onError: (error) => handleError(error, "Failed to upload file"),
+  });
   const send = async (
     content: string,
     files: File[] | undefined,

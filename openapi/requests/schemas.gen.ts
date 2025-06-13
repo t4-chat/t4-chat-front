@@ -6,10 +6,148 @@ export const $AggregationType = {
   title: "AggregationType",
 } as const;
 
+export const $AiModelHostResponseSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The id of the host",
+    },
+    name: {
+      type: "string",
+      title: "Name",
+      description: "The name of the host",
+    },
+    slug: {
+      type: "string",
+      title: "Slug",
+      description: "The slug of the host",
+    },
+    priority: {
+      anyOf: [
+        {
+          type: "integer",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Priority",
+      description: "The priority of the host",
+    },
+    is_active: {
+      type: "boolean",
+      title: "Is Active",
+      description: "Whether the host is active",
+    },
+    model_associations: {
+      items: {
+        $ref: "#/components/schemas/HostAiModelAssociationSchema",
+      },
+      type: "array",
+      title: "Model Associations",
+      description: "The model associations of the host",
+      default: [],
+    },
+  },
+  type: "object",
+  required: ["id", "name", "slug", "is_active"],
+  title: "AiModelHostResponseSchema",
+} as const;
+
+export const $AiModelResponseForAdminSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The id of the model",
+    },
+    name: {
+      type: "string",
+      title: "Name",
+      description: "The name of the model",
+    },
+    slug: {
+      type: "string",
+      title: "Slug",
+      description: "The slug of the model",
+    },
+    prompt_path: {
+      type: "string",
+      title: "Prompt Path",
+      description: "The path to the prompt",
+    },
+    price_input_token: {
+      type: "number",
+      title: "Price Input Token",
+      description: "The price of the input token",
+    },
+    price_output_token: {
+      type: "number",
+      title: "Price Output Token",
+      description: "The price of the output token",
+    },
+    context_length: {
+      type: "integer",
+      title: "Context Length",
+      description: "The context length",
+    },
+    is_active: {
+      type: "boolean",
+      title: "Is Active",
+      description: "Whether the model is active",
+    },
+    tags: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Tags",
+      description: "The tags of the model",
+    },
+    provider: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/src__api__schemas__ai_models__AiProviderResponseSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
+      description: "The provider of the model",
+    },
+    hosts: {
+      items: {
+        $ref: "#/components/schemas/AiModelHostResponseSchema",
+      },
+      type: "array",
+      title: "Hosts",
+      description: "The hosts of the model",
+      default: [],
+    },
+  },
+  type: "object",
+  required: [
+    "id",
+    "name",
+    "slug",
+    "prompt_path",
+    "price_input_token",
+    "price_output_token",
+    "context_length",
+    "is_active",
+    "tags",
+  ],
+  title: "AiModelResponseForAdminSchema",
+} as const;
+
 export const $AiModelResponseSchema = {
   properties: {
     id: {
-      type: "integer",
+      type: "string",
+      format: "uuid",
       title: "Id",
       description: "The id of the model",
     },
@@ -27,19 +165,27 @@ export const $AiModelResponseSchema = {
       description: "The tags of the model",
     },
     provider: {
-      $ref: "#/components/schemas/src__api__schemas__ai_models__AiProviderResponseSchema",
+      anyOf: [
+        {
+          $ref: "#/components/schemas/src__api__schemas__ai_models__AiProviderResponseSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
       description: "The provider of the model",
     },
   },
   type: "object",
-  required: ["id", "name", "tags", "provider"],
+  required: ["id", "name", "tags"],
   title: "AiModelResponseSchema",
 } as const;
 
 export const $AiProviderModelResponseSchema = {
   properties: {
     id: {
-      type: "integer",
+      type: "string",
+      format: "uuid",
       title: "Id",
       description: "The id of the model",
     },
@@ -219,14 +365,22 @@ export const $ChatMessageResponseSchema = {
       description: "The content of the message",
     },
     selected: {
-      type: "boolean",
+      anyOf: [
+        {
+          type: "boolean",
+        },
+        {
+          type: "null",
+        },
+      ],
       title: "Selected",
       description: "Whether the message is selected",
     },
     model_id: {
       anyOf: [
         {
-          type: "integer",
+          type: "string",
+          format: "uuid",
         },
         {
           type: "null",
@@ -272,7 +426,7 @@ export const $ChatMessageResponseSchema = {
     },
   },
   type: "object",
-  required: ["id", "role", "content", "selected", "created_at"],
+  required: ["id", "role", "content", "created_at"],
   title: "ChatMessageResponseSchema",
 } as const;
 
@@ -367,6 +521,113 @@ export const $DeleteChatsRequestSchema = {
   title: "DeleteChatsRequestSchema",
 } as const;
 
+export const $EditAiModelHostRequestSchema = {
+  properties: {
+    name: {
+      type: "string",
+      title: "Name",
+      description: "The name of the host",
+    },
+    slug: {
+      type: "string",
+      title: "Slug",
+      description: "The slug of the host",
+    },
+    is_active: {
+      type: "boolean",
+      title: "Is Active",
+      description: "Whether the host is active",
+    },
+    model_associations: {
+      items: {
+        $ref: "#/components/schemas/HostAiModelAssociationSchema",
+      },
+      type: "array",
+      title: "Model Associations",
+      description: "The model associations of the host",
+    },
+  },
+  type: "object",
+  required: ["name", "slug", "is_active", "model_associations"],
+  title: "EditAiModelHostRequestSchema",
+} as const;
+
+export const $EditAiModelRequestSchema = {
+  properties: {
+    name: {
+      type: "string",
+      title: "Name",
+      description: "The name of the model",
+    },
+    slug: {
+      type: "string",
+      title: "Slug",
+      description: "The slug of the model",
+    },
+    provider_id: {
+      type: "string",
+      format: "uuid",
+      title: "Provider Id",
+      description: "The id of the provider",
+    },
+    prompt_path: {
+      type: "string",
+      title: "Prompt Path",
+      description: "The path to the prompt",
+    },
+    price_input_token: {
+      type: "number",
+      title: "Price Input Token",
+      description: "The price of the input token",
+    },
+    price_output_token: {
+      type: "number",
+      title: "Price Output Token",
+      description: "The price of the output token",
+    },
+    context_length: {
+      type: "integer",
+      title: "Context Length",
+      description: "The context length",
+    },
+    is_active: {
+      type: "boolean",
+      title: "Is Active",
+      description: "Whether the model is active",
+    },
+    tags: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Tags",
+      description: "The tags of the model",
+    },
+    host_associations: {
+      items: {
+        $ref: "#/components/schemas/ModelHostAssociationSchema",
+      },
+      type: "array",
+      title: "Host Associations",
+      description: "The model host associations of the model",
+    },
+  },
+  type: "object",
+  required: [
+    "name",
+    "slug",
+    "provider_id",
+    "prompt_path",
+    "price_input_token",
+    "price_output_token",
+    "context_length",
+    "is_active",
+    "tags",
+    "host_associations",
+  ],
+  title: "EditAiModelRequestSchema",
+} as const;
+
 export const $FileResponseSchema = {
   properties: {
     file_id: {
@@ -418,10 +679,30 @@ export const $HTTPValidationError = {
   title: "HTTPValidationError",
 } as const;
 
+export const $HostAiModelAssociationSchema = {
+  properties: {
+    model_id: {
+      type: "string",
+      format: "uuid",
+      title: "Model Id",
+      description: "The id of the model",
+    },
+    priority: {
+      type: "integer",
+      title: "Priority",
+      description: "The priority of the model",
+    },
+  },
+  type: "object",
+  required: ["model_id", "priority"],
+  title: "HostAiModelAssociationSchema",
+} as const;
+
 export const $LimitResponseSchema = {
   properties: {
     model_id: {
-      type: "integer",
+      type: "string",
+      format: "uuid",
       title: "Model Id",
       description: "The id of the model used",
     },
@@ -452,11 +733,31 @@ export const $LimitsResponseSchema = {
   title: "LimitsResponseSchema",
 } as const;
 
+export const $ModelHostAssociationSchema = {
+  properties: {
+    host_id: {
+      type: "string",
+      format: "uuid",
+      title: "Host Id",
+      description: "The id of the host",
+    },
+    priority: {
+      type: "integer",
+      title: "Priority",
+      description: "The priority of the host",
+    },
+  },
+  type: "object",
+  required: ["host_id", "priority"],
+  title: "ModelHostAssociationSchema",
+} as const;
+
 export const $MultiModelCompletionRequestSchema = {
   properties: {
     model_ids: {
       items: {
-        type: "integer",
+        type: "string",
+        format: "uuid",
       },
       type: "array",
       title: "Model Ids",
@@ -514,7 +815,8 @@ export const $UnifiedAggregatedUsage = {
     model_id: {
       anyOf: [
         {
-          type: "integer",
+          type: "string",
+          format: "uuid",
         },
         {
           type: "null",
@@ -682,7 +984,8 @@ export const $ValidationError = {
 export const $src__api__schemas__ai_models__AiProviderResponseSchema = {
   properties: {
     id: {
-      type: "integer",
+      type: "string",
+      format: "uuid",
       title: "Id",
       description: "The id of the provider",
     },
@@ -705,7 +1008,8 @@ export const $src__api__schemas__ai_models__AiProviderResponseSchema = {
 export const $src__api__schemas__ai_providers__AiProviderResponseSchema = {
   properties: {
     id: {
-      type: "integer",
+      type: "string",
+      format: "uuid",
       title: "Id",
       description: "The id of the provider",
     },

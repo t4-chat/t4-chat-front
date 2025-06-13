@@ -101,16 +101,33 @@ const useInitialModelIds = ({
 
     if (messages.length) {
       if (paneCount === 1) {
-        const lastMessage = messages.findLast((v) => v.role === "assistant");
-        if (lastMessage) {
+        const lastSelectedMessage = [...messages].findLast(
+          (v) =>
+            v.role === "assistant" &&
+            (v.selected === true || v.selected === null),
+        );
+
+        if (lastSelectedMessage) {
           currentSearchParams.set(
             "modelIds",
-            lastMessage.model_id?.toString() ?? "",
+            lastSelectedMessage.model_id?.toString() ?? "",
           );
           setSearchParams(currentSearchParams);
         } else {
-          currentSearchParams.set("modelIds", availableModels[0].id.toString());
-          setSearchParams(currentSearchParams);
+          const lastMessage = messages.findLast((v) => v.role === "assistant");
+          if (lastMessage) {
+            currentSearchParams.set(
+              "modelIds",
+              lastMessage.model_id?.toString() ?? "",
+            );
+            setSearchParams(currentSearchParams);
+          } else {
+            currentSearchParams.set(
+              "modelIds",
+              availableModels[0].id.toString(),
+            );
+            setSearchParams(currentSearchParams);
+          }
         }
       } else {
         const lastUserMessage = messages.findLast((v) => v.role === "user");
@@ -557,7 +574,7 @@ export const ChatPage = () => {
                     (m.selected === false &&
                       m.previous_message_id === lastUserMessage?.id &&
                       showNotSelectedResponses &&
-                      m.model_id === Number(modelIds[paneIndex]))
+                      m.model_id === modelIds[paneIndex])
                   );
                 });
 
@@ -586,7 +603,7 @@ export const ChatPage = () => {
                         const assistantMessage = messages.find(
                           (v) =>
                             v.previous_message_id === lastUserMessage?.id &&
-                            v.model_id === Number(modelIds[0]),
+                            v.model_id === modelIds[0],
                         );
                         if (assistantMessage?.selected === false) {
                           setMessages((prev) => {

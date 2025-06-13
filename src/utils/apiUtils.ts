@@ -1,4 +1,5 @@
 import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
+import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
 export interface MessageStartEvent {
   type: "message_start";
@@ -46,8 +47,11 @@ export type StreamEvent =
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;
 export type DoneCallback = () => void;
+
 export const useChats = () => {
-  const { data: chats, ...other } = useChatsServiceGetApiChats();
+  const { data: chats, ...other } = useChatsServiceGetApiChats(undefined, {
+    enabled: !!tokenService.getToken(),
+  });
 
   if (!chats) {
     return { ...other, chats: [] };

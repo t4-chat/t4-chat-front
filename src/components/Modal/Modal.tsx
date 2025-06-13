@@ -1,14 +1,22 @@
 import { useEffect, type FC, type ReactNode } from "react";
 import "./Modal.scss";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
   title?: string;
+  className?: string;
 }
 
-export const Modal: FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
+export const Modal: FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  title,
+  className,
+}) => {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -31,7 +39,10 @@ export const Modal: FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={cn("modal-content", className)}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
           {title && <h2 className="modal-title">{title}</h2>}
           <button className="modal-close" onClick={onClose}>

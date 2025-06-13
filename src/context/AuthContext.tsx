@@ -16,6 +16,7 @@ import type { UserResponseSchema } from "~/openapi/requests/types.gen";
 import { useQueryClient } from "@tanstack/react-query";
 import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
+import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 
 interface TokenPayload {
   admin?: boolean;
@@ -39,6 +40,7 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { handleError, handleSuccess } = useMutationErrorHandler();
 
   const getIsAdminFromToken = (): boolean => {
     const token = tokenService.getToken();
@@ -59,7 +61,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     isLoading: isUserLoading,
     error,
     refetch: refetchUser,
-  } = useUsersServiceGetApiUsersCurrent();
+  } = useUsersServiceGetApiUsersCurrent(undefined, {
+    enabled: !!tokenService.getToken(),
+  });
 
   const { mutateAsync: loginWithGoogle, isPending: isLoginWithGooglePending } =
     useAuthenticationServicePostApiAuthGoogle({
@@ -67,7 +71,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         tokenService.setToken(data.access_token);
         setIsAdmin(getIsAdminFromToken());
         refetchUser();
+        handleSuccess("Signed in successfully");
       },
+      // onError: (error) => handleError(error, "Authentication failed"),
     });
 
   useEffect(() => {

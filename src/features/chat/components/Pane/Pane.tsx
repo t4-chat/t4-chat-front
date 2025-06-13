@@ -80,7 +80,7 @@ const Pane: FC<PaneProps> = ({
   const hasMessages = useMemo(() => messages.length > 0, [messages.length]);
 
   const getModelInfo = useMemo(() => {
-    return (modelId?: number | null) => {
+    return (modelId?: string | null) => {
       if (!modelId || !modelOptions?.length) {
         return { name: undefined, iconPath: undefined };
       }

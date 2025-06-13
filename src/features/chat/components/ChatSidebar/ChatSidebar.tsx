@@ -22,6 +22,7 @@ import {
   useChatsServicePatchApiChatsByChatIdPin,
   useChatsServicePatchApiChatsByChatIdTitle,
 } from "~/openapi/queries/queries";
+import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 import "./ChatSidebar.scss";
 
 interface ChatSidebarProps {
@@ -61,6 +62,7 @@ export const ChatSidebar = ({
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { chatId: activeChatId } = useParams();
+  const { handleError, handleSuccess } = useMutationErrorHandler();
   const [renameModalState, setRenameModalState] = useState<{
     isOpen: boolean;
     chatId: string | null;
@@ -97,21 +99,46 @@ export const ChatSidebar = ({
         queryClient.invalidateQueries({
           queryKey: UseChatsServiceGetApiChatsKeyFn(),
         });
+        handleSuccess("Chat title updated successfully");
       },
+      onError: (error) => handleError(error, "Failed to update chat title"),
     });
-  const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin({
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: UseChatsServiceGetApiChatsKeyFn(),
-      });
-    },
-  });
+  const { mutateAsync: pinChat } = useChatsServicePatchApiChatsByChatIdPin();
+
+  const handleTogglePinChat = async (chatId: string, isPinned: boolean) => {
+    try {
+      await pinChat(
+        { chatId },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: UseChatsServiceGetApiChatsKeyFn(),
+            });
+            handleSuccess(
+              isPinned
+                ? "Chat unpinned successfully"
+                : "Chat pinned successfully",
+            );
+          },
+          onError: (error) =>
+            handleError(
+              error,
+              isPinned ? "Failed to unpin chat" : "Failed to pin chat",
+            ),
+        },
+      );
+    } catch (error) {
+      console.error("Failed to toggle pin:", error);
+    }
+  };
   const { mutateAsync: deleteChats } = useChatsServiceDeleteApiChats({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: UseChatsServiceGetApiChatsKeyFn(),
       });
+      handleSuccess("Chat(s) deleted successfully");
     },
+    onError: (error) => handleError(error, "Failed to delete chat(s)"),
   });
 
   const filteredChats = useMemo(() => {
@@ -348,7 +375,9 @@ export const ChatSidebar = ({
                     onSelect={() => handleChatSelect?.(chat.id)}
                     onDelete={() => handleDeleteModal(chat.id)}
                     onRename={() => handleRenameModal(chat.id, chat.title)}
-                    onTogglePin={() => pinChat({ chatId: chat.id })}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
                     }
@@ -371,7 +400,9 @@ export const ChatSidebar = ({
                     onSelect={() => handleChatSelect?.(chat.id)}
                     onDelete={() => handleDeleteModal(chat.id)}
                     onRename={() => handleRenameModal(chat.id, chat.title)}
-                    onTogglePin={() => pinChat({ chatId: chat.id })}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
                     }

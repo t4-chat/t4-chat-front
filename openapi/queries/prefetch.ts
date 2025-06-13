@@ -7,25 +7,18 @@ import {
   AiProvidersService,
   ChatsService,
   FilesService,
-  HealthService,
+  HealthChecksService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
 import type { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
-export const prefetchUseHealthServiceGetHealthLive = (
+export const prefetchUseHealthChecksServiceGetHealthLive = (
   queryClient: QueryClient,
 ) =>
   queryClient.prefetchQuery({
-    queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
-    queryFn: () => HealthService.getHealthLive(),
-  });
-export const prefetchUseHealthServiceGetHealthLogs = (
-  queryClient: QueryClient,
-) =>
-  queryClient.prefetchQuery({
-    queryKey: Common.UseHealthServiceGetHealthLogsKeyFn(),
-    queryFn: () => HealthService.getHealthLogs(),
+    queryKey: Common.UseHealthChecksServiceGetHealthLiveKeyFn(),
+    queryFn: () => HealthChecksService.getHealthLive(),
   });
 export const prefetchUseAiProvidersServiceGetApiAiProviders = (
   queryClient: QueryClient,
@@ -72,6 +65,88 @@ export const prefetchUseUsersServiceGetApiUsersCurrent = (
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(),
     queryFn: () => UsersService.getApiUsersCurrent(),
   });
+export const prefetchUseAdminServiceGetApiAdminAiModels = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminAiModelsKeyFn(),
+    queryFn: () => AdminService.getApiAdminAiModels(),
+  });
+export const prefetchUseAdminServiceGetApiAdminAiModelsByAiModelId = (
+  queryClient: QueryClient,
+  {
+    aiModelId,
+  }: {
+    aiModelId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminAiModelsByAiModelIdKeyFn({
+      aiModelId,
+    }),
+    queryFn: () => AdminService.getApiAdminAiModelsByAiModelId({ aiModelId }),
+  });
+export const prefetchUseAdminServiceGetApiAdminModelHosts = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminModelHostsKeyFn(),
+    queryFn: () => AdminService.getApiAdminModelHosts(),
+  });
+export const prefetchUseAdminServiceGetApiAdminModelHostsByHostId = (
+  queryClient: QueryClient,
+  {
+    hostId,
+  }: {
+    hostId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminModelHostsByHostIdKeyFn({
+      hostId,
+    }),
+    queryFn: () => AdminService.getApiAdminModelHostsByHostId({ hostId }),
+  });
+export const prefetchUseAdminServiceGetApiAdminBudget = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
+    queryFn: () => AdminService.getApiAdminBudget(),
+  });
+export const prefetchUseAdminServiceGetApiAdminUsage = (
+  queryClient: QueryClient,
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: string;
+    startDate?: string;
+    userId?: string;
+  } = {},
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
+      aggregation,
+      endDate,
+      modelId,
+      startDate,
+      userId,
+    }),
+    queryFn: () =>
+      AdminService.getApiAdminUsage({
+        aggregation,
+        endDate,
+        modelId,
+        startDate,
+        userId,
+      }),
+  });
 export const prefetchUseAiModelsServiceGetApiAiModels = (
   queryClient: QueryClient,
 ) =>
@@ -104,44 +179,4 @@ export const prefetchUseUtilizationServiceGetApiUtilizationLimits = (
   queryClient.prefetchQuery({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(),
     queryFn: () => UtilizationService.getApiUtilizationLimits(),
-  });
-export const prefetchUseAdminServiceGetApiAdminBudget = (
-  queryClient: QueryClient,
-) =>
-  queryClient.prefetchQuery({
-    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
-    queryFn: () => AdminService.getApiAdminBudget(),
-  });
-export const prefetchUseAdminServiceGetApiAdminUsage = (
-  queryClient: QueryClient,
-  {
-    aggregation,
-    endDate,
-    modelId,
-    startDate,
-    userId,
-  }: {
-    aggregation?: AggregationType;
-    endDate?: string;
-    modelId?: number;
-    startDate?: string;
-    userId?: string;
-  } = {},
-) =>
-  queryClient.prefetchQuery({
-    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
-      aggregation,
-      endDate,
-      modelId,
-      startDate,
-      userId,
-    }),
-    queryFn: () =>
-      AdminService.getApiAdminUsage({
-        aggregation,
-        endDate,
-        modelId,
-        startDate,
-        userId,
-      }),
   });

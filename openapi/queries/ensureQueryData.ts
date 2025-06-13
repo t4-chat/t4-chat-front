@@ -7,25 +7,18 @@ import {
   AiProvidersService,
   ChatsService,
   FilesService,
-  HealthService,
+  HealthChecksService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
 import type { AggregationType } from "../requests/types.gen";
 import * as Common from "./common";
-export const ensureUseHealthServiceGetHealthLiveData = (
+export const ensureUseHealthChecksServiceGetHealthLiveData = (
   queryClient: QueryClient,
 ) =>
   queryClient.ensureQueryData({
-    queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
-    queryFn: () => HealthService.getHealthLive(),
-  });
-export const ensureUseHealthServiceGetHealthLogsData = (
-  queryClient: QueryClient,
-) =>
-  queryClient.ensureQueryData({
-    queryKey: Common.UseHealthServiceGetHealthLogsKeyFn(),
-    queryFn: () => HealthService.getHealthLogs(),
+    queryKey: Common.UseHealthChecksServiceGetHealthLiveKeyFn(),
+    queryFn: () => HealthChecksService.getHealthLive(),
   });
 export const ensureUseAiProvidersServiceGetApiAiProvidersData = (
   queryClient: QueryClient,
@@ -74,6 +67,88 @@ export const ensureUseUsersServiceGetApiUsersCurrentData = (
     queryKey: Common.UseUsersServiceGetApiUsersCurrentKeyFn(),
     queryFn: () => UsersService.getApiUsersCurrent(),
   });
+export const ensureUseAdminServiceGetApiAdminAiModelsData = (
+  queryClient: QueryClient,
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminAiModelsKeyFn(),
+    queryFn: () => AdminService.getApiAdminAiModels(),
+  });
+export const ensureUseAdminServiceGetApiAdminAiModelsByAiModelIdData = (
+  queryClient: QueryClient,
+  {
+    aiModelId,
+  }: {
+    aiModelId: string;
+  },
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminAiModelsByAiModelIdKeyFn({
+      aiModelId,
+    }),
+    queryFn: () => AdminService.getApiAdminAiModelsByAiModelId({ aiModelId }),
+  });
+export const ensureUseAdminServiceGetApiAdminModelHostsData = (
+  queryClient: QueryClient,
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminModelHostsKeyFn(),
+    queryFn: () => AdminService.getApiAdminModelHosts(),
+  });
+export const ensureUseAdminServiceGetApiAdminModelHostsByHostIdData = (
+  queryClient: QueryClient,
+  {
+    hostId,
+  }: {
+    hostId: string;
+  },
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminModelHostsByHostIdKeyFn({
+      hostId,
+    }),
+    queryFn: () => AdminService.getApiAdminModelHostsByHostId({ hostId }),
+  });
+export const ensureUseAdminServiceGetApiAdminBudgetData = (
+  queryClient: QueryClient,
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
+    queryFn: () => AdminService.getApiAdminBudget(),
+  });
+export const ensureUseAdminServiceGetApiAdminUsageData = (
+  queryClient: QueryClient,
+  {
+    aggregation,
+    endDate,
+    modelId,
+    startDate,
+    userId,
+  }: {
+    aggregation?: AggregationType;
+    endDate?: string;
+    modelId?: string;
+    startDate?: string;
+    userId?: string;
+  } = {},
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
+      aggregation,
+      endDate,
+      modelId,
+      startDate,
+      userId,
+    }),
+    queryFn: () =>
+      AdminService.getApiAdminUsage({
+        aggregation,
+        endDate,
+        modelId,
+        startDate,
+        userId,
+      }),
+  });
 export const ensureUseAiModelsServiceGetApiAiModelsData = (
   queryClient: QueryClient,
 ) =>
@@ -106,44 +181,4 @@ export const ensureUseUtilizationServiceGetApiUtilizationLimitsData = (
   queryClient.ensureQueryData({
     queryKey: Common.UseUtilizationServiceGetApiUtilizationLimitsKeyFn(),
     queryFn: () => UtilizationService.getApiUtilizationLimits(),
-  });
-export const ensureUseAdminServiceGetApiAdminBudgetData = (
-  queryClient: QueryClient,
-) =>
-  queryClient.ensureQueryData({
-    queryKey: Common.UseAdminServiceGetApiAdminBudgetKeyFn(),
-    queryFn: () => AdminService.getApiAdminBudget(),
-  });
-export const ensureUseAdminServiceGetApiAdminUsageData = (
-  queryClient: QueryClient,
-  {
-    aggregation,
-    endDate,
-    modelId,
-    startDate,
-    userId,
-  }: {
-    aggregation?: AggregationType;
-    endDate?: string;
-    modelId?: number;
-    startDate?: string;
-    userId?: string;
-  } = {},
-) =>
-  queryClient.ensureQueryData({
-    queryKey: Common.UseAdminServiceGetApiAdminUsageKeyFn({
-      aggregation,
-      endDate,
-      modelId,
-      startDate,
-      userId,
-    }),
-    queryFn: () =>
-      AdminService.getApiAdminUsage({
-        aggregation,
-        endDate,
-        modelId,
-        startDate,
-        userId,
-      }),
   });

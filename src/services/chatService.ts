@@ -32,7 +32,7 @@ export class ChatService {
     options,
   }: {
     message: ChatMessageRequestSchema;
-    modelIds: (number | string)[];
+    modelIds: string[];
     onEvent: StreamEventCallback;
     onError: ErrorCallback;
     onDone: DoneCallback;

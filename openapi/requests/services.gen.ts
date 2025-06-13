@@ -5,7 +5,6 @@ import { OpenAPI } from "./core/OpenAPI";
 import { request as __request } from "./core/request";
 import type {
   GetHealthLiveResponse,
-  GetHealthLogsResponse,
   GetApiAiProvidersResponse,
   GetApiChatsResponse,
   PostApiChatsResponse,
@@ -26,6 +25,27 @@ import type {
   PostApiAuthGoogleData,
   PostApiAuthGoogleResponse,
   GetApiUsersCurrentResponse,
+  GetApiAdminAiModelsResponse,
+  PostApiAdminAiModelsData,
+  PostApiAdminAiModelsResponse,
+  GetApiAdminAiModelsByAiModelIdData,
+  GetApiAdminAiModelsByAiModelIdResponse,
+  PutApiAdminAiModelsByAiModelIdData,
+  PutApiAdminAiModelsByAiModelIdResponse,
+  DeleteApiAdminAiModelsByAiModelIdData,
+  DeleteApiAdminAiModelsByAiModelIdResponse,
+  GetApiAdminModelHostsResponse,
+  PostApiAdminModelHostsData,
+  PostApiAdminModelHostsResponse,
+  GetApiAdminModelHostsByHostIdData,
+  GetApiAdminModelHostsByHostIdResponse,
+  PutApiAdminModelHostsByHostIdData,
+  PutApiAdminModelHostsByHostIdResponse,
+  DeleteApiAdminModelHostsByHostIdData,
+  DeleteApiAdminModelHostsByHostIdResponse,
+  GetApiAdminBudgetResponse,
+  GetApiAdminUsageData,
+  GetApiAdminUsageResponse,
   GetApiAiModelsResponse,
   PostApiFilesUploadData,
   PostApiFilesUploadResponse,
@@ -33,12 +53,9 @@ import type {
   GetApiFilesByFileIdResponse,
   GetApiUtilizationResponse,
   GetApiUtilizationLimitsResponse,
-  GetApiAdminBudgetResponse,
-  GetApiAdminUsageData,
-  GetApiAdminUsageResponse,
 } from "./types.gen";
 
-export class HealthService {
+export class HealthChecksService {
   /**
    * Ping
    * @returns unknown Successful Response
@@ -48,18 +65,6 @@ export class HealthService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/health/live",
-    });
-  }
-
-  /**
-   * Logs
-   * @returns unknown Successful Response
-   * @throws ApiError
-   */
-  public static getHealthLogs(): CancelablePromise<GetHealthLogsResponse> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/health/logs",
     });
   }
 }
@@ -298,6 +303,254 @@ export class UsersService {
   }
 }
 
+export class AdminService {
+  /**
+   * Get Ai Models
+   * @returns AiModelResponseForAdminSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminAiModels(): CancelablePromise<GetApiAdminAiModelsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/ai-models",
+    });
+  }
+
+  /**
+   * Add Ai Model
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AiModelResponseForAdminSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminAiModels(
+    data: PostApiAdminAiModelsData,
+  ): CancelablePromise<PostApiAdminAiModelsResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/ai-models",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Ai Model
+   * @param data The data for the request.
+   * @param data.aiModelId
+   * @returns AiModelResponseForAdminSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminAiModelsByAiModelId(
+    data: GetApiAdminAiModelsByAiModelIdData,
+  ): CancelablePromise<GetApiAdminAiModelsByAiModelIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/ai-models/{ai_model_id}",
+      path: {
+        ai_model_id: data.aiModelId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update Ai Model
+   * @param data The data for the request.
+   * @param data.aiModelId
+   * @param data.requestBody
+   * @returns AiModelResponseForAdminSchema Successful Response
+   * @throws ApiError
+   */
+  public static putApiAdminAiModelsByAiModelId(
+    data: PutApiAdminAiModelsByAiModelIdData,
+  ): CancelablePromise<PutApiAdminAiModelsByAiModelIdResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/admin/ai-models/{ai_model_id}",
+      path: {
+        ai_model_id: data.aiModelId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete Ai Model
+   * @param data The data for the request.
+   * @param data.aiModelId
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiAdminAiModelsByAiModelId(
+    data: DeleteApiAdminAiModelsByAiModelIdData,
+  ): CancelablePromise<DeleteApiAdminAiModelsByAiModelIdResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/admin/ai-models/{ai_model_id}",
+      path: {
+        ai_model_id: data.aiModelId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Hosts
+   * @returns AiModelHostResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminModelHosts(): CancelablePromise<GetApiAdminModelHostsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/model-hosts",
+    });
+  }
+
+  /**
+   * Add Host
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AiModelHostResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminModelHosts(
+    data: PostApiAdminModelHostsData,
+  ): CancelablePromise<PostApiAdminModelHostsResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/model-hosts",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Host
+   * @param data The data for the request.
+   * @param data.hostId
+   * @returns AiModelHostResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminModelHostsByHostId(
+    data: GetApiAdminModelHostsByHostIdData,
+  ): CancelablePromise<GetApiAdminModelHostsByHostIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/model-hosts/{host_id}",
+      path: {
+        host_id: data.hostId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update Host
+   * @param data The data for the request.
+   * @param data.hostId
+   * @param data.requestBody
+   * @returns AiModelHostResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static putApiAdminModelHostsByHostId(
+    data: PutApiAdminModelHostsByHostIdData,
+  ): CancelablePromise<PutApiAdminModelHostsByHostIdResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/admin/model-hosts/{host_id}",
+      path: {
+        host_id: data.hostId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete Host
+   * @param data The data for the request.
+   * @param data.hostId
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiAdminModelHostsByHostId(
+    data: DeleteApiAdminModelHostsByHostIdData,
+  ): CancelablePromise<DeleteApiAdminModelHostsByHostIdResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/admin/model-hosts/{host_id}",
+      path: {
+        host_id: data.hostId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Budget
+   * @returns BudgetResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminBudget(): CancelablePromise<GetApiAdminBudgetResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/budget",
+    });
+  }
+
+  /**
+   * Get Usage
+   * @param data The data for the request.
+   * @param data.aggregation How to aggregate the usage data
+   * @param data.startDate Start date for filtering
+   * @param data.endDate End date for filtering
+   * @param data.userId Filter by user ID
+   * @param data.modelId Filter by model ID
+   * @returns UsageAggregationResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiAdminUsage(
+    data: GetApiAdminUsageData = {},
+  ): CancelablePromise<GetApiAdminUsageResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/admin/usage",
+      query: {
+        aggregation: data.aggregation,
+        start_date: data.startDate,
+        end_date: data.endDate,
+        user_id: data.userId,
+        model_id: data.modelId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+}
+
 export class AiModelsService {
   /**
    * Get Ai Models
@@ -379,50 +632,6 @@ export class UtilizationService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/api/utilization/limits",
-    });
-  }
-}
-
-export class AdminService {
-  /**
-   * Get Budget
-   * @returns BudgetResponseSchema Successful Response
-   * @throws ApiError
-   */
-  public static getApiAdminBudget(): CancelablePromise<GetApiAdminBudgetResponse> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/api/admin/budget",
-    });
-  }
-
-  /**
-   * Get Usage
-   * @param data The data for the request.
-   * @param data.aggregation How to aggregate the usage data
-   * @param data.startDate Start date for filtering
-   * @param data.endDate End date for filtering
-   * @param data.userId Filter by user ID
-   * @param data.modelId Filter by model ID
-   * @returns UsageAggregationResponseSchema Successful Response
-   * @throws ApiError
-   */
-  public static getApiAdminUsage(
-    data: GetApiAdminUsageData = {},
-  ): CancelablePromise<GetApiAdminUsageResponse> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/api/admin/usage",
-      query: {
-        aggregation: data.aggregation,
-        start_date: data.startDate,
-        end_date: data.endDate,
-        user_id: data.userId,
-        model_id: data.modelId,
-      },
-      errors: {
-        422: "Validation Error",
-      },
     });
   }
 }
