@@ -26,6 +26,19 @@ export const useHealthServiceGetHealthLiveSuspense = <
     queryFn: () => HealthService.getHealthLive() as TData,
     ...options,
   });
+export const useHealthServiceGetHealthLogsSuspense = <
+  TData = Common.HealthServiceGetHealthLogsDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey: Common.UseHealthServiceGetHealthLogsKeyFn(queryKey),
+    queryFn: () => HealthService.getHealthLogs() as TData,
+    ...options,
+  });
 export const useAiProvidersServiceGetApiAiProvidersSuspense = <
   TData = Common.AiProvidersServiceGetApiAiProvidersDefaultResponse,
   TError = unknown,

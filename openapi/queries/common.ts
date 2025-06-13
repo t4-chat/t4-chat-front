@@ -24,6 +24,17 @@ export const useHealthServiceGetHealthLiveKey = "HealthServiceGetHealthLive";
 export const UseHealthServiceGetHealthLiveKeyFn = (
   queryKey?: Array<unknown>,
 ) => [useHealthServiceGetHealthLiveKey, ...(queryKey ?? [])];
+export type HealthServiceGetHealthLogsDefaultResponse = Awaited<
+  ReturnType<typeof HealthService.getHealthLogs>
+>;
+export type HealthServiceGetHealthLogsQueryResult<
+  TData = HealthServiceGetHealthLogsDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useHealthServiceGetHealthLogsKey = "HealthServiceGetHealthLogs";
+export const UseHealthServiceGetHealthLogsKeyFn = (
+  queryKey?: Array<unknown>,
+) => [useHealthServiceGetHealthLogsKey, ...(queryKey ?? [])];
 export type AiProvidersServiceGetApiAiProvidersDefaultResponse = Awaited<
   ReturnType<typeof AiProvidersService.getApiAiProviders>
 >;

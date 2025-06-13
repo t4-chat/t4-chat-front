@@ -19,6 +19,10 @@ export type AiModelResponseSchema = {
    */
   name: string;
   /**
+   * The tags of the model
+   */
+  tags: Array<string>;
+  /**
    * The provider of the model
    */
   provider: src__api__schemas__ai_models__AiProviderResponseSchema;
@@ -321,6 +325,8 @@ export type src__api__schemas__ai_providers__AiProviderResponseSchema = {
 
 export type GetHealthLiveResponse = unknown;
 
+export type GetHealthLogsResponse = unknown;
+
 export type GetApiAiProvidersResponse =
   Array<src__api__schemas__ai_providers__AiProviderResponseSchema>;
 
@@ -420,6 +426,16 @@ export type GetApiAdminUsageResponse = UsageAggregationResponseSchema;
 
 export type $OpenApiTs = {
   "/health/live": {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+      };
+    };
+  };
+  "/health/logs": {
     get: {
       res: {
         /**

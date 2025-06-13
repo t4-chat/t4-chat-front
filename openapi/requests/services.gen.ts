@@ -5,6 +5,7 @@ import { OpenAPI } from "./core/OpenAPI";
 import { request as __request } from "./core/request";
 import type {
   GetHealthLiveResponse,
+  GetHealthLogsResponse,
   GetApiAiProvidersResponse,
   GetApiChatsResponse,
   PostApiChatsResponse,
@@ -45,6 +46,18 @@ export class HealthService {
     return __request(OpenAPI, {
       method: "GET",
       url: "/health/live",
+    });
+  }
+
+  /**
+   * Logs
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static getHealthLogs(): CancelablePromise<GetHealthLogsResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/health/logs",
     });
   }
 }

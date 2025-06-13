@@ -18,13 +18,21 @@ export const $AiModelResponseSchema = {
       title: "Name",
       description: "The name of the model",
     },
+    tags: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Tags",
+      description: "The tags of the model",
+    },
     provider: {
       $ref: "#/components/schemas/src__api__schemas__ai_models__AiProviderResponseSchema",
       description: "The provider of the model",
     },
   },
   type: "object",
-  required: ["id", "name", "provider"],
+  required: ["id", "name", "tags", "provider"],
   title: "AiModelResponseSchema",
 } as const;
 

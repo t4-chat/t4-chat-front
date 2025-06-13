@@ -20,6 +20,13 @@ export const ensureUseHealthServiceGetHealthLiveData = (
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
     queryFn: () => HealthService.getHealthLive(),
   });
+export const ensureUseHealthServiceGetHealthLogsData = (
+  queryClient: QueryClient,
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseHealthServiceGetHealthLogsKeyFn(),
+    queryFn: () => HealthService.getHealthLogs(),
+  });
 export const ensureUseAiProvidersServiceGetApiAiProvidersData = (
   queryClient: QueryClient,
 ) =>

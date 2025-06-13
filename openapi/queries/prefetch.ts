@@ -20,6 +20,13 @@ export const prefetchUseHealthServiceGetHealthLive = (
     queryKey: Common.UseHealthServiceGetHealthLiveKeyFn(),
     queryFn: () => HealthService.getHealthLive(),
   });
+export const prefetchUseHealthServiceGetHealthLogs = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseHealthServiceGetHealthLogsKeyFn(),
+    queryFn: () => HealthService.getHealthLogs(),
+  });
 export const prefetchUseAiProvidersServiceGetApiAiProviders = (
   queryClient: QueryClient,
 ) =>
