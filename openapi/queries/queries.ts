@@ -14,6 +14,7 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -24,6 +25,8 @@ import type {
   EditAiModelHostRequestSchema,
   EditAiModelRequestSchema,
   GoogleAuthRequestSchema,
+  HostApiKeyCreateSchema,
+  HostApiKeyUpdateSchema,
   MultiModelCompletionRequestSchema,
   UpdateChatTitleRequestSchema,
 } from "../requests/types.gen";
@@ -276,6 +279,49 @@ export const useFilesServiceGetApiFilesByFileId = <
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }) as TData,
     ...options,
   });
+export const useHostApiKeysServiceGetApiHostApiKeys = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn(
+      { hostId },
+      queryKey,
+    ),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }) as TData,
+    ...options,
+  });
+export const useHostApiKeysServiceGetApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysByKeyIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn(
+      { keyId },
+      queryKey,
+    ),
+    queryFn: () =>
+      HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }) as TData,
+    ...options,
+  });
 export const useUtilizationServiceGetApiUtilization = <
   TData = Common.UtilizationServiceGetApiUtilizationDefaultResponse,
   TError = unknown,
@@ -472,6 +518,37 @@ export const useFilesServicePostApiFilesUpload = <
       }) as unknown as Promise<TData>,
     ...options,
   });
+export const useHostApiKeysServicePostApiHostApiKeys = <
+  TData = Common.HostApiKeysServicePostApiHostApiKeysMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: HostApiKeyCreateSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: HostApiKeyCreateSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      HostApiKeysService.postApiHostApiKeys({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
 export const useAdminServicePutApiAdminAiModelsByAiModelId = <
   TData = Common.AdminServicePutApiAdminAiModelsByAiModelIdMutationResult,
   TError = unknown,
@@ -536,6 +613,40 @@ export const useAdminServicePutApiAdminModelHostsByHostId = <
     mutationFn: ({ hostId, requestBody }) =>
       AdminService.putApiAdminModelHostsByHostId({
         hostId,
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useHostApiKeysServicePutApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServicePutApiHostApiKeysByKeyIdMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        keyId: string;
+        requestBody: HostApiKeyUpdateSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      keyId: string;
+      requestBody: HostApiKeyUpdateSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ keyId, requestBody }) =>
+      HostApiKeysService.putApiHostApiKeysByKeyId({
+        keyId,
         requestBody,
       }) as unknown as Promise<TData>,
     ...options,
@@ -727,6 +838,37 @@ export const useAdminServiceDeleteApiAdminModelHostsByHostId = <
     mutationFn: ({ hostId }) =>
       AdminService.deleteApiAdminModelHostsByHostId({
         hostId,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useHostApiKeysServiceDeleteApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServiceDeleteApiHostApiKeysByKeyIdMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        keyId: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      keyId: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ keyId }) =>
+      HostApiKeysService.deleteApiHostApiKeysByKeyId({
+        keyId,
       }) as unknown as Promise<TData>,
     ...options,
   });

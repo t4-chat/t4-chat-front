@@ -9,6 +9,7 @@ import type {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -231,6 +232,43 @@ export const UseFilesServiceGetApiFilesByFileIdKeyFn = (
   },
   queryKey?: Array<unknown>,
 ) => [useFilesServiceGetApiFilesByFileIdKey, ...(queryKey ?? [{ fileId }])];
+export type HostApiKeysServiceGetApiHostApiKeysDefaultResponse = Awaited<
+  ReturnType<typeof HostApiKeysService.getApiHostApiKeys>
+>;
+export type HostApiKeysServiceGetApiHostApiKeysQueryResult<
+  TData = HostApiKeysServiceGetApiHostApiKeysDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useHostApiKeysServiceGetApiHostApiKeysKey =
+  "HostApiKeysServiceGetApiHostApiKeys";
+export const UseHostApiKeysServiceGetApiHostApiKeysKeyFn = (
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+  queryKey?: Array<unknown>,
+) => [useHostApiKeysServiceGetApiHostApiKeysKey, ...(queryKey ?? [{ hostId }])];
+export type HostApiKeysServiceGetApiHostApiKeysByKeyIdDefaultResponse = Awaited<
+  ReturnType<typeof HostApiKeysService.getApiHostApiKeysByKeyId>
+>;
+export type HostApiKeysServiceGetApiHostApiKeysByKeyIdQueryResult<
+  TData = HostApiKeysServiceGetApiHostApiKeysByKeyIdDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useHostApiKeysServiceGetApiHostApiKeysByKeyIdKey =
+  "HostApiKeysServiceGetApiHostApiKeysByKeyId";
+export const UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn = (
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useHostApiKeysServiceGetApiHostApiKeysByKeyIdKey,
+  ...(queryKey ?? [{ keyId }]),
+];
 export type UtilizationServiceGetApiUtilizationDefaultResponse = Awaited<
   ReturnType<typeof UtilizationService.getApiUtilization>
 >;
@@ -273,11 +311,17 @@ export type AdminServicePostApiAdminModelHostsMutationResult = Awaited<
 export type FilesServicePostApiFilesUploadMutationResult = Awaited<
   ReturnType<typeof FilesService.postApiFilesUpload>
 >;
+export type HostApiKeysServicePostApiHostApiKeysMutationResult = Awaited<
+  ReturnType<typeof HostApiKeysService.postApiHostApiKeys>
+>;
 export type AdminServicePutApiAdminAiModelsByAiModelIdMutationResult = Awaited<
   ReturnType<typeof AdminService.putApiAdminAiModelsByAiModelId>
 >;
 export type AdminServicePutApiAdminModelHostsByHostIdMutationResult = Awaited<
   ReturnType<typeof AdminService.putApiAdminModelHostsByHostId>
+>;
+export type HostApiKeysServicePutApiHostApiKeysByKeyIdMutationResult = Awaited<
+  ReturnType<typeof HostApiKeysService.putApiHostApiKeysByKeyId>
 >;
 export type ChatsServicePatchApiChatsByChatIdTitleMutationResult = Awaited<
   ReturnType<typeof ChatsService.patchApiChatsByChatIdTitle>
@@ -298,3 +342,5 @@ export type AdminServiceDeleteApiAdminAiModelsByAiModelIdMutationResult =
   Awaited<ReturnType<typeof AdminService.deleteApiAdminAiModelsByAiModelId>>;
 export type AdminServiceDeleteApiAdminModelHostsByHostIdMutationResult =
   Awaited<ReturnType<typeof AdminService.deleteApiAdminModelHostsByHostId>>;
+export type HostApiKeysServiceDeleteApiHostApiKeysByKeyIdMutationResult =
+  Awaited<ReturnType<typeof HostApiKeysService.deleteApiHostApiKeysByKeyId>>;

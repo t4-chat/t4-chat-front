@@ -164,6 +164,12 @@ export const $AiModelResponseSchema = {
       title: "Tags",
       description: "The tags of the model",
     },
+    has_api_key: {
+      type: "boolean",
+      title: "Has Api Key",
+      description: "Whether the model has an API key",
+      default: false,
+    },
     provider: {
       anyOf: [
         {
@@ -698,6 +704,113 @@ export const $HostAiModelAssociationSchema = {
   title: "HostAiModelAssociationSchema",
 } as const;
 
+export const $HostApiKeyCreateSchema = {
+  properties: {
+    host_id: {
+      type: "string",
+      format: "uuid",
+      title: "Host Id",
+      description: "The ID of the model host",
+    },
+    name: {
+      type: "string",
+      title: "Name",
+      description: "User-friendly name for the API key",
+    },
+    api_key: {
+      type: "string",
+      title: "Api Key",
+      description: "The API key to be encrypted and stored",
+    },
+  },
+  type: "object",
+  required: ["host_id", "name", "api_key"],
+  title: "HostApiKeyCreateSchema",
+} as const;
+
+export const $HostApiKeyResponseSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The ID of the API key record",
+    },
+    host_id: {
+      type: "string",
+      format: "uuid",
+      title: "Host Id",
+      description: "The ID of the model host",
+    },
+    name: {
+      type: "string",
+      title: "Name",
+      description: "User-friendly name for the API key",
+    },
+    is_active: {
+      type: "boolean",
+      title: "Is Active",
+      description: "Whether the API key is active",
+    },
+    created_at: {
+      type: "string",
+      title: "Created At",
+      description: "When the API key was created",
+    },
+    updated_at: {
+      type: "string",
+      title: "Updated At",
+      description: "When the API key was last updated",
+    },
+  },
+  type: "object",
+  required: ["id", "host_id", "name", "is_active", "created_at", "updated_at"],
+  title: "HostApiKeyResponseSchema",
+} as const;
+
+export const $HostApiKeyUpdateSchema = {
+  properties: {
+    name: {
+      anyOf: [
+        {
+          type: "string",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Name",
+      description: "User-friendly name for the API key",
+    },
+    api_key: {
+      anyOf: [
+        {
+          type: "string",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Api Key",
+      description: "The API key to be encrypted and stored",
+    },
+    is_active: {
+      anyOf: [
+        {
+          type: "boolean",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Is Active",
+      description: "Whether the API key is active",
+    },
+  },
+  type: "object",
+  title: "HostApiKeyUpdateSchema",
+} as const;
+
 export const $LimitResponseSchema = {
   properties: {
     model_id: {
@@ -949,6 +1062,46 @@ export const $UserResponseSchema = {
   type: "object",
   required: ["id", "email"],
   title: "UserResponseSchema",
+} as const;
+
+export const $UtilizationResponseSchema = {
+  properties: {
+    model_id: {
+      type: "string",
+      format: "uuid",
+      title: "Model Id",
+      description: "The id of the model used",
+    },
+    total_tokens: {
+      type: "integer",
+      title: "Total Tokens",
+      description: "The total number of tokens used",
+    },
+    percentage: {
+      type: "number",
+      title: "Percentage",
+      description: "The percentage of the limit used",
+    },
+  },
+  type: "object",
+  required: ["model_id", "total_tokens", "percentage"],
+  title: "UtilizationResponseSchema",
+} as const;
+
+export const $UtilizationsResponseSchema = {
+  properties: {
+    utilizations: {
+      items: {
+        $ref: "#/components/schemas/UtilizationResponseSchema",
+      },
+      type: "array",
+      title: "Utilizations",
+      description: "The list of utilizations",
+    },
+  },
+  type: "object",
+  required: ["utilizations"],
+  title: "UtilizationsResponseSchema",
 } as const;
 
 export const $ValidationError = {

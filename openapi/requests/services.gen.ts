@@ -51,6 +51,16 @@ import type {
   PostApiFilesUploadResponse,
   GetApiFilesByFileIdData,
   GetApiFilesByFileIdResponse,
+  PostApiHostApiKeysData,
+  PostApiHostApiKeysResponse,
+  GetApiHostApiKeysData,
+  GetApiHostApiKeysResponse,
+  GetApiHostApiKeysByKeyIdData,
+  GetApiHostApiKeysByKeyIdResponse,
+  PutApiHostApiKeysByKeyIdData,
+  PutApiHostApiKeysByKeyIdResponse,
+  DeleteApiHostApiKeysByKeyIdData,
+  DeleteApiHostApiKeysByKeyIdResponse,
   GetApiUtilizationResponse,
   GetApiUtilizationLimitsResponse,
 } from "./types.gen";
@@ -610,10 +620,129 @@ export class FilesService {
   }
 }
 
+export class HostApiKeysService {
+  /**
+   * Create Host Api Key
+   * Create a new API key for a model host (mocked)
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiHostApiKeys(
+    data: PostApiHostApiKeysData,
+  ): CancelablePromise<PostApiHostApiKeysResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/host-api-keys",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Host Api Keys
+   * Get all API keys, optionally filtered by host_id (mocked)
+   * @param data The data for the request.
+   * @param data.hostId
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiHostApiKeys(
+    data: GetApiHostApiKeysData = {},
+  ): CancelablePromise<GetApiHostApiKeysResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/host-api-keys",
+      query: {
+        host_id: data.hostId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Host Api Key
+   * Get a specific API key by ID (mocked)
+   * @param data The data for the request.
+   * @param data.keyId
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiHostApiKeysByKeyId(
+    data: GetApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<GetApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update Host Api Key
+   * Update an existing API key (mocked)
+   * @param data The data for the request.
+   * @param data.keyId
+   * @param data.requestBody
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static putApiHostApiKeysByKeyId(
+    data: PutApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<PutApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete Host Api Key
+   * Delete an API key (mocked)
+   * @param data The data for the request.
+   * @param data.keyId
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiHostApiKeysByKeyId(
+    data: DeleteApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<DeleteApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+}
+
 export class UtilizationService {
   /**
    * Get Utilizations
-   * @returns unknown Successful Response
+   * @returns UtilizationsResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiUtilization(): CancelablePromise<GetApiUtilizationResponse> {

@@ -8,6 +8,7 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -165,6 +166,32 @@ export const prefetchUseFilesServiceGetApiFilesByFileId = (
   queryClient.prefetchQuery({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn({ fileId }),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }),
+  });
+export const prefetchUseHostApiKeysServiceGetApiHostApiKeys = (
+  queryClient: QueryClient,
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn({ hostId }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }),
+  });
+export const prefetchUseHostApiKeysServiceGetApiHostApiKeysByKeyId = (
+  queryClient: QueryClient,
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn({
+      keyId,
+    }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }),
   });
 export const prefetchUseUtilizationServiceGetApiUtilization = (
   queryClient: QueryClient,

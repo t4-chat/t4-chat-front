@@ -97,6 +97,10 @@ export type AiModelResponseSchema = {
    */
   tags: Array<string>;
   /**
+   * Whether the model has an API key
+   */
+  has_api_key?: boolean;
+  /**
    * The provider of the model
    */
   provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;
@@ -355,6 +359,63 @@ export type HostAiModelAssociationSchema = {
   priority: number;
 };
 
+export type HostApiKeyCreateSchema = {
+  /**
+   * The ID of the model host
+   */
+  host_id: string;
+  /**
+   * User-friendly name for the API key
+   */
+  name: string;
+  /**
+   * The API key to be encrypted and stored
+   */
+  api_key: string;
+};
+
+export type HostApiKeyResponseSchema = {
+  /**
+   * The ID of the API key record
+   */
+  id: string;
+  /**
+   * The ID of the model host
+   */
+  host_id: string;
+  /**
+   * User-friendly name for the API key
+   */
+  name: string;
+  /**
+   * Whether the API key is active
+   */
+  is_active: boolean;
+  /**
+   * When the API key was created
+   */
+  created_at: string;
+  /**
+   * When the API key was last updated
+   */
+  updated_at: string;
+};
+
+export type HostApiKeyUpdateSchema = {
+  /**
+   * User-friendly name for the API key
+   */
+  name?: string | null;
+  /**
+   * The API key to be encrypted and stored
+   */
+  api_key?: string | null;
+  /**
+   * Whether the API key is active
+   */
+  is_active?: boolean | null;
+};
+
 export type LimitResponseSchema = {
   /**
    * The id of the model used
@@ -449,6 +510,28 @@ export type UserResponseSchema = {
    * The profile image url of the user
    */
   profile_image_url?: string | null;
+};
+
+export type UtilizationResponseSchema = {
+  /**
+   * The id of the model used
+   */
+  model_id: string;
+  /**
+   * The total number of tokens used
+   */
+  total_tokens: number;
+  /**
+   * The percentage of the limit used
+   */
+  percentage: number;
+};
+
+export type UtilizationsResponseSchema = {
+  /**
+   * The list of utilizations
+   */
+  utilizations: Array<UtilizationResponseSchema>;
 };
 
 export type ValidationError = {
@@ -650,7 +733,40 @@ export type GetApiFilesByFileIdData = {
 
 export type GetApiFilesByFileIdResponse = unknown;
 
-export type GetApiUtilizationResponse = unknown;
+export type PostApiHostApiKeysData = {
+  requestBody: HostApiKeyCreateSchema;
+};
+
+export type PostApiHostApiKeysResponse = HostApiKeyResponseSchema;
+
+export type GetApiHostApiKeysData = {
+  hostId?: string | null;
+};
+
+export type GetApiHostApiKeysResponse = Array<HostApiKeyResponseSchema>;
+
+export type GetApiHostApiKeysByKeyIdData = {
+  keyId: string;
+};
+
+export type GetApiHostApiKeysByKeyIdResponse = HostApiKeyResponseSchema;
+
+export type PutApiHostApiKeysByKeyIdData = {
+  keyId: string;
+  requestBody: HostApiKeyUpdateSchema;
+};
+
+export type PutApiHostApiKeysByKeyIdResponse = HostApiKeyResponseSchema;
+
+export type DeleteApiHostApiKeysByKeyIdData = {
+  keyId: string;
+};
+
+export type DeleteApiHostApiKeysByKeyIdResponse = {
+  [key: string]: unknown;
+};
+
+export type GetApiUtilizationResponse = UtilizationsResponseSchema;
 
 export type GetApiUtilizationLimitsResponse = LimitsResponseSchema;
 
@@ -1014,13 +1130,84 @@ export type $OpenApiTs = {
       };
     };
   };
+  "/api/host-api-keys": {
+    post: {
+      req: PostApiHostApiKeysData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: HostApiKeyResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    get: {
+      req: GetApiHostApiKeysData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<HostApiKeyResponseSchema>;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/host-api-keys/{key_id}": {
+    get: {
+      req: GetApiHostApiKeysByKeyIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: HostApiKeyResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    put: {
+      req: PutApiHostApiKeysByKeyIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: HostApiKeyResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+    delete: {
+      req: DeleteApiHostApiKeysByKeyIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: {
+          [key: string]: unknown;
+        };
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
   "/api/utilization": {
     get: {
       res: {
         /**
          * Successful Response
          */
-        200: unknown;
+        200: UtilizationsResponseSchema;
       };
     };
   };

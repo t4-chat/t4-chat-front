@@ -8,6 +8,7 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -167,6 +168,32 @@ export const ensureUseFilesServiceGetApiFilesByFileIdData = (
   queryClient.ensureQueryData({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn({ fileId }),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }),
+  });
+export const ensureUseHostApiKeysServiceGetApiHostApiKeysData = (
+  queryClient: QueryClient,
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn({ hostId }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }),
+  });
+export const ensureUseHostApiKeysServiceGetApiHostApiKeysByKeyIdData = (
+  queryClient: QueryClient,
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+) =>
+  queryClient.ensureQueryData({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn({
+      keyId,
+    }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }),
   });
 export const ensureUseUtilizationServiceGetApiUtilizationData = (
   queryClient: QueryClient,

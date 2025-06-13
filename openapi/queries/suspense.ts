@@ -8,6 +8,7 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -259,6 +260,49 @@ export const useFilesServiceGetApiFilesByFileIdSuspense = <
       queryKey,
     ),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }) as TData,
+    ...options,
+  });
+export const useHostApiKeysServiceGetApiHostApiKeysSuspense = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn(
+      { hostId },
+      queryKey,
+    ),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }) as TData,
+    ...options,
+  });
+export const useHostApiKeysServiceGetApiHostApiKeysByKeyIdSuspense = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysByKeyIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn(
+      { keyId },
+      queryKey,
+    ),
+    queryFn: () =>
+      HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }) as TData,
     ...options,
   });
 export const useUtilizationServiceGetApiUtilizationSuspense = <
