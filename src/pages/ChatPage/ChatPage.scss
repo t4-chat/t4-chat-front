@@ -1,9 +1,8 @@
 @import "@/assets/styles/variables.scss";
 
 .chat-page {
-  height: calc(
-    100vh - 3.75rem
-  ); /* Adjust for header (3.75rem) and footer (3.75rem) */
+  height: calc(100vh - 3.75rem); /* Fallback for browsers without dvh support */
+  height: calc(100dvh - 3.75rem); /* Use dynamic viewport height on modern browsers */
   width: 100%;
   display: flex;
   justify-content: center;
