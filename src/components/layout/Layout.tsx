@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { Header } from "@/components/Header/Header";
 import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
 import { createContext, useState } from "react";
-import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
+import { ChatSidebarFloatingButtons } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
 import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
 
 export const SidebarContext = createContext<{
@@ -30,7 +30,9 @@ export const Layout = () => {
           <div className="flex flex-col flex-1 mx-auto w-full">
             <ChatSidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
-            {!isSidebarOpen && <ChatSidebarToggle onClick={toggleSidebar} />}
+            {!isSidebarOpen && (
+              <ChatSidebarFloatingButtons onToggle={toggleSidebar} />
+            )}
             {isSidebarOpen && <ChatSidebarBackdrop onClick={toggleSidebar} />}
             <Outlet />
           </div>

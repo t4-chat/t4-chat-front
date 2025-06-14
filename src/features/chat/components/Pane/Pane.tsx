@@ -7,7 +7,7 @@ import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage"
 import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
 import { type FC, memo, useEffect, useMemo, useRef } from "react";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
-import "./Pane.scss";
+import { cn } from "@/lib/utils";
 
 interface ModelOption {
   value: string;
@@ -100,12 +100,13 @@ const Pane: FC<PaneProps> = ({
 
   return (
     <div
-      className={`chat ${
-        showModelSelectorTop ? "with-model-selector-top" : ""
-      }`}
+      className={cn(
+        "flex flex-col h-full w-full bg-[var(--chat-bg-color)] relative overflow-visible min-h-0",
+        showModelSelectorTop && "pt-18",
+      )}
     >
       {showModelSelectorTop && modelOptions && modelId && (
-        <div className="chat-model-top-left chat-model-selector">
+        <div className="top-3 left-3 z-10 absolute flex items-center bg-transparent backdrop-blur-[10px] border-[var(--border-color)] border-b border-none rounded-md">
           <ModelSelect
             options={modelOptions as ModelSelectOption[]}
             value={modelId}
@@ -114,28 +115,35 @@ const Pane: FC<PaneProps> = ({
                 props.onModelChange(modelId);
               }
             }}
-            className="model-select"
+            className="max-w-48"
           />
         </div>
       )}
-      <div className="chat-messages" ref={messagesContainerRef}>
+      <div className="flex-1 py-6 overflow-x-hidden overflow-y-auto scroll-smooth">
         {!hasMessages && (
-          <div className="empty-chat">
-            <div className="empty-chat-content">
-              <h2>Start a new conversation</h2>
-              <p>Type a message below to begin</p>
+          <div className="flex flex-col justify-center items-center h-full text-[var(--text-secondary-color)]">
+            <div className="text-center">
+              <h2 className="mb-2 font-medium text-xl">
+                Start a new conversation
+              </h2>
+              <p className="opacity-80 text-base">
+                Type a message below to begin
+              </p>
             </div>
           </div>
         )}
 
         {hasMessages && (
-          <div className="messages-container">
+          <div className="flex flex-col mx-auto px-6 pb-6 w-full max-w-5xl">
             {messages.map((message) => {
               const modelInfo = getModelInfo(message.model_id);
               return (
                 <div
                   key={message.id}
-                  className={`message-wrapper ${message.role === "user" ? "user-message" : "assistant-message"}`}
+                  className={cn(
+                    "flex flex-col w-full mb-4",
+                    message.role === "user" ? "items-end" : "items-start",
+                  )}
                 >
                   <ChatMessage
                     content={message.content}
@@ -149,7 +157,7 @@ const Pane: FC<PaneProps> = ({
                    {isLoading &&
                     message.role === "assistant" &&
                     message === messages[messages.length - 1] && (
-                      <div className="message-loading">
+                      <div className="mt-5 ml-6 h-4">
                         <LoadingDots />
                       </div>
                     )} */}

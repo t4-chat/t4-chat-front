@@ -1,6 +1,8 @@
 import type { FC } from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "@tanstack/react-form";
+import { SidebarContext } from "@/components/Layout/Layout";
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -27,6 +29,7 @@ export const SettingsPage: FC = () => {
     null,
   );
   const [isCreating, setIsCreating] = useState(false);
+  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
 
   // Fetch utilization data
   const { data: utilization, isLoading: utilizationLoading } =
@@ -204,7 +207,12 @@ export const SettingsPage: FC = () => {
   };
 
   return (
-    <div className="space-y-6 mx-auto p-6 container">
+    <div
+      className={cn(
+        "space-y-6 mx-auto p-6 container transition-all duration-300",
+        { "md:pl-64": isSidebarOpen },
+      )}
+    >
       <div className="space-y-2">
         <h1 className="font-bold text-3xl">Settings</h1>
         <p className="text-muted-foreground">

@@ -524,7 +524,7 @@ export const ChatPage = () => {
 
   return (
     <div
-      className={`h-[calc(100vh-3.75rem)] w-full flex justify-center bg-[var(--background-color)] overflow-hidden fixed top-[3.75rem] left-0 right-0 m-0 transition-all duration-300 ${isSidebarOpen ? "pl-64" : ""}`}
+      className={`h-screen w-full flex justify-center bg-[var(--background-color)] overflow-hidden fixed top-0 left-0 right-0 m-0 transition-all duration-300 ${isSidebarOpen ? "md:pl-64" : ""}`}
     >
       <motion.div
         className="flex flex-col w-full max-w-full md:max-w-[90%] lg:max-w-[56.25rem] xl:max-w-[62.5rem] h-full overflow-hidden transition-all duration-300"

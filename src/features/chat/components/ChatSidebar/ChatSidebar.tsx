@@ -5,7 +5,9 @@ import PinIcon from "@/assets/icons/chats/pin.svg?react";
 import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
+import Logo from "@/assets/icons/logo.png";
 import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
+import { Link } from "react-router-dom";
 import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
 import { TextInputModal } from "@/components/Modal/TextInputModal";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,7 +25,7 @@ import {
   useChatsServicePatchApiChatsByChatIdTitle,
 } from "~/openapi/queries/queries";
 import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
-import "./ChatSidebar.scss";
+// import "./ChatSidebar.scss";
 
 interface ChatSidebarProps {
   isOpen: boolean;
@@ -277,61 +279,76 @@ export const ChatSidebar = ({
 
   return (
     <div
-      className={cn("chat-sidebar", {
-        "pointer-events-none cursor-not-allowed": isStreaming,
-        open: isOpen,
-      })}
+      className={cn(
+        "fixed top-0 left-0 bottom-0 w-full md:w-64 bg-[var(--component-bg-color)] border-r border-[var(--border-color)] transition-all duration-150 z-10 flex flex-col -translate-x-full overflow-hidden",
+        isOpen && "translate-x-0 shadow-[0.25rem_0_1rem_rgba(0,0,0,0.1)]",
+        isStreaming && "pointer-events-none cursor-not-allowed",
+      )}
     >
-      <div className="sidebar-header">
+      <div className="flex items-center px-3 py-3 border-[var(--border-color)] border-b">
         <button
           type="button"
-          className="toggle-button"
+          className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] mr-2 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-150 cursor-pointer"
           onClick={onToggle}
           aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
         >
-          <MenuIcon width={24} height={24} />
+          <MenuIcon width={20} height={20} />
         </button>
-        <h2 className="sidebar-title">Chats</h2>
+        <Link
+          to="/"
+          className="flex flex-1 items-center gap-2 hover:opacity-80 no-underline transition-opacity duration-200"
+        >
+          <img src={Logo} alt="T4 Chat Logo" className="w-auto h-5" />
+          <span className="font-semibold text-[var(--text-color)] text-md">
+            T4 Chat
+          </span>
+        </Link>
         <button
           type="button"
-          className="new-chat-button"
+          className="flex justify-center items-center bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] border-none rounded-full w-10 h-10 text-white transition-colors duration-150 cursor-pointer"
           onClick={handleNewChat}
           aria-label="New chat"
         >
-          <NewChatIcon width={20} height={20} />
+          <NewChatIcon width={18} height={18} />
         </button>
       </div>
 
-      <div className="search-container">
-        <div className="search-input-wrapper">
-          <SearchIcon width={16} height={16} />
+      <div className="px-4 py-2 border-[var(--border-color)] border-b">
+        <div className="flex items-center bg-[var(--hover-color)] px-3 py-1.5 rounded-lg">
+          <SearchIcon
+            width={16}
+            height={16}
+            className="mr-3 text-[var(--text-secondary-color)]"
+          />
           <input
             type="text"
             placeholder="Search chats..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="search-input"
+            className="flex-1 bg-transparent border-none outline-none text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-sm"
           />
         </div>
       </div>
 
-      <div className="chats-list">
+      <div className="isolate flex-1 py-2 overflow-y-auto">
         {isLoading ? (
-          <div className="loading-state">
+          <div className="flex justify-center items-center p-6 min-h-20 text-[var(--text-secondary-color)] text-sm text-center">
             <p>Loading chats...</p>
           </div>
         ) : (
           <>
             {filteredChats.length === 0 && (
-              <div className="no-chats">
+              <div className="p-6 text-[var(--text-secondary-color)] text-sm text-center">
                 <p>{searchTerm ? "No chats found" : "No recent chats"}</p>
               </div>
             )}
 
             {/* Pinned chats section */}
             {pinnedChats.length > 0 && (
-              <div className="chat-section">
-                <h3 className="section-title">Pinned</h3>
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  Pinned
+                </h3>
                 {pinnedChats.map((chat) => (
                   <ChatListItem
                     key={chat.id}
@@ -355,8 +372,8 @@ export const ChatSidebar = ({
 
             {/* Other chats section */}
             {unpinnedChats.length > 0 && (
-              <div className="chat-section">
-                {/* <h3 className="section-title">All chats</h3> */}
+              <div className="mb-2">
+                {/* <h3 className="m-0 px-6 py-4 font-medium text-[var(--text-secondary-color)] text-sm uppercase tracking-wider">All chats</h3> */}
                 {unpinnedChats.map((chat) => (
                   <ChatListItem
                     key={chat.id}
@@ -443,36 +460,37 @@ const ChatListItem: FC<ChatListItemProps> = ({
   };
 
   return (
-    <div
-      className={`chat-item flex gap-3 ${isActive ? "active" : ""} ${isMenuOpen ? "menu-open" : ""}`}
+    <button
+      type="button"
+      className={cn(
+        "w-full py-2 px-4 cursor-pointer border-l-4 border-transparent transition-all duration-150 relative flex items-center hover:bg-[var(--hover-color)] text-left bg-transparent border-t-0 border-r-0 border-b-0",
+        isActive &&
+          "bg-[rgba(var(--primary-color-rgb),0.1)] border-l-[var(--primary-color)]",
+        "gap-2",
+      )}
       onClick={onSelect}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSelect();
-        }
-      }}
-      tabIndex={0}
-      role="button"
       aria-label={`Select chat: ${chat.title}`}
     >
-      <button
-        type="button"
-        className="flex items-center gap-1 text-left line-clamp-1 cursor-pointer"
-        aria-label={`Select chat: ${chat.title}`}
-      >
+      <div className="flex flex-1 items-center gap-1 min-w-0 text-left cursor-pointer">
         {chat.pinned && (
           <PinIcon
-            className="text-(--primary) pin-icon"
+            className="flex-shrink-0 mr-1 text-[var(--primary-color)]"
             width={14}
             height={14}
           />
         )}
-        <div className="truncate chat-item-title">{chat.title}</div>
-      </button>
+        <div className="flex flex-1 items-center overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-ellipsis whitespace-nowrap">
+          {chat.title}
+        </div>
+      </div>
 
       <DropdownMenu
-        className="chat-item-menu"
-        trigger={<MoreIcon width={16} height={16} />}
+        className="z-[100] [&.menu-open]:z-[1001] flex-shrink-0 ml-auto"
+        trigger={
+          <div className="z-[inherit] flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-150">
+            <MoreIcon width={16} height={16} />
+          </div>
+        }
         position="left"
         onOpenChange={setIsMenuOpen}
         items={[
@@ -497,6 +515,6 @@ const ChatListItem: FC<ChatListItemProps> = ({
           },
         ]}
       />
-    </div>
+    </button>
   );
 };

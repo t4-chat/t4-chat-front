@@ -100,11 +100,11 @@ export const HomePage: FC = () => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-200",
-        { "pl-12": isSidebarOpen },
+        "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-300",
+        { "md:pl-64": isSidebarOpen },
       )}
     >
-      <header className="mb-8 max-w-[50rem] text-center">
+      <header className="max-w-[50rem] text-center">
         <h1 className="mb-6 font-bold text-[var(--text-primary-color)] text-2xl md:text-3xl leading-tight">
           Access the best AI models in one place
         </h1>
