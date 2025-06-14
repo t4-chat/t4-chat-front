@@ -332,7 +332,7 @@ export const SettingsPage: FC = () => {
         </div>
 
         <div className="flex justify-end gap-3">
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button type="button" variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
@@ -429,7 +429,7 @@ export const SettingsPage: FC = () => {
                       return (
                         <div
                           key={util.model_id}
-                          className="group relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] hover:shadow-xl p-6 border border-[var(--border-color)] hover:border-[var(--primary-color)]/30 rounded-xl hover:scale-[1.02] transition-all duration-200"
+                          className="relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl"
                         >
                           <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-3">
@@ -437,7 +437,7 @@ export const SettingsPage: FC = () => {
                                 {status.icon}
                               </div>
                               <div>
-                                <h3 className="font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] text-lg transition-colors">
+                                <h3 className="font-bold text-[var(--text-color)] text-lg">
                                   {util.model_id}
                                 </h3>
                                 <span
@@ -533,7 +533,7 @@ export const SettingsPage: FC = () => {
                 <Button
                   onClick={() => setIsCreating(true)}
                   disabled={isCreating || !!editingKey}
-                  className="flex items-center gap-2 bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
+                  className="px-6 py-2"
                 >
                   <Plus className="w-4 h-4" />
                   Add API Key
@@ -598,7 +598,7 @@ export const SettingsPage: FC = () => {
                       return (
                         <div
                           key={key.id}
-                          className="group relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] hover:shadow-xl p-6 border border-[var(--border-color)] hover:border-[var(--primary-color)]/30 rounded-xl hover:scale-[1.02] transition-all duration-200"
+                          className="relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl"
                         >
                           <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-3">
@@ -606,7 +606,7 @@ export const SettingsPage: FC = () => {
                                 <Key className="w-5 h-5 text-[var(--primary-color)]" />
                               </div>
                               <div>
-                                <h4 className="font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] text-lg transition-colors">
+                                <h4 className="font-bold text-[var(--text-color)] text-lg">
                                   {key.name}
                                 </h4>
                                 <div className="flex items-center gap-2 mt-1">
@@ -649,11 +649,11 @@ export const SettingsPage: FC = () => {
 
                           <div className="flex gap-2 pt-4 border-[var(--border-color)] border-t">
                             <Button
-                              variant="outline"
+                              variant="secondary"
                               size="sm"
                               onClick={() => setEditingKey(key)}
                               disabled={isCreating || !!editingKey}
-                              className="flex flex-1 gap-1 hover:bg-[var(--hover-color)] border-[var(--border-color)] hover:border-[var(--primary-color)]/50 font-medium text-[var(--text-color)] transition-all"
+                              className="flex-1"
                             >
                               <Edit2 className="w-4 h-4" />
                               Edit
@@ -665,7 +665,7 @@ export const SettingsPage: FC = () => {
                                 handleDeleteModal(key.id, key.name)
                               }
                               disabled={deleteApiKeyMutation.isPending}
-                              className="flex flex-1 gap-1 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 shadow-md hover:shadow-lg font-medium text-white transition-all duration-100"
+                              className="flex-1"
                             >
                               <Trash2 className="w-4 h-4" />
                               Delete
@@ -689,7 +689,7 @@ export const SettingsPage: FC = () => {
                     </p>
                     <Button
                       onClick={() => setIsCreating(true)}
-                      className="flex items-center gap-2 bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
+                      className="px-6 py-2"
                     >
                       <Plus className="w-4 h-4" />
                       Add Your First API Key
