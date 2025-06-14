@@ -11,7 +11,7 @@ interface InfoModalProps {
   closeLabel?: string;
 }
 
-export const InfoModal: FC<InfoModalProps> = ({
+const InfoModal: FC<InfoModalProps> = ({
   isOpen,
   onClose,
   title,
