@@ -4,8 +4,9 @@ import ModelSelect, {
 
 // import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
 import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage";
+import ScrollToBottomButton from "@/features/chat/components/ScrollToBottomButton/ScrollToBottomButton";
 import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
-import { type FC, memo, useEffect, useMemo, useRef } from "react";
+import { type FC, memo, useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
 import { cn } from "@/lib/utils";
 
@@ -47,6 +48,15 @@ type PaneProps = {
 const useScrollToBottom = (messages: ChatMessageWithDate[]) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  const handleScroll = () => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    const { scrollTop, clientHeight, scrollHeight } = container;
+    const atBottom = scrollHeight - scrollTop - clientHeight < 100;
+    setIsAtBottom(atBottom);
+  };
 
   const lastMessageKey =
     messages.length > 0
@@ -57,17 +67,30 @@ const useScrollToBottom = (messages: ChatMessageWithDate[]) => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to react to last message updates
   useEffect(() => {
     if (messagesEndRef.current) {
-      // Use a small timeout to ensure DOM has updated
-      // setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "end",
       });
-      // }, 100);
     }
   }, [lastMessageKey]);
 
-  return { messagesEndRef, messagesContainerRef };
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    handleScroll();
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: container ref is stable
+  }, [messagesContainerRef]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  };
+
+  return { messagesEndRef, messagesContainerRef, isAtBottom, scrollToBottom };
 };
 
 const Pane: FC<PaneProps> = ({
@@ -96,7 +119,8 @@ const Pane: FC<PaneProps> = ({
     };
   }, [modelOptions]);
 
-  const { messagesEndRef, messagesContainerRef } = useScrollToBottom(messages);
+  const { messagesEndRef, messagesContainerRef, isAtBottom, scrollToBottom } =
+    useScrollToBottom(messages);
 
   return (
     <div
@@ -119,7 +143,10 @@ const Pane: FC<PaneProps> = ({
           />
         </div>
       )}
-      <div className="flex-1 py-6 overflow-x-hidden overflow-y-auto scroll-smooth">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 py-6 overflow-x-hidden overflow-y-auto scroll-smooth"
+      >
         {!hasMessages && (
           <div className="flex flex-col justify-center items-center h-full text-[var(--text-secondary-color)]">
             <div className="text-center">
@@ -167,6 +194,7 @@ const Pane: FC<PaneProps> = ({
             <div ref={messagesEndRef} style={{ height: "1rem" }} />
           </div>
         )}
+        <ScrollToBottomButton onClick={scrollToBottom} show={!isAtBottom} />
       </div>
     </div>
   );
