@@ -315,40 +315,6 @@ export const ChatSidebar = ({
         </div>
       </div>
 
-      {/* {filteredChats.length > 0 && (
-        <div className="select-all-container">
-          <div className="select-all-controls">
-            <Checkbox
-              checked={isAllSelected}
-              onCheckedChange={handleSelectAll}
-            />
-            <button
-              type="button"
-              className="py-2! select-all-label"
-              onClick={() => handleSelectAll(!isAllSelected)}
-              aria-label={
-                isAllSelected ? "Deselect all chats" : "Select all chats"
-              }
-            >
-              {isAllSelected ? "Deselect all" : "Select all"}
-            </button>
-          </div>
-          {selectedChatIds.length > 0 && (
-            <button
-              type="button"
-              className="bulk-delete-button-inline"
-              onClick={() => {
-                handleDeleteModal(selectedChatIds);
-                setSelectedChatIds([]);
-              }}
-              aria-label={`Delete ${selectedChatIds.length} selected chats`}
-            >
-              Delete ({selectedChatIds.length})
-            </button>
-          )}
-        </div>
-      )} */}
-
       <div className="chats-list">
         {isLoading ? (
           <div className="loading-state">
@@ -489,13 +455,6 @@ const ChatListItem: FC<ChatListItemProps> = ({
       role="button"
       aria-label={`Select chat: ${chat.title}`}
     >
-      <Checkbox
-        checked={isSelected}
-        onCheckedChange={onSelectChange}
-        onClick={stopPropagation}
-        className="cursor-pointer"
-      />
-
       <button
         type="button"
         className="flex items-center gap-1 text-left line-clamp-1 cursor-pointer"

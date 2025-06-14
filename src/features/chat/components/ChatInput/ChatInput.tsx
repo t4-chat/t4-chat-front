@@ -6,7 +6,7 @@ import ModelSelect from "@/components/ModelSelect/ModelSelect";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "~/components/ui/switch";
-import "./ChatInput.scss";
+import { cn } from "@/lib/utils";
 
 interface IChatInputProps {
   onSend: (message: string, files?: File[]) => void;
@@ -106,7 +106,7 @@ const ChatInput: FC<IChatInputProps> = ({
 
   return (
     <div
-      className="chat-input-integrated-wrapper"
+      className="pb-[env(safe-area-inset-bottom)] relative flex flex-col bg-[var(--background-color)] focus-within:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)] border border-[var(--border-color)] focus-within:border-[var(--primary-color)] rounded-3xl w-full max-w-5xl transition-all duration-200"
       onClick={() => {
         if (textareaRef.current) {
           textareaRef.current.focus();
@@ -123,7 +123,7 @@ const ChatInput: FC<IChatInputProps> = ({
       }}
     >
       {files.length > 0 && (
-        <div className="file-previews">
+        <div className="flex flex-wrap gap-2 p-2 px-4 pt-2">
           {files.map((file, index) => (
             <FilePreview
               key={`${file.name}-${index}`}
@@ -136,21 +136,21 @@ const ChatInput: FC<IChatInputProps> = ({
 
       <textarea
         ref={textareaRef}
-        className="chat-input"
+        className="bg-transparent disabled:opacity-70 px-4 py-3 border-none outline-none min-h-11 max-h-36 md:max-h-60 text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-sm leading-6 resize-none disabled:cursor-not-allowed"
         value={message}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
       />
 
-      <div className="chat-input-actions">
+      <div className="flex justify-between items-center px-2 py-1 pb-2 pl-3 border-t-0">
         {!responseWasSelected && !!textareaRef.current?.value.length && (
           <div className="flex items-center gap-1.5 bg-amber-300/20 shadow-sm px-3 py-1.5 rounded-lg font-bold text-amber-300 text-xs">
             <span>💡</span>
             <span>First response will be used by default</span>
           </div>
         )}
-        <div className="model-selector-container">
+        <div className="relative flex items-center min-w-40">
           <AnimatePresence mode="wait">
             {modelOptions && selectedModel && onModelChange && (
               <motion.div
@@ -159,12 +159,13 @@ const ChatInput: FC<IChatInputProps> = ({
                 exit={{ opacity: 0, scaleX: 0 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 style={{ transformOrigin: "left center" }}
+                className="min-w-40"
               >
                 <ModelSelect
                   options={modelOptions}
                   value={selectedModel}
                   onChange={onModelChange}
-                  className="chat-model-select"
+                  className="min-w-40"
                   dropdownPosition="top"
                 />
               </motion.div>
@@ -172,7 +173,7 @@ const ChatInput: FC<IChatInputProps> = ({
           </AnimatePresence>
         </div>
 
-        <div className="input-action-buttons">
+        <div className="flex items-center gap-1">
           <AnimatePresence>
             {/* {isSplitMode && onPaneCountChange && (
               <motion.div
@@ -198,7 +199,7 @@ const ChatInput: FC<IChatInputProps> = ({
               </motion.div>
             )} */}
           </AnimatePresence>
-          <div className="flex gap-2 split-toggle">
+          <div className="flex items-center gap-2 text-xs">
             <Switch
               id="split-mode"
               checked={isSplitMode}
@@ -218,7 +219,14 @@ const ChatInput: FC<IChatInputProps> = ({
           />
 
           <button
-            className={`send-button ${(message.trim() || files.length > 0) && !isLoading ? "active" : ""}`}
+            className={cn(
+              "flex items-center justify-center w-10 h-10 rounded-full bg-transparent border-none cursor-pointer transition-all duration-200",
+              "text-[var(--text-secondary-color)] hover:bg-[rgba(var(--primary-color-rgb),0.1)] hover:text-[var(--primary-color)]",
+              "disabled:opacity-40 disabled:cursor-not-allowed",
+              (message.trim() || files.length > 0) &&
+                !isLoading &&
+                "bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color-hover)]",
+            )}
             onClick={handleSend}
             disabled={(!message.trim() && files.length === 0) || isLoading}
             aria-label="Send message"
