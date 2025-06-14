@@ -253,7 +253,7 @@ export const SettingsPage: FC = () => {
   return (
     <div
       className={cn(
-        "min-h-screen bg-[var(--background-color)] transition-all duration-300",
+        "min-h-screen bg-[var(--background-color)] transition-all duration-75",
         { "md:pl-64": isSidebarOpen },
       )}
       style={{ backgroundColor: "var(--background-color)" }}
@@ -279,7 +279,7 @@ export const SettingsPage: FC = () => {
               value="utilization"
               className={cn(
                 "data-[state=active]:bg-[var(--primary-color)] data-[state=active]:shadow-sm rounded-lg font-medium text-[var(--text-secondary-color)] data-[state=active]:text-white",
-                isMounted && "transition-all duration-200",
+                isMounted && "transition-all duration-100",
               )}
             >
               Usage & Limits
@@ -288,7 +288,7 @@ export const SettingsPage: FC = () => {
               value="api-keys"
               className={cn(
                 "data-[state=active]:bg-[var(--primary-color)] data-[state=active]:shadow-sm rounded-lg font-medium text-[var(--text-secondary-color)] data-[state=active]:text-white",
-                isMounted && "transition-all duration-200",
+                isMounted && "transition-all duration-100",
               )}
             >
               API Keys
@@ -300,7 +300,7 @@ export const SettingsPage: FC = () => {
             className={cn(
               "space-y-6 mt-8",
               isMounted &&
-                "animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
+                "animate-in fade-in-0 slide-in-from-bottom-2 duration-75",
             )}
           >
             <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
@@ -319,7 +319,7 @@ export const SettingsPage: FC = () => {
                     {utilization.utilizations.map((util) => (
                       <div
                         key={util.model_id}
-                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-200"
+                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-100"
                       >
                         <div>
                           <p className="font-semibold text-[var(--text-color)] text-lg">
@@ -335,7 +335,7 @@ export const SettingsPage: FC = () => {
                           </div>
                           <div className="bg-[var(--border-color)] rounded-full w-24 h-3">
                             <div
-                              className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color-hover)] rounded-full h-3 transition-all duration-300"
+                              className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color-hover)] rounded-full h-3 transition-all duration-75"
                               style={{
                                 width: `${Math.min(util.percentage, 100)}%`,
                               }}
@@ -359,7 +359,7 @@ export const SettingsPage: FC = () => {
             className={cn(
               "space-y-6 mt-8",
               isMounted &&
-                "animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
+                "animate-in fade-in-0 slide-in-from-bottom-2 duration-75",
             )}
           >
             <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
@@ -375,7 +375,7 @@ export const SettingsPage: FC = () => {
                 <Button
                   onClick={() => setIsCreating(true)}
                   disabled={isCreating || !!editingKey}
-                  className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-200"
+                  className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
                 >
                   Add API Key
                 </Button>
@@ -422,7 +422,7 @@ export const SettingsPage: FC = () => {
                     {apiKeys.map((key) => (
                       <div
                         key={key.id}
-                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-200"
+                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-100"
                       >
                         <div className="space-y-2">
                           <div className="flex items-center gap-3">
@@ -466,7 +466,7 @@ export const SettingsPage: FC = () => {
                             size="sm"
                             onClick={() => handleDeleteModal(key.id, key.name)}
                             disabled={deleteApiKeyMutation.isPending}
-                            className="bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg px-4 py-2 font-medium text-white transition-all duration-200"
+                            className="bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg px-4 py-2 font-medium text-white transition-all duration-100"
                           >
                             Delete
                           </Button>

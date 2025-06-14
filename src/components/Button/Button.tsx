@@ -33,7 +33,7 @@ export const Button: FC<ButtonProps> = ({
   return (
     <button
       className={cn(
-        "rounded-lg font-medium cursor-pointer transition-all duration-200 inline-flex items-center justify-center border-none",
+        "rounded-lg font-medium cursor-pointer transition-all duration-100 inline-flex items-center justify-center border-none",
         buttonVariants[variant],
         buttonSizes[size],
         "disabled:opacity-50 disabled:cursor-not-allowed",

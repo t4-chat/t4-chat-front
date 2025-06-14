@@ -45,7 +45,7 @@ export const FileUpload = ({
     >
       <button
         type="button"
-        className="flex justify-center items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] disabled:opacity-50 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+        className="flex justify-center items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] disabled:opacity-50 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] active:scale-95 transition-all duration-100 cursor-pointer disabled:cursor-not-allowed"
         onClick={handleClick}
         disabled={disabled}
         aria-label="Attach files"

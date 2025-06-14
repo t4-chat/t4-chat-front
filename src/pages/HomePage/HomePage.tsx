@@ -100,7 +100,7 @@ export const HomePage: FC = () => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-300",
+        "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-75",
         { "md:pl-64": isSidebarOpen },
       )}
     >
@@ -119,7 +119,7 @@ export const HomePage: FC = () => {
           />
           <input
             type="text"
-            className="bg-[var(--background-color)] shadow-sm focus:shadow-lg px-10 py-4 border border-[var(--border-color)] focus:border-blue-500 rounded-full focus:outline-none w-full text-[var(--text-primary-color)] text-base transition-all duration-200"
+            className="bg-[var(--background-color)] shadow-sm focus:shadow-lg px-10 py-4 border border-[var(--border-color)] focus:border-blue-500 rounded-full focus:outline-none w-full text-[var(--text-primary-color)] text-base transition-all duration-100"
             placeholder="Search models or providers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -175,7 +175,7 @@ export const HomePage: FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.15, ease: "easeInOut" }}
           >
             {Object.entries(groupedModels).map(
               ([categoryName, categoryModels]) => (
@@ -185,7 +185,7 @@ export const HomePage: FC = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
-                    duration: 0.4,
+                    duration: 0.1,
                     delay: 0.1,
                     ease: "easeOut",
                   }}
@@ -204,22 +204,22 @@ export const HomePage: FC = () => {
                       <motion.button
                         type="button"
                         key={model.id}
-                        className="flex flex-col items-center w-full hover:scale-105 active:scale-95 transition-transform duration-200 cursor-pointer"
+                        className="flex flex-col items-center w-full hover:scale-105 active:scale-95 transition-transform duration-100 cursor-pointer"
                         onClick={() => handleTileClick(model)}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
-                          duration: 0.3,
+                          duration: 0.15,
                           delay: 0.2 + index * 0.05,
                           ease: "easeOut",
                         }}
                         whileHover={{
                           scale: 1.02,
-                          transition: { duration: 0.2 },
+                          transition: { duration: 0.1 },
                         }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <div className="after:top-0 after:left-0 after:z-10 after:absolute relative flex justify-center items-center after:bg-white shadow-sm hover:shadow-lg mb-4 rounded-2xl w-[4.375rem] sm:w-15 md:w-16 after:w-full h-[4.375rem] sm:h-15 md:h-16 after:h-full overflow-hidden text-white after:content-[''] transition-all duration-200">
+                        <div className="after:top-0 after:left-0 after:z-10 after:absolute relative flex justify-center items-center after:bg-white shadow-sm hover:shadow-lg mb-4 rounded-2xl w-[4.375rem] sm:w-15 md:w-16 after:w-full h-[4.375rem] sm:h-15 md:h-16 after:h-full overflow-hidden text-white after:content-[''] transition-all duration-100">
                           <img
                             src={getProviderIconPath(
                               model.provider?.slug || "",

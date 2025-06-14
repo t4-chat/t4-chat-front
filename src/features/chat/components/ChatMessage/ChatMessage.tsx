@@ -220,7 +220,7 @@ export const ChatMessage = ({
     >
       <button
         className={cn(
-          "absolute bg-transparent border-none text-[var(--text-secondary-color)] cursor-pointer p-2 rounded-sm opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity duration-150 hover:bg-black/5",
+          "absolute bg-transparent border-none text-[var(--text-secondary-color)] cursor-pointer p-2 rounded-sm opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity duration-75 hover:bg-black/5",
           placement === "top" && "-top-10",
           placement === "bottom" && "-bottom-10",
           placement === "side" && "top-1/2 -translate-y-1/2",
@@ -371,7 +371,7 @@ export const ChatMessage = ({
               <div
                 key={info.fileId}
                 className={cn(
-                  "flex items-center transition-all duration-150 cursor-pointer",
+                  "flex items-center transition-all duration-75 cursor-pointer",
                   info.isImage
                     ? "p-0 overflow-hidden max-w-[200px] max-h-[200px] cursor-default rounded-md hover:bg-black/[0.05]"
                     : "py-2 px-4 bg-black/[0.05] rounded-md hover:bg-black/[0.08]",
@@ -401,7 +401,7 @@ export const ChatMessage = ({
                     />
                     <button
                       type="button"
-                      className="right-2 bottom-2 absolute flex justify-center items-center bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100 border-none rounded-full w-7 h-7 text-white transition-opacity duration-200 cursor-pointer"
+                      className="right-2 bottom-2 absolute flex justify-center items-center bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100 border-none rounded-full w-7 h-7 text-white transition-opacity duration-100 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         downloadFile(info.fileId);

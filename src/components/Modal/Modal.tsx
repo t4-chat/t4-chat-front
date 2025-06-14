@@ -54,7 +54,7 @@ export const Modal: FC<ModalProps> = ({
           )}
           <button
             type="button"
-            className="hover:bg-[var(--hover-color)] bg-none p-1 border-none rounded text-[var(--text-color)] text-2xl leading-none transition-colors duration-200 cursor-pointer"
+            className="hover:bg-[var(--hover-color)] bg-none p-1 border-none rounded text-[var(--text-color)] text-2xl leading-none transition-colors duration-100 cursor-pointer"
             onClick={onClose}
           >
             ×

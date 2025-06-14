@@ -280,7 +280,7 @@ export const ChatSidebar = ({
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 bottom-0 w-full md:w-64 bg-[var(--component-bg-color)] border-r border-[var(--border-color)] transition-all duration-150 z-10 flex flex-col -translate-x-full overflow-hidden",
+        "fixed top-0 left-0 bottom-0 w-full md:w-64 bg-[var(--component-bg-color)] border-r border-[var(--border-color)] transition-all duration-75 z-10 flex flex-col -translate-x-full overflow-hidden",
         isOpen && "translate-x-0 shadow-[0.25rem_0_1rem_rgba(0,0,0,0.1)]",
         isStreaming && "pointer-events-none cursor-not-allowed",
       )}
@@ -288,7 +288,7 @@ export const ChatSidebar = ({
       <div className="flex items-center px-3 py-3 border-[var(--border-color)] border-b">
         <button
           type="button"
-          className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] mr-2 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-150 cursor-pointer"
+          className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] mr-2 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75 cursor-pointer"
           onClick={onToggle}
           aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
         >
@@ -296,7 +296,7 @@ export const ChatSidebar = ({
         </button>
         <Link
           to="/"
-          className="flex flex-1 items-center gap-2 hover:opacity-80 no-underline transition-opacity duration-200"
+          className="flex flex-1 items-center gap-2 hover:opacity-80 no-underline transition-opacity duration-100"
         >
           <img src={Logo} alt="T4 Chat Logo" className="w-auto h-5" />
           <span className="font-semibold text-[var(--text-color)] text-md">
@@ -305,7 +305,7 @@ export const ChatSidebar = ({
         </Link>
         <button
           type="button"
-          className="flex justify-center items-center bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] border-none rounded-full w-10 h-10 text-white transition-colors duration-150 cursor-pointer"
+          className="flex justify-center items-center bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] border-none rounded-full w-10 h-10 text-white transition-colors duration-75 cursor-pointer"
           onClick={handleNewChat}
           aria-label="New chat"
         >
@@ -463,7 +463,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
     <button
       type="button"
       className={cn(
-        "w-full py-2 px-4 cursor-pointer border-l-4 border-transparent transition-all duration-150 relative flex items-center hover:bg-[var(--hover-color)] text-left bg-transparent border-t-0 border-r-0 border-b-0",
+        "w-full py-2 px-4 cursor-pointer border-l-4 border-transparent transition-all duration-75 relative flex items-center hover:bg-[var(--hover-color)] text-left bg-transparent border-t-0 border-r-0 border-b-0",
         isActive &&
           "bg-[rgba(var(--primary-color-rgb),0.1)] border-l-[var(--primary-color)]",
         "gap-2",
@@ -487,7 +487,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
       <DropdownMenu
         className="z-[100] [&.menu-open]:z-[1001] flex-shrink-0 ml-auto"
         trigger={
-          <div className="z-[inherit] flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-150">
+          <div className="z-[inherit] flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
             <MoreIcon width={16} height={16} />
           </div>
         }

@@ -74,7 +74,7 @@ const TabsList = React.forwardRef<
         {...props}
       />
       <div
-        className="absolute bg-primary shadow-sm rounded-md transition-all duration-300 ease-in-out"
+        className="absolute bg-primary shadow-sm rounded-md transition-all duration-75 ease-in-out"
         style={indicatorStyle}
       />
     </div>

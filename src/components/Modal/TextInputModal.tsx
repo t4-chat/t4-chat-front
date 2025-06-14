@@ -79,7 +79,7 @@ export const TextInputModal: FC<TextInputModalProps> = ({
             ref={inputRef}
             type="text"
             className={cn(
-              "w-full p-3 border border-[var(--border-color)] rounded-lg text-base text-[var(--text-primary-color)] bg-[var(--component-bg-color)] transition-colors duration-200",
+              "w-full p-3 border border-[var(--border-color)] rounded-lg text-base text-[var(--text-primary-color)] bg-[var(--component-bg-color)] transition-colors duration-100",
               "focus:outline-none focus:border-[var(--primary-color)] focus:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)]",
               "placeholder:text-[var(--text-placeholder-color)]",
               error &&

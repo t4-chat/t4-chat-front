@@ -126,7 +126,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
               <li key={item.id} className="bg-[var(--component-bg-color)]">
                 <button
                   type="button"
-                  className={`flex items-center w-full py-3 px-4 bg-[var(--component-bg-color)] border-none text-left cursor-pointer text-sm transition-colors duration-200 ${
+                  className={`flex items-center w-full py-3 px-4 bg-[var(--component-bg-color)] border-none text-left cursor-pointer text-sm transition-colors duration-100 ${
                     item.isDanger
                       ? "text-[var(--error-color)] hover:bg-[rgba(var(--error-color-rgb),0.1)]"
                       : "text-[var(--text-primary-color)] hover:bg-[var(--hover-color)]"

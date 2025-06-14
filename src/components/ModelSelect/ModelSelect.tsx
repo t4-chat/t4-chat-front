@@ -85,7 +85,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
           className,
         )}
       >
-        <SelectTrigger className="[&_svg]:hidden relative flex justify-start items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] data-[state=open]:shadow-none px-1 py-0.5 border data-[state=open]:border-[var(--primary-color)] hover:border-[rgba(var(--primary-color-rgb),0.2)] border-transparent min-h-8 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] text-sm transition-all duration-200 cursor-pointer">
+        <SelectTrigger className="[&_svg]:hidden relative flex justify-start items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] data-[state=open]:shadow-none px-1 py-0.5 border data-[state=open]:border-[var(--primary-color)] hover:border-[rgba(var(--primary-color-rgb),0.2)] border-transparent min-h-8 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] text-sm transition-all duration-100 cursor-pointer">
           <div className="flex flex-1 items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
             {selectedOption ? (
               <>
@@ -158,7 +158,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                 <SelectItem
                   key={option.value}
                   value={option.value}
-                  className="[&_.absolute]:!hidden relative !flex [&>span]:!flex !flex-row [&>span]:!flex-row !items-center [&>span]:!items-center gap-2 [&>span]:gap-2 data-[highlighted]:bg-[rgba(var(--primary-color-rgb),0.05)] data-[state=checked]:bg-[rgba(var(--primary-color-rgb),0.1)] hover:bg-[rgba(var(--primary-color-rgb),0.05)] !px-3 !py-2.5 border-[var(--border-color)] border-b last:border-b-0 outline-none [&>span]:w-full data-[state=checked]:font-medium text-[var(--text-primary-color)] data-[state=checked]:text-[var(--primary-color)] transition-colors duration-200 cursor-pointer"
+                  className="[&_.absolute]:!hidden relative !flex [&>span]:!flex !flex-row [&>span]:!flex-row !items-center [&>span]:!items-center gap-2 [&>span]:gap-2 data-[highlighted]:bg-[rgba(var(--primary-color-rgb),0.05)] data-[state=checked]:bg-[rgba(var(--primary-color-rgb),0.1)] hover:bg-[rgba(var(--primary-color-rgb),0.05)] !px-3 !py-2.5 border-[var(--border-color)] border-b last:border-b-0 outline-none [&>span]:w-full data-[state=checked]:font-medium text-[var(--text-primary-color)] data-[state=checked]:text-[var(--primary-color)] transition-colors duration-100 cursor-pointer"
                 >
                   <div className="flex flex-1 items-center gap-2">
                     {option.iconPath && (

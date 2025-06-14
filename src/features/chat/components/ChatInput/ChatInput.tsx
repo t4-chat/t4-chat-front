@@ -106,7 +106,7 @@ const ChatInput: FC<IChatInputProps> = ({
 
   return (
     <div
-      className="pb-[env(safe-area-inset-bottom)] relative flex flex-col bg-[var(--background-color)] focus-within:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)] border border-[var(--border-color)] focus-within:border-[var(--primary-color)] rounded-3xl w-full max-w-5xl transition-all duration-200"
+      className="pb-[env(safe-area-inset-bottom)] relative flex flex-col bg-[var(--background-color)] focus-within:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)] border border-[var(--border-color)] focus-within:border-[var(--primary-color)] rounded-3xl w-full max-w-5xl transition-all duration-100"
       onClick={() => {
         if (textareaRef.current) {
           textareaRef.current.focus();
@@ -157,7 +157,7 @@ const ChatInput: FC<IChatInputProps> = ({
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 exit={{ opacity: 0, scaleX: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.1, ease: "easeInOut" }}
                 style={{ transformOrigin: "left center" }}
                 className="min-w-40"
               >
@@ -180,7 +180,7 @@ const ChatInput: FC<IChatInputProps> = ({
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 exit={{ opacity: 0, scaleX: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                transition={{ duration: 0.1, ease: "easeInOut" }}
                 style={{ transformOrigin: "left center" }}
               >
                 <ModelSelect
@@ -220,7 +220,7 @@ const ChatInput: FC<IChatInputProps> = ({
 
           <button
             className={cn(
-              "flex items-center justify-center w-10 h-10 rounded-full bg-transparent border-none cursor-pointer transition-all duration-200",
+              "flex items-center justify-center w-10 h-10 rounded-full bg-transparent border-none cursor-pointer transition-all duration-100",
               "text-[var(--text-secondary-color)] hover:bg-[rgba(var(--primary-color-rgb),0.1)] hover:text-[var(--primary-color)]",
               "disabled:opacity-40 disabled:cursor-not-allowed",
               (message.trim() || files.length > 0) &&

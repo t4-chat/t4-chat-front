@@ -60,7 +60,7 @@ export const Header = () => {
 
   const userTrigger = (
     <button
-      className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] p-1 border-none rounded-full transition-colors duration-200 cursor-pointer"
+      className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] p-1 border-none rounded-full transition-colors duration-100 cursor-pointer"
       title={userName}
       type="button"
     >
@@ -95,7 +95,7 @@ export const Header = () => {
     }
     return (
       <button
-        className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] px-3 py-1 border-none rounded text-white text-xs transition-colors duration-200 cursor-pointer"
+        className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] px-3 py-1 border-none rounded text-white text-xs transition-colors duration-100 cursor-pointer"
         onClick={openLoginModal}
         type="button"
       >
@@ -112,7 +112,7 @@ export const Header = () => {
           {renderUserContent()}
           <button
             type="button"
-            className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] focus:bg-[var(--hover-color)] p-1.5 border-none rounded-lg focus:outline-none text-base transition-colors duration-200 cursor-pointer"
+            className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] focus:bg-[var(--hover-color)] p-1.5 border-none rounded-lg focus:outline-none text-base transition-colors duration-100 cursor-pointer"
             onClick={handleThemeChange}
             aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}
             title={`Current: ${currentTheme}. Click to switch theme`}
