@@ -4,7 +4,6 @@ import { useContext, useMemo, useState, type FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
-import "./HomePage.scss";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { cn } from "@/lib/utils";
@@ -99,23 +98,28 @@ export const HomePage: FC = () => {
   const { isOpen: isSidebarOpen } = useContext(SidebarContext);
 
   return (
-    <div className={cn("home-page", { "with-sidebar": isSidebarOpen })}>
-      <header className="home-page__header">
-        <h1 className="home-page__main-title">
+    <div
+      className={cn(
+        "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-200",
+        { "pl-12": isSidebarOpen },
+      )}
+    >
+      <header className="mb-8 max-w-[50rem] text-center">
+        <h1 className="mb-6 font-bold text-[var(--text-primary-color)] text-2xl md:text-3xl leading-tight">
           Access the best AI models in one place
         </h1>
       </header>
 
       <div className="flex flex-col items-center gap-4 mx-auto mb-6 w-full max-w-[1200px]">
-        <div className="home-page__search-container">
+        <div className="relative w-full max-w-[37.5rem]">
           <SearchIcon
             width={16}
             height={16}
-            className="home-page__search-icon"
+            className="top-1/2 left-4 z-10 absolute text-[var(--text-secondary-color)] -translate-y-1/2 transform"
           />
           <input
             type="text"
-            className="home-page__search-input"
+            className="bg-[var(--background-color)] shadow-sm focus:shadow-lg px-10 py-4 border border-[var(--border-color)] focus:border-blue-500 rounded-full focus:outline-none w-full text-[var(--text-primary-color)] text-base transition-all duration-200"
             placeholder="Search models or providers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -123,7 +127,7 @@ export const HomePage: FC = () => {
           {searchQuery && (
             <button
               type="button"
-              className="home-page__search-clear"
+              className="top-1/2 right-4 absolute flex justify-center items-center bg-transparent hover:bg-black/5 p-0 border-none rounded-full w-6 h-6 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] text-xl -translate-y-1/2 cursor-pointer transform"
               onClick={handleClearSearch}
               aria-label="Clear search"
             >
@@ -149,22 +153,24 @@ export const HomePage: FC = () => {
       </div>
 
       {isMinimumLoading ? (
-        <div className="home-page__loading">Loading AI models...</div>
+        <div className="before:top-1/2 before:left-0 before:absolute relative mt-8 p-4 pl-8 before:border-[var(--primary-color)] before:border-2 before:border-t-transparent rounded-md before:rounded-full before:w-4 before:h-4 text-[var(--text-secondary-color)] text-base text-center before:content-[''] before:-translate-y-1/2 before:animate-spin">
+          Loading AI models...
+        </div>
       ) : error ? (
-        <div className="home-page__error">
+        <div className="bg-red-50 mt-8 p-4 rounded-md text-[var(--error-color)] text-base text-center">
           Failed to load AI models. Please try again later.
         </div>
       ) : filteredModels.length === 0 ? (
-        <p className="home-page__no-results">
+        <p className="mt-8 p-4 rounded-md text-[var(--text-secondary-color)] text-base text-center italic">
           No models found matching "{searchQuery}"
         </p>
       ) : (
         <AnimatePresence mode="wait">
           <motion.div
             key={categorizationMode}
-            className={cn("home-page__providers-grid", {
-              "home-page__providers-grid--usage":
-                categorizationMode === "usage",
+            className={cn("grid gap-8 w-full max-w-[75rem] mx-auto mb-8", {
+              "grid-cols-1": categorizationMode === "usage",
+              "grid-cols-1 md:grid-cols-2": categorizationMode === "provider",
             })}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -175,7 +181,7 @@ export const HomePage: FC = () => {
               ([categoryName, categoryModels]) => (
                 <motion.section
                   key={categoryName}
-                  className="home-page__provider-section"
+                  className="w-full"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
@@ -185,20 +191,20 @@ export const HomePage: FC = () => {
                   }}
                 >
                   {categorizationMode === "usage" ? (
-                    <h2 className="home-page__provider-title">
+                    <h2 className="mb-4 font-semibold text-[var(--text-primary-color)] text-lg">
                       {getCategoryDisplayName(categoryName)}
                     </h2>
                   ) : (
-                    <h2 className="home-page__provider-title">
+                    <h2 className="mb-4 font-semibold text-[var(--text-primary-color)] text-lg">
                       {categoryName}
                     </h2>
                   )}
-                  <div className="home-page__grid">
+                  <div className="justify-items-center gap-6 sm:gap-4 md:gap-5 grid grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(5.313rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(6.25rem,1fr))] mb-6">
                     {categoryModels.map((model, index) => (
                       <motion.button
                         type="button"
                         key={model.id}
-                        className="home-page__tile"
+                        className="flex flex-col items-center w-full hover:scale-105 active:scale-95 transition-transform duration-200 cursor-pointer"
                         onClick={() => handleTileClick(model)}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -213,24 +219,26 @@ export const HomePage: FC = () => {
                         }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <div className="home-page__tile-icon">
+                        <div className="after:top-0 after:left-0 after:z-10 after:absolute relative flex justify-center items-center after:bg-white shadow-sm hover:shadow-lg mb-4 rounded-2xl w-[4.375rem] sm:w-15 md:w-16 after:w-full h-[4.375rem] sm:h-15 md:h-16 after:h-full overflow-hidden text-white after:content-[''] transition-all duration-200">
                           <img
                             src={getProviderIconPath(
                               model.provider?.slug || "",
                             )}
                             alt={`${model.provider?.name || "Unknown"} icon`}
-                            className="home-page__tile-svg"
+                            className="z-20 relative w-full h-full"
                           />
                           {model.has_api_key && (
                             <div
-                              className="home-page__byok-indicator"
+                              className="-top-0.5 -right-0.5 z-30 absolute flex justify-center items-center bg-green-500 shadow-sm border-2 border-white rounded-full w-5 h-5 text-xs"
                               title="Using your API key"
                             >
                               🔑
                             </div>
                           )}
                         </div>
-                        <div className="home-page__tile-name">{model.name}</div>
+                        <div className="w-full overflow-hidden font-medium text-[var(--text-primary-color)] text-sm text-center text-ellipsis whitespace-nowrap">
+                          {model.name}
+                        </div>
                       </motion.button>
                     ))}
                   </div>

@@ -359,3 +359,62 @@ html {
     opacity: 1;
   }
 }
+
+@keyframes dropdown-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add styles to ensure body doesn't have unnecessary scrolling */
+body,
+html {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* Chat sidebar styles for menu state */
+.chat-item.menu-open {
+  background-color: var(--hover-color) !important;
+}
+
+/* Global scrollbar styling with subtle hover effect */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.2);
+}
+
+/* More subtle scrollbar for chat areas */
+.chat-messages::-webkit-scrollbar-thumb:hover,
+.chats-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-color);
+}

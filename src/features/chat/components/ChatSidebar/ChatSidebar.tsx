@@ -315,7 +315,7 @@ export const ChatSidebar = ({
         </div>
       </div>
 
-      {filteredChats.length > 0 && (
+      {/* {filteredChats.length > 0 && (
         <div className="select-all-container">
           <div className="select-all-controls">
             <Checkbox
@@ -347,7 +347,7 @@ export const ChatSidebar = ({
             </button>
           )}
         </div>
-      )}
+      )} */}
 
       <div className="chats-list">
         {isLoading ? (
@@ -390,7 +390,7 @@ export const ChatSidebar = ({
             {/* Other chats section */}
             {unpinnedChats.length > 0 && (
               <div className="chat-section">
-                <h3 className="section-title">All chats</h3>
+                {/* <h3 className="section-title">All chats</h3> */}
                 {unpinnedChats.map((chat) => (
                   <ChatListItem
                     key={chat.id}
@@ -470,13 +470,15 @@ const ChatListItem: FC<ChatListItemProps> = ({
   onSelectChange,
   formatDate,
 }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
     <div
-      className={`chat-item flex gap-2 ${isActive ? "active" : ""}`}
+      className={`chat-item flex gap-3 ${isActive ? "active" : ""} ${isMenuOpen ? "menu-open" : ""}`}
       onClick={onSelect}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -513,6 +515,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
         className="chat-item-menu"
         trigger={<MoreIcon width={16} height={16} />}
         position="left"
+        onOpenChange={setIsMenuOpen}
         items={[
           {
             id: "pin",

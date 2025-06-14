@@ -1,8 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Header } from "@/components/Header/Header";
-import "@/assets/styles/theme.scss";
-import "./Layout.scss";
 import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
 import { createContext, useState } from "react";
 import { ChatSidebarToggle } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarToggle";
@@ -27,9 +25,9 @@ export const Layout = () => {
       <SidebarContext.Provider
         value={{ isOpen: isSidebarOpen, onToggle: toggleSidebar }}
       >
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col bg-[var(--background-color)] min-h-screen text-[var(--text-color)] transition-colors duration-300">
           <Header />
-          <div className="flex flex-col grow">
+          <div className="flex flex-col flex-1 mx-auto w-full">
             <ChatSidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
             {!isSidebarOpen && <ChatSidebarToggle onClick={toggleSidebar} />}

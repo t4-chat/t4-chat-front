@@ -7,7 +7,6 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import "../Select/Select.scss";
 
 export interface ModelSelectOption {
   value: string;
@@ -80,17 +79,22 @@ const ModelSelect: FC<IModelSelectProps> = ({
         }
       }}
     >
-      <div className={cn("select-wrapper chat-model-select", className)}>
-        <SelectTrigger className="enhanced-select minimal">
-          <div className="selected-option">
+      <div
+        className={cn(
+          "flex flex-col gap-1 relative [&_.select-dropdown]:min-w-60 [&_.select-dropdown]:w-auto",
+          className,
+        )}
+      >
+        <SelectTrigger className="[&_svg]:hidden relative flex justify-start items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] data-[state=open]:shadow-none px-1 py-0.5 border data-[state=open]:border-[var(--primary-color)] hover:border-[rgba(var(--primary-color-rgb),0.2)] border-transparent min-h-8 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] text-sm transition-all duration-200 cursor-pointer">
+          <div className="flex flex-1 items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
             {selectedOption ? (
               <>
                 {selectedOption.iconPath && (
-                  <span className="relative option-icon">
+                  <span className="relative flex justify-center items-center">
                     <img
                       src={selectedOption.iconPath}
                       alt=""
-                      className="model-icon"
+                      className="inline-block mr-0 w-5 h-5 object-contain align-middle"
                     />
                     {selectedOption.hasApiKey && (
                       <div
@@ -102,7 +106,9 @@ const ModelSelect: FC<IModelSelectProps> = ({
                     )}
                   </span>
                 )}
-                <span className="option-label">{selectedOption.label}</span>
+                <span className="flex-1 overflow-hidden text-start text-ellipsis whitespace-nowrap">
+                  {selectedOption.label}
+                </span>
                 {selectedOption.hasApiKey && !selectedOption.iconPath && (
                   <span
                     className="ml-2 text-green-500 text-xs"
@@ -113,18 +119,23 @@ const ModelSelect: FC<IModelSelectProps> = ({
                 )}
               </>
             ) : (
-              <span className="placeholder">Select model</span>
+              <span className="text-[var(--text-placeholder-color)]">
+                Select model
+              </span>
             )}
           </div>
         </SelectTrigger>
         <SelectContent
-          className={cn("select-dropdown", dropdownPosition)}
+          className={cn(
+            "bg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-md shadow-lg z-50 min-w-[var(--radix-select-trigger-width)] max-h-80 overflow-hidden data-[state=open]:animate-[dropdown-slide-down_200ms_both] data-[state=closed]:animate-[dropdown-slide-up_200ms_both]",
+            dropdownPosition,
+          )}
           side={dropdownPosition}
           position="popper"
           onCloseAutoFocus={() => setSearchTerm("")}
           onKeyDown={handleContentKeyDown}
         >
-          <div className="top-0 z-10 sticky bg-[var(--component-bg-color)] search-container">
+          <div className="top-0 z-10 sticky bg-[var(--component-bg-color)] p-1 border-[var(--border-color)] border-b">
             <input
               ref={searchInputRef}
               type="text"
@@ -137,50 +148,56 @@ const ModelSelect: FC<IModelSelectProps> = ({
               onClick={(e) => e.stopPropagation()}
               onPointerDown={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
-              className="search-input"
+              className="bg-[var(--background-color)] p-2 border border-[var(--border-color)] focus:border-[var(--primary-color)] rounded-sm focus:outline-none w-full text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-sm"
               data-e2e="model-select-search"
             />
           </div>
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                className="select-option"
-              >
-                <div className="flex flex-1 items-center gap-2">
-                  {option.iconPath && (
-                    <span className="relative option-icon">
-                      <img
-                        src={option.iconPath}
-                        alt=""
-                        className="model-icon"
-                      />
-                      {option.hasApiKey && (
-                        <div
-                          className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
-                          title="Using your API key"
-                        >
-                          🔑
-                        </div>
-                      )}
+          <div className="max-h-80 overflow-y-auto">
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="[&_.absolute]:!hidden relative !flex [&>span]:!flex !flex-row [&>span]:!flex-row !items-center [&>span]:!items-center gap-2 [&>span]:gap-2 data-[highlighted]:bg-[rgba(var(--primary-color-rgb),0.05)] data-[state=checked]:bg-[rgba(var(--primary-color-rgb),0.1)] hover:bg-[rgba(var(--primary-color-rgb),0.05)] !px-3 !py-2.5 border-[var(--border-color)] border-b last:border-b-0 outline-none [&>span]:w-full data-[state=checked]:font-medium text-[var(--text-primary-color)] data-[state=checked]:text-[var(--primary-color)] transition-colors duration-200 cursor-pointer"
+                >
+                  <div className="flex flex-1 items-center gap-2">
+                    {option.iconPath && (
+                      <span className="relative flex flex-shrink-0 justify-center items-center">
+                        <img
+                          src={option.iconPath}
+                          alt=""
+                          className="inline-block mr-0 w-5 h-5 object-contain align-middle"
+                        />
+                        {option.hasApiKey && (
+                          <div
+                            className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
+                            title="Using your API key"
+                          >
+                            🔑
+                          </div>
+                        )}
+                      </span>
+                    )}
+                    <span className="flex-1 overflow-hidden text-start text-ellipsis whitespace-nowrap">
+                      {option.label}
                     </span>
-                  )}
-                  <span className="option-label">{option.label}</span>
-                  {option.hasApiKey && !option.iconPath && (
-                    <span
-                      className="text-green-500 text-xs"
-                      title="Using your API key"
-                    >
-                      🔑
-                    </span>
-                  )}
-                </div>
-              </SelectItem>
-            ))
-          ) : (
-            <div className="no-results">No options found</div>
-          )}
+                    {option.hasApiKey && !option.iconPath && (
+                      <span
+                        className="text-green-500 text-xs"
+                        title="Using your API key"
+                      >
+                        🔑
+                      </span>
+                    )}
+                  </div>
+                </SelectItem>
+              ))
+            ) : (
+              <div className="p-4 text-[var(--text-secondary-color)] text-sm text-center">
+                No options found
+              </div>
+            )}
+          </div>
         </SelectContent>
       </div>
     </Select>

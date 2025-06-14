@@ -23,7 +23,6 @@ import {
   useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect,
 } from "~/openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
-import "./ChatPage.scss";
 import { responseWasSelected } from "@/lib/utils";
 
 const useInitialMessages = ({
@@ -524,9 +523,11 @@ export const ChatPage = () => {
   }
 
   return (
-    <div className={`chat-page ${isSidebarOpen ? "with-sidebar" : ""}`}>
+    <div
+      className={`h-[calc(100vh-3.75rem)] w-full flex justify-center bg-[var(--background-color)] overflow-hidden fixed top-[3.75rem] left-0 right-0 m-0 transition-all duration-300 ${isSidebarOpen ? "pl-64" : ""}`}
+    >
       <motion.div
-        className="chat-container"
+        className="flex flex-col w-full max-w-full md:max-w-[90%] lg:max-w-[56.25rem] xl:max-w-[62.5rem] h-full overflow-hidden transition-all duration-300"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -535,13 +536,25 @@ export const ChatPage = () => {
           <motion.div
             layout
             key="split"
-            className="split-mode-wrapper"
+            className="flex flex-col flex-1 bg-[var(--component-bg-color)] mt-4 rounded-lg h-full min-h-0"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2 }}
           >
-            <div className={`split-view-grid count-${paneCount}`}>
+            <div
+              className={`h-full grid gap-4 p-4 min-h-0 ${
+                paneCount === 2
+                  ? "grid-cols-1 md:grid-cols-2"
+                  : paneCount === 3
+                    ? "grid-cols-1 md:grid-cols-3"
+                    : paneCount === 4
+                      ? "grid-cols-1 md:grid-cols-2 md:grid-rows-2"
+                      : paneCount === 6
+                        ? "grid-cols-1 md:grid-cols-3 md:grid-rows-2"
+                        : "grid-cols-1"
+              }`}
+            >
               {Array.from({ length: paneCount }, (_, index) => ({
                 id: `split-pane-${index}`,
                 index,
@@ -582,7 +595,7 @@ export const ChatPage = () => {
 
                 return (
                   <motion.div
-                    className="split-pane"
+                    className="relative flex flex-col bg-[var(--component-bg-color)] border border-[var(--border-color)] min-h-0 overflow-y-auto"
                     key={id}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
@@ -630,7 +643,7 @@ export const ChatPage = () => {
                     />
                     {isSplitMode && (
                       <button
-                        className="preview-chat-btn"
+                        className="top-2 right-2 z-[2] absolute flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] backdrop-blur-sm p-1 border-none rounded-sm w-10 h-10 text-[var(--text-secondary-color)] transition-colors duration-200 cursor-pointer"
                         onClick={() => {
                           setPreviewPaneIndex(index);
                         }}
@@ -644,9 +657,9 @@ export const ChatPage = () => {
                     {isSplitMode &&
                       lastDisplayedMessage?.selected === false &&
                       lastDisplayedMessage.done && (
-                        <div className="use-answer-container">
+                        <div className="right-4 bottom-4 z-10 absolute flex flex-col items-end gap-3">
                           <motion.button
-                            className="use-answer-btn"
+                            className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-sm transition-all hover:-translate-y-0.5 duration-200 cursor-pointer hover:transform"
                             onClick={() =>
                               handleUseAnswer({
                                 modelId:
@@ -669,7 +682,7 @@ export const ChatPage = () => {
                       <AnimatePresence>
                         {previewPaneIndex === paneIndex && (
                           <motion.div
-                            className="chat-preview-overlay"
+                            className="z-[1000] fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -678,7 +691,7 @@ export const ChatPage = () => {
                             }}
                           >
                             <motion.div
-                              className="chat-preview-container"
+                              className="relative flex flex-col bg-[var(--component-bg-color)] shadow-2xl border border-[var(--border-color)] rounded-lg w-full max-w-[90vw] h-full max-h-[90vh] overflow-hidden"
                               onClick={(e) => e.stopPropagation()}
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
@@ -686,7 +699,7 @@ export const ChatPage = () => {
                               transition={{ duration: 0.2, ease: "easeInOut" }}
                             >
                               <button
-                                className="preview-close-btn"
+                                className="top-4 right-4 z-10 absolute flex justify-center items-center hover:bg-[var(--hover-color)] shadow-md p-2 rounded-full w-10 h-10 text-[var(--text-color)] text-xl leading-none hover:scale-105 transition-all duration-200 cursor-pointer"
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
@@ -712,9 +725,9 @@ export const ChatPage = () => {
                               {isSplitMode &&
                                 lastDisplayedMessage?.selected === false &&
                                 lastDisplayedMessage.done && (
-                                  <div className="use-answer-container">
+                                  <div className="right-4 bottom-4 z-10 absolute flex flex-col items-end gap-3">
                                     <motion.button
-                                      className="use-answer-btn"
+                                      className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-sm transition-all hover:-translate-y-0.5 duration-200 cursor-pointer hover:transform"
                                       onClick={() =>
                                         handleUseAnswer({
                                           modelId:
@@ -746,7 +759,7 @@ export const ChatPage = () => {
         </LayoutGroup>
 
         <motion.div
-          className="chat-input-wrapper"
+          className="flex justify-center mt-4"
           layoutId="chat-input"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

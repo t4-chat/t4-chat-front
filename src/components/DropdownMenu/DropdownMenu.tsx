@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, type FC } from "react";
-import "./DropdownMenu.scss";
 
 export interface DropdownMenuItem {
   id: string;
@@ -14,6 +13,7 @@ interface DropdownMenuProps {
   items: DropdownMenuItem[];
   position?: "left" | "right";
   className?: string;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const DropdownMenu: FC<DropdownMenuProps> = ({
@@ -21,14 +21,27 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   items,
   position = "right",
   className = "",
+  onOpenChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
 
-  const toggleMenu = (e: KeyboardEvent) => {
+  const toggleMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpen(!isOpen);
+    const newOpen = !isOpen;
+    setIsOpen(newOpen);
+    onOpenChange?.(newOpen);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      const newOpen = !isOpen;
+      setIsOpen(newOpen);
+      onOpenChange?.(newOpen);
+    }
   };
 
   const handleItemClick = (e: React.MouseEvent, item: DropdownMenuItem) => {
@@ -37,10 +50,11 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
       item.onClick();
     }
     setIsOpen(false);
+    onOpenChange?.(false);
   };
 
   // Prevent click from propagating to underlying elements
-  const handleMenuClick = (e: KeyboardEvent) => {
+  const handleMenuClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
@@ -54,6 +68,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
         !triggerRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        onOpenChange?.(false);
       }
     };
 
@@ -71,6 +86,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
+        onOpenChange?.(false);
       }
     };
 
@@ -85,30 +101,46 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
 
   return (
     <div
-      className={`dropdown-menu-container ${isOpen ? "menu-open" : ""} ${className}`}
+      className={`relative inline-block ${isOpen ? "z-[1001]" : ""} ${className}`}
     >
-      <div className="dropdown-trigger" onClick={toggleMenu} ref={triggerRef}>
+      <div
+        className="flex justify-center items-center cursor-pointer"
+        onClick={toggleMenu}
+        onKeyDown={handleKeyDown}
+        ref={triggerRef}
+        tabIndex={0}
+        role="button"
+        aria-expanded={isOpen}
+      >
         {trigger}
       </div>
 
       {isOpen && (
         <div
-          className={`dropdown-menu ${position}`}
+          className={`absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg z-[1000] min-w-40 overflow-hidden ${position === "left" ? "right-0" : "left-0"}`}
           ref={menuRef}
           onClick={handleMenuClick}
         >
-          <ul className="dropdown-menu-list">
+          <ul className="bg-[var(--component-bg-color)] m-0 p-0 list-none">
             {items.map((item) => (
-              <li key={item.id} className="dropdown-menu-item">
+              <li key={item.id} className="bg-[var(--component-bg-color)]">
                 <button
                   type="button"
-                  className={`dropdown-menu-button ${item.isDanger ? "danger" : ""}`}
+                  className={`flex items-center w-full py-3 px-4 bg-[var(--component-bg-color)] border-none text-left cursor-pointer text-sm transition-colors duration-200 ${
+                    item.isDanger
+                      ? "text-[var(--error-color)] hover:bg-[rgba(var(--error-color-rgb),0.1)]"
+                      : "text-[var(--text-primary-color)] hover:bg-[var(--hover-color)]"
+                  }`}
                   onClick={(e) => handleItemClick(e, item)}
                 >
                   {item.icon && (
-                    <span className="dropdown-menu-icon">{item.icon}</span>
+                    <span className="flex items-center mr-3 text-inherit">
+                      {item.icon}
+                    </span>
                   )}
-                  <span className="dropdown-menu-label">{item.label}</span>
+                  <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                    {item.label}
+                  </span>
                 </button>
               </li>
             ))}
