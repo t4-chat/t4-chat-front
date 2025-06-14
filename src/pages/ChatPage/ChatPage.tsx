@@ -654,7 +654,7 @@ export const ChatPage = () => {
                           setPreviewPaneIndex(index);
                         }}
                         aria-label="Preview chat"
-                        className="top-2 right-2 z-[2] absolute backdrop-blur-sm rounded-sm w-10 h-10"
+                        className="top-2 right-2 z-[2] absolute rounded-full w-10 h-10"
                       >
                         <Maximize2 size={16} />
                       </Button>
@@ -710,7 +710,7 @@ export const ChatPage = () => {
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
-                                className="top-4 right-4 z-10 absolute shadow-md rounded-full w-10 h-10 text-xl leading-none hover:scale-105"
+                                className="top-4 right-4 z-10 absolute rounded-full w-10 h-10 text-xl leading-none"
                               >
                                 <XIcon size={16} />
                               </Button>

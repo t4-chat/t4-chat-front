@@ -126,7 +126,6 @@ const Pane: FC<PaneProps> = ({
     <div
       className={cn(
         "flex flex-col h-full w-full bg-[var(--chat-bg-color)] relative overflow-visible min-h-0",
-        showModelSelectorTop && "pt-18",
       )}
     >
       {showModelSelectorTop && modelOptions && modelId && (
@@ -161,7 +160,7 @@ const Pane: FC<PaneProps> = ({
         )}
 
         {hasMessages && (
-          <div className="flex flex-col mx-auto px-6 pb-6 w-full max-w-5xl">
+          <div className="flex flex-col mx-auto px-2 w-full max-w-5xl">
             {messages.map((message) => {
               const modelInfo = getModelInfo(message.model_id);
               return (
