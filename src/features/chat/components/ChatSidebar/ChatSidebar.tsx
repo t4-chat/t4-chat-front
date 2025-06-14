@@ -313,7 +313,7 @@ export const ChatSidebar = ({
         </button>
       </div>
 
-      <div className="px-4 py-2 border-[var(--border-color)] border-b">
+      <div className="px-2 py-2 border-[var(--border-color)] border-b">
         <div className="flex items-center bg-[var(--hover-color)] px-3 py-1.5 rounded-lg">
           <SearchIcon
             width={16}
