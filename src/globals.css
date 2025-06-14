@@ -418,3 +418,129 @@ html {
 .chats-list::-webkit-scrollbar-thumb:hover {
   background-color: var(--border-color);
 }
+
+/* Sonner Toast Styling for Dark Mode */
+.dark [data-sonner-toaster],
+[data-theme="dark"] [data-sonner-toaster] {
+  --gray1: var(--background-color);
+  --gray2: var(--component-bg-color);
+  --gray3: var(--hover-color);
+  --gray4: var(--border-color);
+  --gray5: var(--text-secondary-color);
+  --gray6: var(--text-primary-color);
+  --gray11: var(--text-secondary-color);
+  --gray12: var(--text-primary-color);
+  --green1: var(--background-color);
+  --green2: var(--success-color);
+  --green3: var(--success-color);
+  --green4: var(--success-color);
+  --green5: var(--success-color);
+  --green6: var(--success-color);
+  --green7: var(--success-color);
+  --green8: var(--success-color);
+  --green9: var(--success-color);
+  --green10: var(--success-color);
+  --green11: var(--success-color);
+  --green12: #ffffff;
+  --red1: var(--background-color);
+  --red2: var(--error-color);
+  --red3: var(--error-color);
+  --red4: var(--error-color);
+  --red5: var(--error-color);
+  --red6: var(--error-color);
+  --red7: var(--error-color);
+  --red8: var(--error-color);
+  --red9: var(--error-color);
+  --red10: var(--error-color);
+  --red11: var(--error-color);
+  --red12: #ffffff;
+  --yellow1: var(--background-color);
+  --yellow2: var(--warning-color);
+  --yellow3: var(--warning-color);
+  --yellow4: var(--warning-color);
+  --yellow5: var(--warning-color);
+  --yellow6: var(--warning-color);
+  --yellow7: var(--warning-color);
+  --yellow8: var(--warning-color);
+  --yellow9: var(--warning-color);
+  --yellow10: var(--warning-color);
+  --yellow11: var(--warning-color);
+  --yellow12: #1a1a1a;
+}
+
+/* Toast styling */
+.dark [data-sonner-toast],
+[data-theme="dark"] [data-sonner-toast] {
+  background-color: var(--component-bg-color) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary-color) !important;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Toast description text */
+.dark [data-sonner-toast] [data-description],
+[data-theme="dark"] [data-sonner-toast] [data-description] {
+  color: var(--text-secondary-color) !important;
+}
+
+/* Close button styling */
+.dark [data-sonner-toast] [data-close-button],
+[data-theme="dark"] [data-sonner-toast] [data-close-button] {
+  background-color: var(--background-color) !important;
+  border: none !important;
+  color: var(--text-secondary-color) !important;
+  border-radius: 50% !important;
+  padding: 0.25rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.1s ease !important;
+}
+
+.dark [data-sonner-toast] [data-close-button]:hover,
+[data-theme="dark"] [data-sonner-toast] [data-close-button]:hover {
+  background-color: var(--hover-color) !important;
+}
+
+/* Success toast specific styling */
+.dark [data-sonner-toast][data-type="success"],
+[data-theme="dark"] [data-sonner-toast][data-type="success"] {
+  border-left: 4px solid var(--success-color) !important;
+}
+
+/* Error toast specific styling */
+.dark [data-sonner-toast][data-type="error"],
+[data-theme="dark"] [data-sonner-toast][data-type="error"] {
+  border-left: 4px solid var(--error-color) !important;
+}
+
+/* Warning toast specific styling */
+.dark [data-sonner-toast][data-type="warning"],
+[data-theme="dark"] [data-sonner-toast][data-type="warning"] {
+  border-left: 4px solid var(--warning-color) !important;
+}
+
+/* Loading toast styling */
+.dark [data-sonner-toast][data-type="loading"],
+[data-theme="dark"] [data-sonner-toast][data-type="loading"] {
+  border-left: 4px solid var(--primary-color) !important;
+}
+
+/* Action button styling */
+.dark [data-sonner-toast] button:not([data-close-button]),
+[data-theme="dark"] [data-sonner-toast] button:not([data-close-button]) {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.75rem !important;
+  font-weight: 500 !important;
+  transition: all 0.1s ease !important;
+}
+
+.dark [data-sonner-toast] button:not([data-close-button]):hover,
+[data-theme="dark"] [data-sonner-toast] button:not([data-close-button]):hover {
+  background-color: var(--primary-color-hover) !important;
+}

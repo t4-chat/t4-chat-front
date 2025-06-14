@@ -107,12 +107,12 @@ export const Header = () => {
   return (
     <>
       {/* Top Right Section - Controls */}
-      <div className="top-4 right-4 z-[100] fixed bg-[var(--background-color)]/95 shadow-black/5 shadow-lg backdrop-blur-sm px-2 py-2 border border-[var(--border-color)]/50 rounded-xl">
-        <div className="flex items-center gap-1.5">
+      <div className="top-3 right-3 z-[100] fixed rounded-xl">
+        <div className="flex items-center gap-1">
           {renderUserContent()}
           <button
             type="button"
-            className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] focus:bg-[var(--hover-color)] p-1.5 border-none rounded-lg focus:outline-none text-base transition-colors duration-100 cursor-pointer"
+            className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] focus:bg-[var(--hover-color)] border-none rounded-full focus:outline-none w-8 h-8 text-base transition-colors duration-100 cursor-pointer"
             onClick={handleThemeChange}
             aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}
             title={`Current: ${currentTheme}. Click to switch theme`}

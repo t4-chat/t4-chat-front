@@ -1,6 +1,7 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
 import { SidebarContext } from "@/components/Layout/Layout";
 import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
+import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
 import { Portal } from "@/components/Portal/Portal";
 import { useAuth } from "@/context/AuthContext";
@@ -11,7 +12,7 @@ import Pane, {
 import useChatSender from "@/features/chat/hooks/useChatSender";
 import { useHotkey } from "@/hooks/general";
 import type { StreamEvent } from "@/utils/apiUtils";
-import { useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Maximize2 } from "lucide-react";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -34,7 +35,7 @@ const useInitialMessages = ({
     useChatsServiceGetApiChatsByChatIdMessages(
       { chatId: chatId || "" },
       undefined,
-      { enabled: !!chatId },
+      { enabled: !!chatId, placeholderData: keepPreviousData },
     );
   const previousChatIdRef = useRef<string | undefined>(undefined);
   const [messages, setMessages] = useState<ChatMessageWithDate[] | undefined>(
@@ -519,7 +520,11 @@ export const ChatPage = () => {
   });
 
   if (!messages || !paneCount || !modelIds || !availableModels) {
-    return <LoadingDots />;
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <LoadingScreen message="Loading chat..." />
+      </div>
+    );
   }
 
   return (

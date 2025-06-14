@@ -9,7 +9,6 @@ import Logo from "@/assets/icons/logo.png";
 import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
 import { Link } from "react-router-dom";
 import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
-import { TextInputModal } from "@/components/Modal/TextInputModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Chat } from "@/features/chat/types";
 import { useHotkey } from "@/hooks/general";
@@ -65,15 +64,6 @@ export const ChatSidebar = ({
   const queryClient = useQueryClient();
   const { chatId: activeChatId } = useParams();
   const { handleError, handleSuccess } = useMutationErrorHandler();
-  const [renameModalState, setRenameModalState] = useState<{
-    isOpen: boolean;
-    chatId: string | null;
-    currentTitle: string;
-  }>({
-    isOpen: false,
-    chatId: null,
-    currentTitle: "",
-  });
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedChatIds, setSelectedChatIds] = useState<string[]>([]);
@@ -177,8 +167,48 @@ export const ChatSidebar = ({
       )
       .sort((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
   }, [searchTerm, chats]);
+
+  const groupChatsByDate = (chats: typeof filteredChats) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getTime() - 86400000);
+    const thisWeek = new Date(today.getTime() - today.getDay() * 86400000);
+    const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const groups = {
+      today: [] as typeof filteredChats,
+      yesterday: [] as typeof filteredChats,
+      thisWeek: [] as typeof filteredChats,
+      thisMonth: [] as typeof filteredChats,
+      older: [] as typeof filteredChats,
+    };
+
+    chats.forEach((chat) => {
+      const chatDate = new Date(
+        chat.updated_at.getFullYear(),
+        chat.updated_at.getMonth(),
+        chat.updated_at.getDate(),
+      );
+
+      if (chatDate.getTime() === today.getTime()) {
+        groups.today.push(chat);
+      } else if (chatDate.getTime() === yesterday.getTime()) {
+        groups.yesterday.push(chat);
+      } else if (chatDate >= thisWeek && chatDate < today) {
+        groups.thisWeek.push(chat);
+      } else if (chatDate >= thisMonth && chatDate < thisWeek) {
+        groups.thisMonth.push(chat);
+      } else {
+        groups.older.push(chat);
+      }
+    });
+
+    return groups;
+  };
+
   const pinnedChats = filteredChats.filter((chat) => chat.pinned);
   const unpinnedChats = filteredChats.filter((chat) => !chat.pinned);
+  const unpinnedChatGroups = groupChatsByDate(unpinnedChats);
   const isAllSelected =
     filteredChats.length > 0 && selectedChatIds.length === filteredChats.length;
 
@@ -190,18 +220,14 @@ export const ChatSidebar = ({
       onToggle();
     }
   };
-  const handleRenameChat = async (newTitle: string) => {
+  const handleRenameChat = async (chatId: string, newTitle: string) => {
     try {
-      if (renameModalState.chatId) {
-        await updateChatTitle({
-          chatId: renameModalState.chatId,
-          requestBody: { title: newTitle },
-        });
-      }
-      setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
+      await updateChatTitle({
+        chatId,
+        requestBody: { title: newTitle },
+      });
     } catch (error) {
       console.error("Failed to rename chat:", error);
-      setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" });
     }
   };
   const handleChatSelect = async (chatId: string) => {
@@ -215,9 +241,7 @@ export const ChatSidebar = ({
       onToggle();
     }
   };
-  const handleRenameModal = (chatId: string, currentTitle: string) => {
-    setRenameModalState({ isOpen: true, chatId, currentTitle });
-  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -357,7 +381,7 @@ export const ChatSidebar = ({
                     isSelected={selectedChatIds.includes(chat.id)}
                     onSelect={() => handleChatSelect?.(chat.id)}
                     onDelete={() => handleDeleteModal(chat.id)}
-                    onRename={() => handleRenameModal(chat.id, chat.title)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
                     onTogglePin={() =>
                       handleTogglePinChat(chat.id, chat.pinned)
                     }
@@ -370,11 +394,13 @@ export const ChatSidebar = ({
               </div>
             )}
 
-            {/* Other chats section */}
-            {unpinnedChats.length > 0 && (
+            {/* Date-organized chats sections */}
+            {unpinnedChatGroups.today.length > 0 && (
               <div className="mb-2">
-                {/* <h3 className="m-0 px-6 py-4 font-medium text-[var(--text-secondary-color)] text-sm uppercase tracking-wider">All chats</h3> */}
-                {unpinnedChats.map((chat) => (
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  Today
+                </h3>
+                {unpinnedChatGroups.today.map((chat) => (
                   <ChatListItem
                     key={chat.id}
                     chat={chat}
@@ -382,7 +408,111 @@ export const ChatSidebar = ({
                     isSelected={selectedChatIds.includes(chat.id)}
                     onSelect={() => handleChatSelect?.(chat.id)}
                     onDelete={() => handleDeleteModal(chat.id)}
-                    onRename={() => handleRenameModal(chat.id, chat.title)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
+                    formatDate={formatDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {unpinnedChatGroups.yesterday.length > 0 && (
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  Yesterday
+                </h3>
+                {unpinnedChatGroups.yesterday.map((chat) => (
+                  <ChatListItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
+                    formatDate={formatDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {unpinnedChatGroups.thisWeek.length > 0 && (
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  This Week
+                </h3>
+                {unpinnedChatGroups.thisWeek.map((chat) => (
+                  <ChatListItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
+                    formatDate={formatDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {unpinnedChatGroups.thisMonth.length > 0 && (
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  This Month
+                </h3>
+                {unpinnedChatGroups.thisMonth.map((chat) => (
+                  <ChatListItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
+                    onTogglePin={() =>
+                      handleTogglePinChat(chat.id, chat.pinned)
+                    }
+                    onSelectChange={(checked) =>
+                      toggleChatSelection(chat.id, checked)
+                    }
+                    formatDate={formatDate}
+                  />
+                ))}
+              </div>
+            )}
+
+            {unpinnedChatGroups.older.length > 0 && (
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--text-secondary-color)] text-xs uppercase tracking-wider">
+                  Older
+                </h3>
+                {unpinnedChatGroups.older.map((chat) => (
+                  <ChatListItem
+                    key={chat.id}
+                    chat={chat}
+                    isActive={activeChatId === chat.id}
+                    isSelected={selectedChatIds.includes(chat.id)}
+                    onSelect={() => handleChatSelect?.(chat.id)}
+                    onDelete={() => handleDeleteModal(chat.id)}
+                    onRenameSubmit={(id, title) => handleRenameChat(id, title)}
                     onTogglePin={() =>
                       handleTogglePinChat(chat.id, chat.pinned)
                     }
@@ -407,24 +537,6 @@ export const ChatSidebar = ({
         cancelLabel="Cancel"
         isDanger={true}
       />
-
-      <TextInputModal
-        isOpen={renameModalState.isOpen}
-        onClose={() =>
-          setRenameModalState({ isOpen: false, chatId: null, currentTitle: "" })
-        }
-        onSave={handleRenameChat}
-        title="Rename chat"
-        initialValue={renameModalState.currentTitle}
-        placeholder="Enter a new name for this chat"
-        saveLabel="Save"
-        cancelLabel="Cancel"
-        maxLength={50}
-        validator={(value) =>
-          value.trim().length > 0 && value.trim().length <= 50
-        }
-        errorMessage="Chat name must be between 1 and 50 characters"
-      />
     </div>
   );
 };
@@ -436,7 +548,7 @@ interface ChatListItemProps {
   isSelected: boolean;
   onSelect: () => void;
   onDelete: () => void;
-  onRename: () => void;
+  onRenameSubmit: (chatId: string, newTitle: string) => void;
   onTogglePin: () => void;
   onSelectChange: (checked: boolean) => void;
   formatDate: (date: Date) => string;
@@ -448,15 +560,42 @@ const ChatListItem: FC<ChatListItemProps> = ({
   isSelected,
   onSelect,
   onDelete,
-  onRename,
+  onRenameSubmit,
   onTogglePin,
   onSelectChange,
   formatDate,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [titleInput, setTitleInput] = useState(chat.title);
 
   const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const startEditing = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setTitleInput(chat.title);
+  };
+
+  const finishEditing = async () => {
+    const newTitle = titleInput.trim();
+    setIsEditing(false);
+    if (newTitle && newTitle !== chat.title) {
+      onRenameSubmit(chat.id, newTitle);
+    }
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      await finishEditing();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setIsEditing(false);
+      setTitleInput(chat.title);
+    }
   };
 
   return (
@@ -479,8 +618,24 @@ const ChatListItem: FC<ChatListItemProps> = ({
             height={14}
           />
         )}
-        <div className="flex flex-1 items-center overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-ellipsis whitespace-nowrap">
-          {chat.title}
+        <div
+          className="flex flex-1 items-center overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-ellipsis whitespace-nowrap"
+          onDoubleClick={startEditing}
+        >
+          {isEditing ? (
+            <input
+              type="text"
+              value={titleInput}
+              onBlur={finishEditing}
+              onChange={(e) => setTitleInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              maxLength={50}
+              className="flex-1 bg-[var(--hover-color)] px-2 py-1 border border-[var(--primary-color)] rounded outline-none font-medium text-[var(--text-primary-color)] text-base"
+              ref={(input) => input?.focus()}
+            />
+          ) : (
+            chat.title
+          )}
         </div>
       </div>
 
@@ -504,7 +659,10 @@ const ChatListItem: FC<ChatListItemProps> = ({
             id: "rename",
             label: "Rename",
             icon: <RenameIcon width={16} height={16} />,
-            onClick: onRename,
+            onClick: () => {
+              setIsEditing(true);
+              setTitleInput(chat.title);
+            },
           },
           {
             id: "delete",

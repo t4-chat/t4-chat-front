@@ -3,6 +3,7 @@ import { Layout } from "@/components/Layout/Layout";
 import { ChatPage } from "@/pages/ChatPage/ChatPage";
 import { SettingsPage } from "@/pages/SettingsPage/SettingsPage";
 import { AuthProvider } from "@/context/AuthContext";
+import { HomePage } from "@/pages/HomePage/HomePage";
 
 export const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Navigate to="/chat" replace />,
+        element: <HomePage />,
       },
       {
         path: "chat",
