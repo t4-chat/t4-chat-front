@@ -175,7 +175,7 @@ const ChatInput: FC<IChatInputProps> = ({
 
         <div className="flex items-center gap-1">
           <AnimatePresence>
-            {/* {isSplitMode && onPaneCountChange && (
+            {isSplitMode && onPaneCountChange && (
               <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
@@ -197,7 +197,7 @@ const ChatInput: FC<IChatInputProps> = ({
                   disabled={!responseWasSelected}
                 />
               </motion.div>
-            )} */}
+            )}
           </AnimatePresence>
           <div className="flex items-center gap-2 text-xs">
             <Switch

@@ -1,11 +1,20 @@
 import type { FC } from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
 import { SidebarContext } from "@/components/Layout/Layout";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   useUtilizationServiceGetApiUtilization,
   useHostApiKeysServiceGetApiHostApiKeys,
@@ -29,7 +38,12 @@ export const SettingsPage: FC = () => {
     null,
   );
   const [isCreating, setIsCreating] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { isOpen: isSidebarOpen } = useContext(SidebarContext);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Fetch utilization data
   const { data: utilization, isLoading: utilizationLoading } =
@@ -68,9 +82,6 @@ export const SettingsPage: FC = () => {
       },
     },
   );
-
-  const inputClassName =
-    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground/60 placeholder:font-normal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
   const ApiKeyForm: FC<{
     initialData?: HostApiKeyResponseSchema;
@@ -113,23 +124,28 @@ export const SettingsPage: FC = () => {
           <form.Field name="host_id">
             {(field) => (
               <div className="space-y-1.5">
-                <label htmlFor="host-id" className="font-medium text-sm">
+                <label
+                  htmlFor="host-id"
+                  className="font-medium text-[var(--text-color)] text-sm"
+                >
                   Model Host <span className="text-red-500">*</span>
                 </label>
-                <select
-                  id="host-id"
+                <Select
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className={inputClassName}
+                  onValueChange={(value) => field.handleChange(value)}
                   disabled={!!initialData || modelHostsLoading}
                 >
-                  <option value="">Select Model Host</option>
-                  {modelHosts.map((host) => (
-                    <option key={host.id} value={host.id}>
-                      {host.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Model Host" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {modelHosts.map((host) => (
+                      <SelectItem key={host.id} value={host.id}>
+                        {host.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>
@@ -137,15 +153,17 @@ export const SettingsPage: FC = () => {
           <form.Field name="name">
             {(field) => (
               <div className="space-y-1.5">
-                <label htmlFor="key-name" className="font-medium text-sm">
+                <label
+                  htmlFor="key-name"
+                  className="font-medium text-[var(--text-color)] text-sm"
+                >
                   Key Name <span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   id="key-name"
                   type="text"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className={inputClassName}
                   placeholder="My API Key"
                 />
               </div>
@@ -155,16 +173,18 @@ export const SettingsPage: FC = () => {
           <form.Field name="api_key">
             {(field) => (
               <div className="space-y-1.5">
-                <label htmlFor="api-key" className="font-medium text-sm">
+                <label
+                  htmlFor="api-key"
+                  className="font-medium text-[var(--text-color)] text-sm"
+                >
                   API Key{" "}
                   {!initialData && <span className="text-red-500">*</span>}
                 </label>
-                <input
+                <Input
                   id="api-key"
                   type="password"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className={inputClassName}
                   placeholder={
                     initialData
                       ? "Leave empty to keep current key"
@@ -179,13 +199,15 @@ export const SettingsPage: FC = () => {
             <form.Field name="is_active">
               {(field) => (
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     id="is-active"
                     checked={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.checked)}
+                    onCheckedChange={(checked) => field.handleChange(!!checked)}
                   />
-                  <label htmlFor="is-active" className="font-medium text-sm">
+                  <label
+                    htmlFor="is-active"
+                    className="font-medium text-[var(--text-color)] text-sm"
+                  >
                     Active
                   </label>
                 </div>
@@ -209,200 +231,250 @@ export const SettingsPage: FC = () => {
   return (
     <div
       className={cn(
-        "space-y-6 mx-auto p-6 container transition-all duration-300",
+        "min-h-screen bg-[var(--background-color)] transition-all duration-300",
         { "md:pl-64": isSidebarOpen },
       )}
+      style={{ backgroundColor: "var(--background-color)" }}
     >
-      <div className="space-y-2">
-        <h1 className="font-bold text-3xl">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and API keys
-        </p>
-      </div>
+      <div className="mx-auto p-8 max-w-5xl">
+        <div className="space-y-3 mb-8">
+          <h1 className="font-bold text-[var(--text-color)] text-4xl tracking-tight">
+            Settings
+          </h1>
+          <p className="text-[var(--text-secondary-color)] text-lg leading-relaxed">
+            Manage your account settings and API keys
+          </p>
+        </div>
 
-      <Tabs
-        value={activeTab}
-        onValueChange={(value) =>
-          setActiveTab(value as "utilization" | "api-keys")
-        }
-      >
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="utilization">Usage & Limits</TabsTrigger>
-          <TabsTrigger value="api-keys">API Keys</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="utilization" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Current Usage</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {utilizationLoading ? (
-                <p className="text-muted-foreground">
-                  Loading utilization data...
-                </p>
-              ) : utilization ? (
-                <div className="space-y-4">
-                  {utilization.utilizations.map((util) => (
-                    <div
-                      key={util.model_id}
-                      className="flex justify-between items-center p-3 border rounded-lg"
-                    >
-                      <div>
-                        <p className="font-medium">Model: {util.model_id}</p>
-                        <p className="text-muted-foreground text-sm">
-                          Tokens used: {util.total_tokens.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-lg">
-                          {util.percentage}%
-                        </div>
-                        <div className="bg-gray-200 rounded-full w-20 h-2">
-                          <div
-                            className="bg-primary rounded-full h-2"
-                            style={{
-                              width: `${Math.min(util.percentage, 100)}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted-foreground">
-                  No utilization data available.
-                </p>
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) =>
+            setActiveTab(value as "utilization" | "api-keys")
+          }
+        >
+          <TabsList className="grid grid-cols-2 bg-[var(--component-bg-color)] mx-auto p-1 border border-[var(--border-color)] rounded-xl w-full max-w-md">
+            <TabsTrigger
+              value="utilization"
+              className={cn(
+                "data-[state=active]:bg-[var(--primary-color)] data-[state=active]:shadow-sm rounded-lg font-medium text-[var(--text-secondary-color)] data-[state=active]:text-white",
+                isMounted && "transition-all duration-200",
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="api-keys" className="space-y-4">
-          <Card>
-            <CardHeader className="flex flex-row justify-between items-center">
-              <div>
-                <CardTitle>Bring Your Own API Keys</CardTitle>
-                <p className="mt-1 text-muted-foreground text-sm">
-                  Add your own API keys to use with supported models
-                </p>
-              </div>
-              <Button
-                onClick={() => setIsCreating(true)}
-                disabled={isCreating || !!editingKey}
-              >
-                Add API Key
-              </Button>
-            </CardHeader>
-            <CardContent>
-              {(isCreating || editingKey) && (
-                <div className="bg-muted/10 mb-6 p-4 border rounded-lg">
-                  <h3 className="mb-4 font-medium text-lg">
-                    {editingKey ? "Edit API Key" : "Add New API Key"}
-                  </h3>
-                  <ApiKeyForm
-                    initialData={editingKey || undefined}
-                    onSubmit={(data) => {
-                      if (editingKey) {
-                        updateApiKeyMutation.mutate({
-                          keyId: editingKey.id,
-                          requestBody: data as HostApiKeyUpdateSchema,
-                        });
-                      } else {
-                        createApiKeyMutation.mutate({
-                          requestBody: data as HostApiKeyCreateSchema,
-                        });
-                      }
-                    }}
-                    onCancel={() => {
-                      setIsCreating(false);
-                      setEditingKey(null);
-                    }}
-                    isSubmitting={
-                      createApiKeyMutation.isPending ||
-                      updateApiKeyMutation.isPending
-                    }
-                  />
-                </div>
+            >
+              Usage & Limits
+            </TabsTrigger>
+            <TabsTrigger
+              value="api-keys"
+              className={cn(
+                "data-[state=active]:bg-[var(--primary-color)] data-[state=active]:shadow-sm rounded-lg font-medium text-[var(--text-secondary-color)] data-[state=active]:text-white",
+                isMounted && "transition-all duration-200",
               )}
+            >
+              API Keys
+            </TabsTrigger>
+          </TabsList>
 
-              {apiKeysLoading ? (
-                <div className="relative">
-                  <LoadingOverlay />
-                  <p className="text-muted-foreground">Loading API keys...</p>
-                </div>
-              ) : apiKeys.length > 0 ? (
-                <div className="space-y-3">
-                  {apiKeys.map((key) => (
-                    <div
-                      key={key.id}
-                      className="flex justify-between items-center p-4 border rounded-lg"
-                    >
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-medium">{key.name}</h4>
-                          <span
-                            className={`px-2 py-1 text-xs rounded-full ${
-                              key.is_active
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {key.is_active ? "Active" : "Inactive"}
-                          </span>
+          <TabsContent
+            value="utilization"
+            className={cn(
+              "space-y-6 mt-8",
+              isMounted &&
+                "animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
+            )}
+          >
+            <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--primary-color)]/10 pb-6 border-[var(--border-color)] border-b">
+                <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
+                  Current Usage
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                {utilizationLoading ? (
+                  <p className="py-8 text-[var(--text-secondary-color)] text-center">
+                    Loading utilization data...
+                  </p>
+                ) : utilization ? (
+                  <div className="space-y-4">
+                    {utilization.utilizations.map((util) => (
+                      <div
+                        key={util.model_id}
+                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-200"
+                      >
+                        <div>
+                          <p className="font-semibold text-[var(--text-color)] text-lg">
+                            Model: {util.model_id}
+                          </p>
+                          <p className="mt-1 text-[var(--text-secondary-color)] text-sm">
+                            Tokens used: {util.total_tokens.toLocaleString()}
+                          </p>
                         </div>
-                        <p className="text-muted-foreground text-sm">
-                          Host:{" "}
-                          {modelHosts.find((h) => h.id === key.host_id)?.name ||
-                            key.host_id}
-                        </p>
-                        <p className="text-muted-foreground text-xs">
-                          Created:{" "}
-                          {new Date(key.created_at).toLocaleDateString()}
-                        </p>
+                        <div className="text-right">
+                          <div className="mb-2 font-bold text-[var(--primary-color)] text-xl">
+                            {util.percentage}%
+                          </div>
+                          <div className="bg-[var(--border-color)] rounded-full w-24 h-3">
+                            <div
+                              className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color-hover)] rounded-full h-3 transition-all duration-300"
+                              style={{
+                                width: `${Math.min(util.percentage, 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setEditingKey(key)}
-                          disabled={isCreating || !!editingKey}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => {
-                            if (
-                              confirm(
-                                `Are you sure you want to delete "${key.name}"?`,
-                              )
-                            ) {
-                              deleteApiKeyMutation.mutate({ keyId: key.id });
-                            }
-                          }}
-                          disabled={deleteApiKeyMutation.isPending}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-8 text-muted-foreground text-center">
-                  <p>No API keys configured yet.</p>
-                  <p className="text-sm">
-                    Add your first API key to get started.
+                    ))}
+                  </div>
+                ) : (
+                  <p className="py-8 text-[var(--text-secondary-color)] text-center">
+                    No utilization data available.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent
+            value="api-keys"
+            className={cn(
+              "space-y-6 mt-8",
+              isMounted &&
+                "animate-in fade-in-0 slide-in-from-bottom-2 duration-300",
+            )}
+          >
+            <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
+              <CardHeader className="flex flex-row justify-between items-center bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--primary-color)]/10 pb-6 border-[var(--border-color)] border-b">
+                <div>
+                  <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
+                    Bring Your Own API Keys
+                  </CardTitle>
+                  <p className="mt-2 text-[var(--text-secondary-color)] text-sm leading-relaxed">
+                    Add your own API keys to use with supported models
                   </p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                <Button
+                  onClick={() => setIsCreating(true)}
+                  disabled={isCreating || !!editingKey}
+                  className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-200"
+                >
+                  Add API Key
+                </Button>
+              </CardHeader>
+              <CardContent className="p-6">
+                {(isCreating || editingKey) && (
+                  <div className="bg-[var(--background-color)] shadow-md mb-6 p-6 border border-[var(--border-color)] rounded-xl">
+                    <h3 className="mb-6 font-semibold text-[var(--text-color)] text-lg">
+                      {editingKey ? "Edit API Key" : "Add New API Key"}
+                    </h3>
+                    <ApiKeyForm
+                      initialData={editingKey || undefined}
+                      onSubmit={(data) => {
+                        if (editingKey) {
+                          updateApiKeyMutation.mutate({
+                            keyId: editingKey.id,
+                            requestBody: data as HostApiKeyUpdateSchema,
+                          });
+                        } else {
+                          createApiKeyMutation.mutate({
+                            requestBody: data as HostApiKeyCreateSchema,
+                          });
+                        }
+                      }}
+                      onCancel={() => {
+                        setIsCreating(false);
+                        setEditingKey(null);
+                      }}
+                      isSubmitting={
+                        createApiKeyMutation.isPending ||
+                        updateApiKeyMutation.isPending
+                      }
+                    />
+                  </div>
+                )}
+
+                {apiKeysLoading ? (
+                  <div className="relative">
+                    <LoadingOverlay />
+                    <p className="text-muted-foreground">Loading API keys...</p>
+                  </div>
+                ) : apiKeys.length > 0 ? (
+                  <div className="space-y-4">
+                    {apiKeys.map((key) => (
+                      <div
+                        key={key.id}
+                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-200"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <h4 className="font-semibold text-[var(--text-color)] text-lg">
+                              {key.name}
+                            </h4>
+                            <span
+                              className={`px-3 py-1 text-xs font-medium rounded-full ${
+                                key.is_active
+                                  ? "bg-green-100 text-green-700 border border-green-200"
+                                  : "bg-gray-100 text-gray-600 border border-gray-200"
+                              }`}
+                            >
+                              {key.is_active ? "Active" : "Inactive"}
+                            </span>
+                          </div>
+                          <p className="text-[var(--text-secondary-color)] text-sm">
+                            Host:{" "}
+                            <span className="font-medium text-[var(--text-color)]">
+                              {modelHosts.find((h) => h.id === key.host_id)
+                                ?.name || key.host_id}
+                            </span>
+                          </p>
+                          <p className="text-[var(--text-secondary-color)] text-xs">
+                            Created:{" "}
+                            {new Date(key.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="flex gap-3">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setEditingKey(key)}
+                            disabled={isCreating || !!editingKey}
+                            className="hover:bg-[var(--hover-color)] px-4 py-2 border-[var(--border-color)] font-medium text-[var(--text-color)]"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => {
+                              if (
+                                confirm(
+                                  `Are you sure you want to delete "${key.name}"?`,
+                                )
+                              ) {
+                                deleteApiKeyMutation.mutate({ keyId: key.id });
+                              }
+                            }}
+                            disabled={deleteApiKeyMutation.isPending}
+                            className="bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg px-4 py-2 font-medium text-white transition-all duration-200"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-12 text-center">
+                    <p className="mb-2 text-[var(--text-secondary-color)] text-lg">
+                      No API keys configured yet.
+                    </p>
+                    <p className="text-[var(--text-secondary-color)] text-sm">
+                      Add your first API key to get started.
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

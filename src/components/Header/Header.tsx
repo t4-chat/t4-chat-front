@@ -53,7 +53,7 @@ export const Header = () => {
     {
       id: "logout",
       label: "Logout",
-      icon: <LogoutIcon />,
+      icon: <LogoutIcon width={16} height={16} />,
       onClick: logout,
     },
   ];

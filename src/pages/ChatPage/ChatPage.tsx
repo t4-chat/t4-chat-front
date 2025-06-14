@@ -595,7 +595,7 @@ export const ChatPage = () => {
 
                 return (
                   <motion.div
-                    className="relative flex flex-col bg-[var(--component-bg-color)] border border-[var(--border-color)] min-h-0 overflow-y-auto"
+                    className="relative flex flex-colbg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-md min-h-0 overflow-y-auto"
                     key={id}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                   >
