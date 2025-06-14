@@ -29,6 +29,7 @@ import type {
   HostApiKeyUpdateSchema,
 } from "~/openapi/requests/types.gen";
 import { LoadingOverlay } from "@/components/LoadingOverlay/LoadingOverlay";
+import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
 
 export const SettingsPage: FC = () => {
   const [activeTab, setActiveTab] = useState<"utilization" | "api-keys">(
@@ -39,6 +40,15 @@ export const SettingsPage: FC = () => {
   );
   const [isCreating, setIsCreating] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    keyId: string | null;
+    keyName: string;
+  }>({
+    isOpen: false,
+    keyId: null,
+    keyName: "",
+  });
   const { isOpen: isSidebarOpen } = useContext(SidebarContext);
 
   useEffect(() => {
@@ -78,10 +88,22 @@ export const SettingsPage: FC = () => {
   const deleteApiKeyMutation = useHostApiKeysServiceDeleteApiHostApiKeysByKeyId(
     {
       onSuccess: () => {
+        setEditingKey(null);
+        setDeleteModalState({ isOpen: false, keyId: null, keyName: "" });
         refetchApiKeys();
       },
     },
   );
+
+  const handleDeleteModal = (keyId: string, keyName: string) => {
+    setDeleteModalState({ isOpen: true, keyId, keyName });
+  };
+
+  const handleDeleteApiKey = async () => {
+    if (deleteModalState.keyId) {
+      deleteApiKeyMutation.mutate({ keyId: deleteModalState.keyId });
+    }
+  };
 
   const ApiKeyForm: FC<{
     initialData?: HostApiKeyResponseSchema;
@@ -133,7 +155,7 @@ export const SettingsPage: FC = () => {
                 <Select
                   value={field.state.value}
                   onValueChange={(value) => field.handleChange(value)}
-                  disabled={!!initialData || modelHostsLoading}
+                  disabled={modelHostsLoading}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Model Host" />
@@ -442,15 +464,7 @@ export const SettingsPage: FC = () => {
                           <Button
                             variant="destructive"
                             size="sm"
-                            onClick={() => {
-                              if (
-                                confirm(
-                                  `Are you sure you want to delete "${key.name}"?`,
-                                )
-                              ) {
-                                deleteApiKeyMutation.mutate({ keyId: key.id });
-                              }
-                            }}
+                            onClick={() => handleDeleteModal(key.id, key.name)}
                             disabled={deleteApiKeyMutation.isPending}
                             className="bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg px-4 py-2 font-medium text-white transition-all duration-200"
                           >
@@ -475,6 +489,19 @@ export const SettingsPage: FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <ConfirmationModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() =>
+          setDeleteModalState({ isOpen: false, keyId: null, keyName: "" })
+        }
+        onConfirm={handleDeleteApiKey}
+        title="Delete API Key"
+        message={`Are you sure you want to delete "${deleteModalState.keyName}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        isDanger={true}
+      />
     </div>
   );
 };
