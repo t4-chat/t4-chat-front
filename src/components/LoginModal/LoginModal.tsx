@@ -2,7 +2,6 @@ import { type FC, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/context/AuthContext";
 import { Modal } from "@/components/Modal/Modal";
-import "./LoginModal.scss";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -11,8 +10,8 @@ interface LoginModalProps {
 }
 
 interface GoogleCredentialResponse {
-  credential: string;
-  select_by: string;
+  credential?: string;
+  select_by?: string;
 }
 
 export const LoginModal: FC<LoginModalProps> = ({
@@ -28,6 +27,9 @@ export const LoginModal: FC<LoginModalProps> = ({
   ) => {
     try {
       setError(null);
+      if (!credentialResponse.credential) {
+        throw new Error("No credential received");
+      }
       await loginWithGoogle(credentialResponse.credential);
       if (onLoginSuccess) {
         onLoginSuccess();
@@ -46,12 +48,18 @@ export const LoginModal: FC<LoginModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Sign In">
-      <div className="login-modal">
-        <p className="login-description">Sign in to continue to T4 Chat</p>
+      <div className="text-center">
+        <p className="mb-5 text-[var(--text-color)] text-base">
+          Sign in to continue to T4 Chat
+        </p>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="bg-[rgba(var(--error-color-rgb),0.1)] mb-4 p-2 rounded text-[var(--error-color)]">
+            {error}
+          </div>
+        )}
 
-        <div className="login-options">
+        <div className="flex justify-center gap-3">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
@@ -59,7 +67,11 @@ export const LoginModal: FC<LoginModalProps> = ({
           />
         </div>
 
-        {isLoading && <div className="loading">Authenticating...</div>}
+        {isLoading && (
+          <div className="mt-4 text-[var(--text-color)] text-sm">
+            Authenticating...
+          </div>
+        )}
       </div>
     </Modal>
   );

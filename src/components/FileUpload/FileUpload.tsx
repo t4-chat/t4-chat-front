@@ -1,5 +1,5 @@
 import { type ChangeEvent, useRef } from "react";
-import "./FileUpload.scss";
+import { cn } from "@/lib/utils";
 
 export interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -37,10 +37,15 @@ export const FileUpload = ({
   };
 
   return (
-    <div className={`file-upload ${disabled ? "disabled" : ""}`}>
+    <div
+      className={cn(
+        "inline-flex items-center",
+        disabled && "opacity-60 cursor-not-allowed",
+      )}
+    >
       <button
         type="button"
-        className="file-upload-button"
+        className="flex justify-center items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] disabled:opacity-50 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] active:scale-95 transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
         onClick={handleClick}
         disabled={disabled}
         aria-label="Attach files"

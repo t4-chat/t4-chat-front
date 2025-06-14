@@ -1,5 +1,4 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
-import InfoModal from "@/components/InfoModal/InfoModal";
 import { SidebarContext } from "@/components/Layout/Layout";
 import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
@@ -810,12 +809,7 @@ export const ChatPage = () => {
           />
         </motion.div>
       </motion.div>
-      <InfoModal
-        isOpen={isSelectModalOpen}
-        onClose={() => setIsSelectModalOpen(false)}
-        title="Select a message"
-        message="Please select a message to continue the conversation."
-      />
+
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => {

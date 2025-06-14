@@ -1,5 +1,3 @@
-import "./ChatSidebarBackdrop.scss";
-
 interface ChatSidebarBackdropProps {
   onClick: () => void;
 }
@@ -7,8 +5,9 @@ interface ChatSidebarBackdropProps {
 export const ChatSidebarBackdrop = ({ onClick }: ChatSidebarBackdropProps) => {
   return (
     <div
-      className="chat-sidebar-backdrop"
+      className="md:hidden top-0 right-0 bottom-0 left-0 z-[8] fixed bg-black/50 animate-[fadeIn_0.2s_ease]"
       onClick={onClick}
+      onKeyDown={(e) => e.key === "Escape" && onClick()}
       aria-hidden="true"
     />
   );
