@@ -69,6 +69,28 @@
     gap: $spacing-md;
   }
 
+  &__theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xs;
+    border-radius: $radius-sm;
+    font-size: 1.2rem;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: var(--hover-color);
+    }
+
+    &:focus {
+      outline: none;
+      background-color: var(--hover-color);
+    }
+  }
+
   &__login-btn {
     padding: $spacing-sm $spacing-lg;
     border-radius: $radius-md;

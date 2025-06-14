@@ -596,8 +596,9 @@ export const ChatPage = () => {
                         label: m.name,
                         iconPath:
                           providerIconPaths[
-                            m.provider.slug as keyof typeof providerIconPaths
+                            m.provider?.slug as keyof typeof providerIconPaths
                           ],
+                        hasApiKey: m.has_api_key,
                       }))}
                       onModelChange={(modelId) => {
                         const assistantMessage = messages.find(
@@ -701,8 +702,9 @@ export const ChatPage = () => {
                                   iconPath:
                                     providerIconPaths[
                                       m.provider
-                                        .slug as keyof typeof providerIconPaths
+                                        ?.slug as keyof typeof providerIconPaths
                                     ],
+                                  hasApiKey: m.has_api_key,
                                 }))}
                                 showModelSelectorTop={false}
                                 modelId={modelIds[paneIndex]}
@@ -798,8 +800,9 @@ export const ChatPage = () => {
               label: m.name,
               iconPath:
                 providerIconPaths[
-                  m.provider.slug as keyof typeof providerIconPaths
+                  m.provider?.slug as keyof typeof providerIconPaths
                 ],
+              hasApiKey: m.has_api_key,
             }))}
             selectedModel={isSplitMode ? undefined : modelIds[0]}
             isSplitMode={isSplitMode}

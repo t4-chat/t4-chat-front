@@ -13,6 +13,7 @@ export interface ModelSelectOption {
   value: string;
   label: string;
   iconPath?: string;
+  hasApiKey?: boolean;
 }
 
 interface IModelSelectProps {
@@ -85,15 +86,31 @@ const ModelSelect: FC<IModelSelectProps> = ({
             {selectedOption ? (
               <>
                 {selectedOption.iconPath && (
-                  <span className="option-icon">
+                  <span className="relative option-icon">
                     <img
                       src={selectedOption.iconPath}
                       alt=""
                       className="model-icon"
                     />
+                    {selectedOption.hasApiKey && (
+                      <div
+                        className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
+                        title="Using your API key"
+                      >
+                        🔑
+                      </div>
+                    )}
                   </span>
                 )}
                 <span className="option-label">{selectedOption.label}</span>
+                {selectedOption.hasApiKey && !selectedOption.iconPath && (
+                  <span
+                    className="ml-2 text-green-500 text-xs"
+                    title="Using your API key"
+                  >
+                    🔑
+                  </span>
+                )}
               </>
             ) : (
               <span className="placeholder">Select model</span>
@@ -104,12 +121,6 @@ const ModelSelect: FC<IModelSelectProps> = ({
           className={cn("select-dropdown", dropdownPosition)}
           side={dropdownPosition}
           position="popper"
-          onOpenAutoFocus={(e) => {
-            e.preventDefault();
-            if (searchInputRef.current) {
-              searchInputRef.current.focus();
-            }
-          }}
           onCloseAutoFocus={() => setSearchTerm("")}
           onKeyDown={handleContentKeyDown}
         >
@@ -137,12 +148,34 @@ const ModelSelect: FC<IModelSelectProps> = ({
                 value={option.value}
                 className="select-option"
               >
-                {option.iconPath && (
-                  <span className="option-icon">
-                    <img src={option.iconPath} alt="" className="model-icon" />
-                  </span>
-                )}
-                <span className="option-label">{option.label}</span>
+                <div className="flex flex-1 items-center gap-2">
+                  {option.iconPath && (
+                    <span className="relative option-icon">
+                      <img
+                        src={option.iconPath}
+                        alt=""
+                        className="model-icon"
+                      />
+                      {option.hasApiKey && (
+                        <div
+                          className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
+                          title="Using your API key"
+                        >
+                          🔑
+                        </div>
+                      )}
+                    </span>
+                  )}
+                  <span className="option-label">{option.label}</span>
+                  {option.hasApiKey && !option.iconPath && (
+                    <span
+                      className="text-green-500 text-xs"
+                      title="Using your API key"
+                    >
+                      🔑
+                    </span>
+                  )}
+                </div>
               </SelectItem>
             ))
           ) : (

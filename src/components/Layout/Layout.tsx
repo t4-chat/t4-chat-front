@@ -1,7 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { Header } from "@/components/Header/Header";
-import { Footer } from "@/components/Footer/Footer";
 import "@/assets/styles/theme.scss";
 import "./Layout.scss";
 import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
@@ -19,7 +18,6 @@ export const SidebarContext = createContext<{
 
 export const Layout = () => {
   const location = useLocation();
-  const showFooter = !location.pathname.includes("/chat");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -29,16 +27,15 @@ export const Layout = () => {
       <SidebarContext.Provider
         value={{ isOpen: isSidebarOpen, onToggle: toggleSidebar }}
       >
-        <div className={`layout ${!showFooter ? "no-footer" : ""}`}>
+        <div className="flex flex-col min-h-screen">
           <Header />
-          <main className="main">
+          <div className="flex flex-col grow">
             <ChatSidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
             {!isSidebarOpen && <ChatSidebarToggle onClick={toggleSidebar} />}
             {isSidebarOpen && <ChatSidebarBackdrop onClick={toggleSidebar} />}
             <Outlet />
-          </main>
-          {showFooter && <Footer />}
+          </div>
         </div>
       </SidebarContext.Provider>
     </ThemeProvider>

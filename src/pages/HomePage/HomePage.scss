@@ -5,25 +5,25 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: calc(100vh - 8.5rem);
+  
   padding: $spacing-xl $spacing-lg;
   background-color: var(--background-color);
   transition: padding $transition-fast;
-  background-image: linear-gradient(
-      120deg,
-      rgba(33, 150, 243, 0.05) 0%,
-      rgba(103, 58, 183, 0.05) 100%
-    ),
-    radial-gradient(
-      circle at 75% 25%,
-      rgba(103, 58, 183, 0.05) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 25% 75%,
-      rgba(33, 150, 243, 0.05) 0%,
-      transparent 50%
-    );
+  // background-image: linear-gradient(
+  //     120deg,
+  //     rgba(33, 150, 243, 0.05) 0%,
+  //     rgba(103, 58, 183, 0.05) 100%
+  //   ),
+  //   radial-gradient(
+  //     circle at 75% 25%,
+  //     rgba(103, 58, 183, 0.05) 0%,
+  //     transparent 50%
+  //   ),
+  //   radial-gradient(
+  //     circle at 25% 75%,
+  //     rgba(33, 150, 243, 0.05) 0%,
+  //     transparent 50%
+  //   );
   background-attachment: fixed;
 
   // Header styling
@@ -249,6 +249,23 @@
       width: 3.75rem;
       height: 3.75rem;
     }
+  }
+
+  &__byok-indicator {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    z-index: 3;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   &__tile-svg {

@@ -53,7 +53,7 @@ export const HomePage: FC = () => {
     return models.filter(
       (model) =>
         model.name.toLowerCase().includes(query) ||
-        model.provider.name.toLowerCase().includes(query) ||
+        model.provider?.name.toLowerCase().includes(query) ||
         model.tags.some((tag) => tag.toLowerCase().includes(query)),
     );
   }, [models, query]);
@@ -62,7 +62,7 @@ export const HomePage: FC = () => {
     if (categorizationMode === "provider") {
       return filteredModels.reduce<Record<string, AiModelResponseSchema[]>>(
         (acc, model) => {
-          const providerName = model.provider.name;
+          const providerName = model.provider?.name || "Unknown";
           if (!acc[providerName]) {
             acc[providerName] = [];
           }
@@ -215,10 +215,20 @@ export const HomePage: FC = () => {
                       >
                         <div className="home-page__tile-icon">
                           <img
-                            src={getProviderIconPath(model.provider.slug)}
-                            alt={`${model.provider} icon`}
+                            src={getProviderIconPath(
+                              model.provider?.slug || "",
+                            )}
+                            alt={`${model.provider?.name || "Unknown"} icon`}
                             className="home-page__tile-svg"
                           />
+                          {model.has_api_key && (
+                            <div
+                              className="home-page__byok-indicator"
+                              title="Using your API key"
+                            >
+                              🔑
+                            </div>
+                          )}
                         </div>
                         <div className="home-page__tile-name">{model.name}</div>
                       </motion.button>

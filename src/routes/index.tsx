@@ -2,9 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Layout } from "@/components/Layout/Layout";
 import { ChatPage } from "@/pages/ChatPage/ChatPage";
 import { HomePage } from "@/pages/HomePage/HomePage";
-import { AdminPage } from "@/pages/AdminPage/AdminPage";
+import { SettingsPage } from "@/pages/SettingsPage/SettingsPage";
 import { AuthProvider } from "@/context/AuthContext";
-import { AdminRoute } from "@/components/AdminRoute/AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -27,13 +26,10 @@ export const router = createBrowserRouter([
         path: "chat/:chatId",
         element: <ChatPage />,
       },
+
       {
-        path: "admin",
-        element: (
-          <AdminRoute>
-            <AdminPage />
-          </AdminRoute>
-        ),
+        path: "settings",
+        element: <SettingsPage />,
       },
     ],
   },
