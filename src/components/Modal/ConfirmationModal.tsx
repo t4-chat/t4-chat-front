@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { Modal } from "./Modal";
-import { Button } from "../Button/Button";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
               onConfirm();
               onClose();
             }}
-            variant={isDanger ? "danger" : "primary"}
+            variant={isDanger ? "destructive" : "primary"}
           >
             {confirmLabel}
           </Button>

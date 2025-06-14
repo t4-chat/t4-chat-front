@@ -9,6 +9,7 @@ import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SidebarContext } from "@/components/Layout/Layout";
+import { Key } from "lucide-react";
 
 export const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -119,7 +120,7 @@ export const HomePage: FC = () => {
           />
           <input
             type="text"
-            className="bg-[var(--background-color)] shadow-sm focus:shadow-lg px-10 py-4 border border-[var(--border-color)] focus:border-blue-500 rounded-full focus:outline-none w-full text-[var(--text-primary-color)] text-base transition-all duration-100"
+            className="bg-[var(--background-color)] shadow-sm focus:shadow-lg px-10 py-4 border border-[var(--border-color)] focus-visible:border-[var(--primary-color)] rounded-full focus-visible:outline-none focus-visible:ring-[var(--primary-color)] focus-visible:ring-2 focus-visible:ring-offset-0 w-full text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-base transition-all duration-100"
             placeholder="Search models or providers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -232,7 +233,7 @@ export const HomePage: FC = () => {
                               className="-top-0.5 -right-0.5 z-30 absolute flex justify-center items-center bg-green-500 shadow-sm border-2 border-white rounded-full w-5 h-5 text-xs"
                               title="Using your API key"
                             >
-                              🔑
+                              <Key className="w-4 h-4" />
                             </div>
                           )}
                         </div>

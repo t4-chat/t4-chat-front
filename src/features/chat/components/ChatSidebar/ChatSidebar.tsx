@@ -9,6 +9,7 @@ import Logo from "@/assets/icons/logo.png";
 import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
 import { Link } from "react-router-dom";
 import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Chat } from "@/features/chat/types";
 import { useHotkey } from "@/hooks/general";
@@ -310,14 +311,15 @@ export const ChatSidebar = ({
       )}
     >
       <div className="flex items-center px-3 py-3 border-[var(--border-color)] border-b">
-        <button
-          type="button"
-          className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] mr-2 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75 cursor-pointer"
+        <Button
+          variant="text"
+          size="icon"
           onClick={onToggle}
           aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
+          className="mr-2 rounded-full w-10 h-10"
         >
           <MenuIcon width={20} height={20} />
-        </button>
+        </Button>
         <Link
           to="/"
           className="flex flex-1 items-center gap-2 hover:opacity-80 no-underline transition-opacity duration-100"
@@ -327,14 +329,15 @@ export const ChatSidebar = ({
             T4 Chat
           </span>
         </Link>
-        <button
-          type="button"
-          className="flex justify-center items-center bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] border-none rounded-full w-10 h-10 text-white transition-colors duration-75 cursor-pointer"
+        <Button
+          variant="primary"
+          size="icon"
           onClick={handleNewChat}
           aria-label="New chat"
+          className="rounded-full w-10 h-10"
         >
           <NewChatIcon width={18} height={18} />
-        </button>
+        </Button>
       </div>
 
       <div className="px-2 py-2 border-[var(--border-color)] border-b">

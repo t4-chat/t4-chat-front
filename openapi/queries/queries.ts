@@ -19,6 +19,7 @@ import {
   UtilizationService,
 } from "../requests/services.gen";
 import type {
+  AdminSendMessageRequestSchema,
   AggregationType,
   Body_upload_file_api_files_upload_post,
   DeleteChatsRequestSchema,
@@ -484,6 +485,102 @@ export const useAdminServicePostApiAdminModelHosts = <
     mutationFn: ({ requestBody }) =>
       AdminService.postApiAdminModelHosts({
         requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useAdminServicePostApiAdminMessages = <
+  TData = Common.AdminServicePostApiAdminMessagesMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: AdminSendMessageRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: AdminSendMessageRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      AdminService.postApiAdminMessages({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useAdminServicePostApiAdminMessagesStream = <
+  TData = Common.AdminServicePostApiAdminMessagesStreamMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: AdminSendMessageRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: AdminSendMessageRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      AdminService.postApiAdminMessagesStream({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useAdminServicePostApiAdminToolsWebSearch = <
+  TData = Common.AdminServicePostApiAdminToolsWebSearchMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        numResults?: number;
+        query: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      numResults?: number;
+      query: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ numResults, query }) =>
+      AdminService.postApiAdminToolsWebSearch({
+        numResults,
+        query,
       }) as unknown as Promise<TData>,
     ...options,
   });

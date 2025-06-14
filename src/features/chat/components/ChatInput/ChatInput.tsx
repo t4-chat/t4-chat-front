@@ -6,6 +6,7 @@ import ModelSelect from "@/components/ModelSelect/ModelSelect";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "~/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface IChatInputProps {
@@ -218,22 +219,20 @@ const ChatInput: FC<IChatInputProps> = ({
             accept="image/*,.pdf,.doc,.docx,.txt"
           />
 
-          <button
-            className={cn(
-              "flex items-center justify-center w-10 h-10 rounded-full bg-transparent border-none cursor-pointer transition-all duration-100",
-              "text-[var(--text-secondary-color)] hover:bg-[rgba(var(--primary-color-rgb),0.1)] hover:text-[var(--primary-color)]",
-              "disabled:opacity-40 disabled:cursor-not-allowed",
-              (message.trim() || files.length > 0) &&
-                !isLoading &&
-                "bg-[var(--primary-color)] text-white hover:bg-[var(--primary-color-hover)]",
-            )}
+          <Button
+            variant={
+              (message.trim() || files.length > 0) && !isLoading
+                ? "primary"
+                : "text"
+            }
+            size="icon"
             onClick={handleSend}
             disabled={(!message.trim() && files.length === 0) || isLoading}
             aria-label="Send message"
-            type="button"
+            className="rounded-full w-10 h-10"
           >
             <SendIcon width={20} height={20} />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { useEffect, type FC, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { XIcon } from "lucide-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -52,13 +54,14 @@ export const Modal: FC<ModalProps> = ({
           {title && (
             <h2 className="m-0 text-[var(--text-color)] text-2xl">{title}</h2>
           )}
-          <button
-            type="button"
-            className="hover:bg-[var(--hover-color)] bg-none p-1 border-none rounded text-[var(--text-color)] text-2xl leading-none transition-colors duration-100 cursor-pointer"
+          <Button
+            variant="text"
+            size="icon"
             onClick={onClose}
+            className="p-1 text-2xl leading-none"
           >
-            ×
-          </button>
+            <XIcon size={16} />
+          </Button>
         </div>
         <div className="text-[var(--text-color)]">{children}</div>
       </div>

@@ -16,6 +16,20 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  BarChart3,
+  Shield,
+  Plus,
+  Edit2,
+  Trash2,
+  AlertTriangle,
+  Zap,
+  TrendingUp,
+  CheckCircle,
+  Key,
+  Server,
+} from "lucide-react";
+import { providerIconPaths } from "@/assets/icons/ai-providers/index";
+import {
   useUtilizationServiceGetApiUtilization,
   useHostApiKeysServiceGetApiHostApiKeys,
   useHostApiKeysServicePostApiHostApiKeys,
@@ -28,7 +42,6 @@ import type {
   HostApiKeyResponseSchema,
   HostApiKeyUpdateSchema,
 } from "~/openapi/requests/types.gen";
-import { LoadingOverlay } from "@/components/LoadingOverlay/LoadingOverlay";
 import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
 
 export const SettingsPage: FC = () => {
@@ -105,6 +118,79 @@ export const SettingsPage: FC = () => {
     }
   };
 
+  // Helper function to get host icon based on name/slug
+  const getHostIcon = (hostName: string) => {
+    const name = hostName.toLowerCase();
+    let iconPath = providerIconPaths.default;
+
+    if (name.includes("openai") || name.includes("gpt")) {
+      iconPath = providerIconPaths.openai;
+    } else if (name.includes("anthropic") || name.includes("claude")) {
+      iconPath = providerIconPaths.anthropic;
+    } else if (
+      name.includes("google") ||
+      name.includes("gemini") ||
+      name.includes("bard")
+    ) {
+      iconPath = providerIconPaths.gemini;
+    } else if (name.includes("meta") || name.includes("llama")) {
+      iconPath = providerIconPaths.meta;
+    } else if (name.includes("mistral")) {
+      iconPath = providerIconPaths.mistral;
+    } else if (name.includes("deepseek")) {
+      iconPath = providerIconPaths.deepseek;
+    } else if (name.includes("xai") || name.includes("grok")) {
+      iconPath = providerIconPaths.xai;
+    } else if (name.includes("aws") || name.includes("nova")) {
+      iconPath = providerIconPaths.awsnova;
+    } else if (name.includes("ollama")) {
+      iconPath = providerIconPaths.ollama;
+    }
+
+    return (
+      <img
+        src={iconPath}
+        alt={`${hostName} icon`}
+        className="w-4 h-4 object-contain"
+      />
+    );
+  };
+
+  // Helper function to get status color and icon
+  const getUtilizationStatus = (percentage: number) => {
+    if (percentage >= 90)
+      return {
+        color: "text-red-400 dark:text-red-300",
+        bg: "bg-red-400 dark:bg-red-500",
+        bgLight: "bg-red-50 dark:bg-red-950/50",
+        icon: <AlertTriangle className="w-5 h-5" />,
+        status: "Critical",
+      };
+    if (percentage >= 70)
+      return {
+        color: "text-orange-400 dark:text-orange-300",
+        bg: "bg-orange-400 dark:bg-orange-500",
+        bgLight: "bg-orange-50 dark:bg-orange-950/50",
+        icon: <Zap className="w-5 h-5" />,
+        status: "High",
+      };
+    if (percentage >= 40)
+      return {
+        color: "text-blue-400 dark:text-blue-300",
+        bg: "bg-blue-400 dark:bg-blue-500",
+        bgLight: "bg-blue-50 dark:bg-blue-950/50",
+        icon: <BarChart3 className="w-5 h-5" />,
+        status: "Moderate",
+      };
+    return {
+      color: "text-green-400 dark:text-green-300",
+      bg: "bg-green-400 dark:bg-green-500",
+      bgLight: "bg-green-50 dark:bg-green-950/50",
+      icon: <CheckCircle className="w-5 h-5" />,
+      status: "Healthy",
+    };
+  };
+
   const ApiKeyForm: FC<{
     initialData?: HostApiKeyResponseSchema;
     onSubmit: (data: HostApiKeyCreateSchema | HostApiKeyUpdateSchema) => void;
@@ -162,8 +248,15 @@ export const SettingsPage: FC = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {modelHosts.map((host) => (
-                      <SelectItem key={host.id} value={host.id}>
-                        {host.name}
+                      <SelectItem
+                        key={host.id}
+                        value={host.id}
+                        className="pl-2"
+                      >
+                        <div className="flex items-center gap-2">
+                          {getHostIcon(host.name)}
+                          <span>{host.name}</span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -305,50 +398,110 @@ export const SettingsPage: FC = () => {
           >
             <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--primary-color)]/10 pb-6 border-[var(--border-color)] border-b">
-                <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
-                  Current Usage
-                </CardTitle>
+                <div className="flex items-center gap-3">
+                  <div className="flex justify-center items-center bg-[var(--primary-color)]/10 rounded-lg w-10 h-10">
+                    <BarChart3 className="w-5 h-5 text-[var(--primary-color)]" />
+                  </div>
+                  <div>
+                    <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
+                      Current Usage
+                    </CardTitle>
+                    <p className="mt-1 text-[var(--text-secondary-color)] text-sm">
+                      Monitor your model token consumption
+                    </p>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="p-6">
                 {utilizationLoading ? (
-                  <p className="py-8 text-[var(--text-secondary-color)] text-center">
-                    Loading utilization data...
-                  </p>
+                  <div className="flex justify-center items-center py-12">
+                    <div className="space-y-3 text-center">
+                      <div className="mx-auto border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-8 h-8 animate-spin" />
+                      <p className="text-[var(--text-secondary-color)]">
+                        Loading utilization data...
+                      </p>
+                    </div>
+                  </div>
                 ) : utilization ? (
-                  <div className="space-y-4">
-                    {utilization.utilizations.map((util) => (
-                      <div
-                        key={util.model_id}
-                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-100"
-                      >
-                        <div>
-                          <p className="font-semibold text-[var(--text-color)] text-lg">
-                            Model: {util.model_id}
-                          </p>
-                          <p className="mt-1 text-[var(--text-secondary-color)] text-sm">
-                            Tokens used: {util.total_tokens.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className="mb-2 font-bold text-[var(--primary-color)] text-xl">
-                            {util.percentage}%
+                  <div className="gap-4 grid md:grid-cols-1 lg:grid-cols-2">
+                    {utilization.utilizations.map((util) => {
+                      const status = getUtilizationStatus(util.percentage);
+                      return (
+                        <div
+                          key={util.model_id}
+                          className="group relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] hover:shadow-xl p-6 border border-[var(--border-color)] hover:border-[var(--primary-color)]/30 rounded-xl hover:scale-[1.02] transition-all duration-200"
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className={`${status.color}`}>
+                                {status.icon}
+                              </div>
+                              <div>
+                                <h3 className="font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] text-lg transition-colors">
+                                  {util.model_id}
+                                </h3>
+                                <span
+                                  className={`text-xs font-medium px-2 py-1 rounded-full ${status.color} ${status.bgLight}`}
+                                >
+                                  {status.status}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div
+                                className={`text-2xl font-bold ${status.color}`}
+                              >
+                                {util.percentage}%
+                              </div>
+                            </div>
                           </div>
-                          <div className="bg-[var(--border-color)] rounded-full w-24 h-3">
-                            <div
-                              className="bg-gradient-to-r from-[var(--primary-color)] to-[var(--primary-color-hover)] rounded-full h-3 transition-all duration-75"
-                              style={{
-                                width: `${Math.min(util.percentage, 100)}%`,
-                              }}
-                            />
+
+                          <div className="space-y-3">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-[var(--text-secondary-color)]">
+                                Tokens used
+                              </span>
+                              <span className="font-medium text-[var(--text-color)]">
+                                {util.total_tokens.toLocaleString()} /{" "}
+                                {util.max_tokens.toLocaleString()}
+                              </span>
+                            </div>
+
+                            <div className="relative">
+                              <div className="bg-[var(--border-color)] rounded-full h-2 overflow-hidden">
+                                <div
+                                  className={`${status.bg} rounded-full h-2 transition-all duration-1000 ease-out relative overflow-hidden`}
+                                  style={{
+                                    width: `${Math.min(util.percentage, 100)}%`,
+                                  }}
+                                >
+                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-between text-[var(--text-secondary-color)] text-xs">
+                              <span>0%</span>
+                              <span>100%</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
-                  <p className="py-8 text-[var(--text-secondary-color)] text-center">
-                    No utilization data available.
-                  </p>
+                  <div className="flex flex-col justify-center items-center py-12 text-center">
+                    <div className="flex justify-center items-center bg-[var(--component-bg-color)] mb-4 rounded-full w-16 h-16">
+                      <TrendingUp className="w-8 h-8 text-[var(--text-secondary-color)]" />
+                    </div>
+                    <p className="mb-2 text-[var(--text-secondary-color)] text-lg">
+                      No utilization data available.
+                    </p>
+                    <p className="text-[var(--text-secondary-color)] text-sm">
+                      Usage statistics will appear here once you start using
+                      models.
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -364,28 +517,43 @@ export const SettingsPage: FC = () => {
           >
             <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
               <CardHeader className="flex flex-row justify-between items-center bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--primary-color)]/10 pb-6 border-[var(--border-color)] border-b">
-                <div>
-                  <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
-                    Bring Your Own API Keys
-                  </CardTitle>
-                  <p className="mt-2 text-[var(--text-secondary-color)] text-sm leading-relaxed">
-                    Add your own API keys to use with supported models
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex justify-center items-center bg-[var(--primary-color)]/10 rounded-lg w-10 h-10">
+                    <Shield className="w-5 h-5 text-[var(--primary-color)]" />
+                  </div>
+                  <div>
+                    <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
+                      Bring Your Own API Keys
+                    </CardTitle>
+                    <p className="mt-1 text-[var(--text-secondary-color)] text-sm leading-relaxed">
+                      Add your own API keys to use with supported models
+                    </p>
+                  </div>
                 </div>
                 <Button
                   onClick={() => setIsCreating(true)}
                   disabled={isCreating || !!editingKey}
-                  className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
+                  className="flex items-center gap-2 bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] shadow-md hover:shadow-lg px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
                 >
+                  <Plus className="w-4 h-4" />
                   Add API Key
                 </Button>
               </CardHeader>
               <CardContent className="p-6">
                 {(isCreating || editingKey) && (
-                  <div className="bg-[var(--background-color)] shadow-md mb-6 p-6 border border-[var(--border-color)] rounded-xl">
-                    <h3 className="mb-6 font-semibold text-[var(--text-color)] text-lg">
-                      {editingKey ? "Edit API Key" : "Add New API Key"}
-                    </h3>
+                  <div className="bg-gradient-to-br from-[var(--background-color)] to-[var(--background-color)]/50 shadow-md mb-6 p-6 border border-[var(--primary-color)]/20 rounded-xl">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex justify-center items-center bg-[var(--primary-color)]/10 rounded-lg w-8 h-8">
+                        {editingKey ? (
+                          <Edit2 className="w-4 h-4 text-[var(--text-color)]" />
+                        ) : (
+                          <Plus className="w-4 h-4 text-[var(--text-color)]" />
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-[var(--text-color)] text-lg">
+                        {editingKey ? "Edit API Key" : "Add New API Key"}
+                      </h3>
+                    </div>
                     <ApiKeyForm
                       initialData={editingKey || undefined}
                       onSubmit={(data) => {
@@ -413,75 +581,119 @@ export const SettingsPage: FC = () => {
                 )}
 
                 {apiKeysLoading ? (
-                  <div className="relative">
-                    <LoadingOverlay />
-                    <p className="text-muted-foreground">Loading API keys...</p>
+                  <div className="flex justify-center items-center py-12">
+                    <div className="space-y-3 text-center">
+                      <div className="mx-auto border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-8 h-8 animate-spin" />
+                      <p className="text-[var(--text-secondary-color)]">
+                        Loading API keys...
+                      </p>
+                    </div>
                   </div>
                 ) : apiKeys.length > 0 ? (
-                  <div className="space-y-4">
-                    {apiKeys.map((key) => (
-                      <div
-                        key={key.id}
-                        className="flex justify-between items-center bg-[var(--background-color)] hover:shadow-md p-5 border border-[var(--border-color)] rounded-xl transition-all duration-100"
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3">
-                            <h4 className="font-semibold text-[var(--text-color)] text-lg">
-                              {key.name}
-                            </h4>
-                            <span
-                              className={`px-3 py-1 text-xs font-medium rounded-full ${
-                                key.is_active
-                                  ? "bg-green-100 text-green-700 border border-green-200"
-                                  : "bg-gray-100 text-gray-600 border border-gray-200"
-                              }`}
-                            >
-                              {key.is_active ? "Active" : "Inactive"}
-                            </span>
+                  <div className="gap-4 grid md:grid-cols-1 lg:grid-cols-2">
+                    {apiKeys.map((key) => {
+                      const hostName =
+                        modelHosts.find((h) => h.id === key.host_id)?.name ||
+                        key.host_id;
+                      return (
+                        <div
+                          key={key.id}
+                          className="group relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] hover:shadow-xl p-6 border border-[var(--border-color)] hover:border-[var(--primary-color)]/30 rounded-xl hover:scale-[1.02] transition-all duration-200"
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--primary-color)]/5 rounded-lg w-10 h-10">
+                                <Key className="w-5 h-5 text-[var(--primary-color)]" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-[var(--text-color)] group-hover:text-[var(--primary-color)] text-lg transition-colors">
+                                  {key.name}
+                                </h4>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span
+                                    className={`px-2 py-1 text-xs font-medium rounded-full flex items-center gap-1 ${
+                                      key.is_active
+                                        ? "bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800"
+                                        : "bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`w-1.5 h-1.5 rounded-full ${key.is_active ? "bg-green-500 dark:bg-green-400" : "bg-gray-400 dark:bg-gray-500"}`}
+                                    />
+                                    {key.is_active ? "Active" : "Inactive"}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-[var(--text-secondary-color)] text-sm">
-                            Host:{" "}
-                            <span className="font-medium text-[var(--text-color)]">
-                              {modelHosts.find((h) => h.id === key.host_id)
-                                ?.name || key.host_id}
-                            </span>
-                          </p>
-                          <p className="text-[var(--text-secondary-color)] text-xs">
-                            Created:{" "}
-                            {new Date(key.created_at).toLocaleDateString()}
-                          </p>
+
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-[var(--text-secondary-color)]">
+                                Host:
+                              </span>
+                              <span className="flex items-center gap-2 bg-[var(--component-bg-color)] px-2 py-1 rounded-md font-medium text-[var(--text-color)]">
+                                {getHostIcon(hostName)}
+                                {hostName}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-[var(--text-secondary-color)]">
+                                Created:
+                              </span>
+                              <span className="font-medium text-[var(--text-color)]">
+                                {new Date(key.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2 pt-4 border-[var(--border-color)] border-t">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setEditingKey(key)}
+                              disabled={isCreating || !!editingKey}
+                              className="flex flex-1 gap-1 hover:bg-[var(--hover-color)] border-[var(--border-color)] hover:border-[var(--primary-color)]/50 font-medium text-[var(--text-color)] transition-all"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() =>
+                                handleDeleteModal(key.id, key.name)
+                              }
+                              disabled={deleteApiKeyMutation.isPending}
+                              className="flex flex-1 gap-1 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 shadow-md hover:shadow-lg font-medium text-white transition-all duration-100"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Delete
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex gap-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setEditingKey(key)}
-                            disabled={isCreating || !!editingKey}
-                            className="hover:bg-[var(--hover-color)] px-4 py-2 border-[var(--border-color)] font-medium text-[var(--text-color)]"
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => handleDeleteModal(key.id, key.name)}
-                            disabled={deleteApiKeyMutation.isPending}
-                            className="bg-red-500 hover:bg-red-600 shadow-md hover:shadow-lg px-4 py-2 font-medium text-white transition-all duration-100"
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div className="py-12 text-center">
-                    <p className="mb-2 text-[var(--text-secondary-color)] text-lg">
-                      No API keys configured yet.
+                  <div className="flex flex-col justify-center items-center py-16 text-center">
+                    <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--primary-color)]/5 mb-6 rounded-2xl w-20 h-20">
+                      <Shield className="w-12 h-12 text-[var(--text-secondary-color)]" />
+                    </div>
+                    <h3 className="mb-2 font-semibold text-[var(--text-color)] text-xl">
+                      No API keys configured yet
+                    </h3>
+                    <p className="mb-6 max-w-sm text-[var(--text-secondary-color)] text-sm">
+                      Add your first API key to start using your own model
+                      providers and get better control over costs.
                     </p>
-                    <p className="text-[var(--text-secondary-color)] text-sm">
-                      Add your first API key to get started.
-                    </p>
+                    <Button
+                      onClick={() => setIsCreating(true)}
+                      className="flex items-center gap-2 bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] px-6 py-2 rounded-lg font-medium text-white transition-all duration-100"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Your First API Key
+                    </Button>
                   </div>
                 )}
               </CardContent>

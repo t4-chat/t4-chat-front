@@ -308,6 +308,15 @@ export type AdminServicePostApiAdminAiModelsMutationResult = Awaited<
 export type AdminServicePostApiAdminModelHostsMutationResult = Awaited<
   ReturnType<typeof AdminService.postApiAdminModelHosts>
 >;
+export type AdminServicePostApiAdminMessagesMutationResult = Awaited<
+  ReturnType<typeof AdminService.postApiAdminMessages>
+>;
+export type AdminServicePostApiAdminMessagesStreamMutationResult = Awaited<
+  ReturnType<typeof AdminService.postApiAdminMessagesStream>
+>;
+export type AdminServicePostApiAdminToolsWebSearchMutationResult = Awaited<
+  ReturnType<typeof AdminService.postApiAdminToolsWebSearch>
+>;
 export type FilesServicePostApiFilesUploadMutationResult = Awaited<
   ReturnType<typeof FilesService.postApiFilesUpload>
 >;

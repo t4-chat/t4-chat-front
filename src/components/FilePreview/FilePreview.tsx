@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface FilePreviewProps {
   file: File;
@@ -58,11 +59,12 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
           </span>
         </div>
       </div>
-      <button
-        className="flex flex-shrink-0 justify-center items-center bg-none ml-2 p-0 border-none w-5 h-5 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] cursor-pointer"
+      <Button
+        variant="text"
+        size="icon"
         onClick={onRemove}
         aria-label="Remove file"
-        type="button"
+        className="flex-shrink-0 ml-2 p-0 w-5 h-5"
       >
         <svg
           width="16"
@@ -81,7 +83,7 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </Button>
     </div>
   );
 };

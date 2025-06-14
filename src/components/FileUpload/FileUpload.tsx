@@ -1,5 +1,6 @@
 import { type ChangeEvent, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -43,12 +44,13 @@ export const FileUpload = ({
         disabled && "opacity-60 cursor-not-allowed",
       )}
     >
-      <button
-        type="button"
-        className="flex justify-center items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] disabled:opacity-50 border-none rounded-full w-10 h-10 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] active:scale-95 transition-all duration-100 cursor-pointer disabled:cursor-not-allowed"
+      <Button
+        variant="text"
+        size="icon"
         onClick={handleClick}
         disabled={disabled}
         aria-label="Attach files"
+        className="rounded-full w-10 h-10 active:scale-95"
       >
         <svg
           width="20"
@@ -75,7 +77,7 @@ export const FileUpload = ({
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </Button>
       <input
         ref={fileInputRef}
         type="file"

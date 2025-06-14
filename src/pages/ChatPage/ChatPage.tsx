@@ -1,10 +1,10 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
 import { SidebarContext } from "@/components/Layout/Layout";
-import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
 import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
 import { Portal } from "@/components/Portal/Portal";
 import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
 import ChatInput from "@/features/chat/components/ChatInput/ChatInput";
 import Pane, {
   type ChatMessageWithDate,
@@ -14,7 +14,7 @@ import { useHotkey } from "@/hooks/general";
 import type { StreamEvent } from "@/utils/apiUtils";
 import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, XIcon } from "lucide-react";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
@@ -35,7 +35,7 @@ const useInitialMessages = ({
     useChatsServiceGetApiChatsByChatIdMessages(
       { chatId: chatId || "" },
       undefined,
-      { enabled: !!chatId, placeholderData: keepPreviousData },
+      { enabled: !!chatId },
     );
   const previousChatIdRef = useRef<string | undefined>(undefined);
   const [messages, setMessages] = useState<ChatMessageWithDate[] | undefined>(
@@ -647,16 +647,17 @@ export const ChatPage = () => {
                       // }}
                     />
                     {isSplitMode && (
-                      <button
-                        className="top-2 right-2 z-[2] absolute flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] backdrop-blur-sm p-1 border-none rounded-sm w-10 h-10 text-[var(--text-secondary-color)] transition-colors duration-100 cursor-pointer"
+                      <Button
+                        variant="text"
+                        size="icon"
                         onClick={() => {
                           setPreviewPaneIndex(index);
                         }}
                         aria-label="Preview chat"
-                        type="button"
+                        className="top-2 right-2 z-[2] absolute backdrop-blur-sm rounded-sm w-10 h-10"
                       >
                         <Maximize2 size={16} />
-                      </button>
+                      </Button>
                     )}
 
                     {isSplitMode &&
@@ -703,15 +704,16 @@ export const ChatPage = () => {
                               exit={{ opacity: 0, scale: 0.95 }}
                               transition={{ duration: 0.1, ease: "easeInOut" }}
                             >
-                              <button
-                                className="top-4 right-4 z-10 absolute flex justify-center items-center hover:bg-[var(--hover-color)] shadow-md p-2 rounded-full w-10 h-10 text-[var(--text-color)] text-xl leading-none hover:scale-105 transition-all duration-100 cursor-pointer"
+                              <Button
+                                variant="text"
+                                size="icon"
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
-                                type="button"
+                                className="top-4 right-4 z-10 absolute shadow-md rounded-full w-10 h-10 text-xl leading-none hover:scale-105"
                               >
-                                ×
-                              </button>
+                                <XIcon size={16} />
+                              </Button>
                               <Pane
                                 modelOptions={availableModels?.map((m) => ({
                                   value: m.id.toString(),

@@ -46,6 +46,12 @@ import type {
   GetApiAdminBudgetResponse,
   GetApiAdminUsageData,
   GetApiAdminUsageResponse,
+  PostApiAdminMessagesData,
+  PostApiAdminMessagesResponse,
+  PostApiAdminMessagesStreamData,
+  PostApiAdminMessagesStreamResponse,
+  PostApiAdminToolsWebSearchData,
+  PostApiAdminToolsWebSearchResponse,
   GetApiAiModelsResponse,
   PostApiFilesUploadData,
   PostApiFilesUploadResponse,
@@ -559,6 +565,72 @@ export class AdminService {
       },
     });
   }
+
+  /**
+   * Send Message
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AdminSendMessageResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminMessages(
+    data: PostApiAdminMessagesData,
+  ): CancelablePromise<PostApiAdminMessagesResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/messages",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Generate Response Stream
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminMessagesStream(
+    data: PostApiAdminMessagesStreamData,
+  ): CancelablePromise<PostApiAdminMessagesStreamResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/messages/stream",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Web Search
+   * @param data The data for the request.
+   * @param data.query
+   * @param data.numResults
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminToolsWebSearch(
+    data: PostApiAdminToolsWebSearchData,
+  ): CancelablePromise<PostApiAdminToolsWebSearchResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/tools/web-search",
+      query: {
+        query: data.query,
+        num_results: data.numResults,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
 }
 
 export class AiModelsService {
@@ -623,7 +695,6 @@ export class FilesService {
 export class HostApiKeysService {
   /**
    * Create Host Api Key
-   * Create a new API key for a model host (mocked)
    * @param data The data for the request.
    * @param data.requestBody
    * @returns HostApiKeyResponseSchema Successful Response
@@ -645,7 +716,6 @@ export class HostApiKeysService {
 
   /**
    * Get Host Api Keys
-   * Get all API keys, optionally filtered by host_id (mocked)
    * @param data The data for the request.
    * @param data.hostId
    * @returns HostApiKeyResponseSchema Successful Response
@@ -668,7 +738,6 @@ export class HostApiKeysService {
 
   /**
    * Get Host Api Key
-   * Get a specific API key by ID (mocked)
    * @param data The data for the request.
    * @param data.keyId
    * @returns HostApiKeyResponseSchema Successful Response
@@ -691,7 +760,6 @@ export class HostApiKeysService {
 
   /**
    * Update Host Api Key
-   * Update an existing API key (mocked)
    * @param data The data for the request.
    * @param data.keyId
    * @param data.requestBody
@@ -717,7 +785,6 @@ export class HostApiKeysService {
 
   /**
    * Delete Host Api Key
-   * Delete an API key (mocked)
    * @param data The data for the request.
    * @param data.keyId
    * @returns unknown Successful Response

@@ -4,8 +4,9 @@ import { useAuth } from "@/context/AuthContext";
 import { useTheme, type ThemeType } from "@/context/ThemeContext";
 import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
-import { Shield, Settings } from "lucide-react";
+import { Shield, Settings, Moon, Sun } from "lucide-react";
 import { LoginModal } from "@/components/LoginModal/LoginModal";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   type DropdownMenuItem,
@@ -30,11 +31,11 @@ export const Header = () => {
   const getThemeIcon = (theme: ThemeType) => {
     switch (theme) {
       case "light":
-        return "🌙"; // Show moon icon to switch to dark
+        return <Moon size={16} />; // Show moon icon to switch to dark
       case "dark":
-        return "☀️"; // Show sun icon to switch to light
+        return <Sun size={16} />; // Show sun icon to switch to light
       default:
-        return "⚙️";
+        return <Settings size={16} />;
     }
   };
 
@@ -59,10 +60,11 @@ export const Header = () => {
   ];
 
   const userTrigger = (
-    <button
-      className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] p-1 border-none rounded-full transition-colors duration-100 cursor-pointer"
+    <Button
+      variant="text"
+      size="icon"
       title={userName}
-      type="button"
+      className="rounded-full"
     >
       {hasProfileImage ? (
         <img
@@ -71,9 +73,9 @@ export const Header = () => {
           className="border border-[var(--border-color)] rounded-full w-6 h-6 object-cover"
         />
       ) : (
-        <UserIcon className="w-5 h-5 text-[var(--text-color)]" />
+        <UserIcon className="w-5 h-5" />
       )}
-    </button>
+    </Button>
   );
   const { isMinimumLoading } = useMinimumLoading({
     initialLoading: isLoading,
@@ -94,13 +96,9 @@ export const Header = () => {
       );
     }
     return (
-      <button
-        className="bg-[var(--primary-color)] hover:bg-[var(--primary-color-hover)] px-3 py-1 border-none rounded text-white text-xs transition-colors duration-100 cursor-pointer"
-        onClick={openLoginModal}
-        type="button"
-      >
+      <Button onClick={openLoginModal} size="sm" className="text-xs">
         Login
-      </button>
+      </Button>
     );
   };
 
@@ -110,15 +108,16 @@ export const Header = () => {
       <div className="top-3 right-3 z-[100] fixed rounded-xl">
         <div className="flex items-center gap-1">
           {renderUserContent()}
-          <button
-            type="button"
-            className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] focus:bg-[var(--hover-color)] border-none rounded-full focus:outline-none w-8 h-8 text-base transition-colors duration-100 cursor-pointer"
+          <Button
+            variant="text"
+            size="icon"
             onClick={handleThemeChange}
             aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}
             title={`Current: ${currentTheme}. Click to switch theme`}
+            className="rounded-full w-8 h-8"
           >
             {getThemeIcon(currentTheme)}
-          </button>
+          </Button>
         </div>
       </div>
 

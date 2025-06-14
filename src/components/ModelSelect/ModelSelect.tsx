@@ -7,12 +7,19 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Key } from "lucide-react";
+
+interface IProviderOption {
+  id: string;
+  name: string;
+}
 
 export interface ModelSelectOption {
   value: string;
   label: string;
   iconPath?: string;
   hasApiKey?: boolean;
+  provider?: IProviderOption;
 }
 
 interface IModelSelectProps {
@@ -101,7 +108,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                         className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
                         title="Using your API key"
                       >
-                        🔑
+                        <Key className="w-3 h-3" />
                       </div>
                     )}
                   </span>
@@ -114,7 +121,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                     className="ml-2 text-green-500 text-xs"
                     title="Using your API key"
                   >
-                    🔑
+                    <Key className="w-3 h-3" />
                   </span>
                 )}
               </>
@@ -127,7 +134,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
         </SelectTrigger>
         <SelectContent
           className={cn(
-            "bg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-md shadow-lg z-50 min-w-[var(--radix-select-trigger-width)] max-h-80 overflow-hidden data-[state=open]:animate-[dropdown-slide-down_200ms_both] data-[state=closed]:animate-[dropdown-slide-up_200ms_both]",
+            "bg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-lg shadow-lg z-50 min-w-[var(--radix-select-trigger-width)] max-h-80 overflow-hidden data-[state=open]:animate-[dropdown-slide-down_200ms_both] data-[state=closed]:animate-[dropdown-slide-up_200ms_both]",
             dropdownPosition,
           )}
           side={dropdownPosition}
@@ -148,7 +155,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
               onClick={(e) => e.stopPropagation()}
               onPointerDown={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
-              className="bg-[var(--background-color)] p-2 border border-[var(--border-color)] focus:border-[var(--primary-color)] rounded-sm focus:outline-none w-full text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-sm"
+              className="flex bg-[var(--background-color)] px-3 py-2 border border-[var(--border-color)] focus-visible:border-[var(--primary-color)] rounded-lg focus-visible:outline-none focus-visible:ring-[var(--primary-color)] focus-visible:ring-2 focus-visible:ring-offset-0 w-full h-9 text-[var(--text-primary-color)] placeholder:text-[var(--text-placeholder-color)] text-sm transition-all duration-100"
               data-e2e="model-select-search"
             />
           </div>
@@ -173,7 +180,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                             className="-top-1 -right-1 absolute flex justify-center items-center bg-green-500 border border-white rounded-full w-3 h-3 text-xs"
                             title="Using your API key"
                           >
-                            🔑
+                            <Key className="w-3 h-3" />
                           </div>
                         )}
                       </span>
@@ -186,7 +193,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                         className="text-green-500 text-xs"
                         title="Using your API key"
                       >
-                        🔑
+                        <Key className="w-3 h-3" />
                       </span>
                     )}
                   </div>
