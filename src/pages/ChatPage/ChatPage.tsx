@@ -21,6 +21,7 @@ import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
 import {
   useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChatsByChatIdMessages,
+  useChatsServiceGetApiChatsSharedBySharedConversationId,
   useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect,
 } from "~/openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
@@ -28,20 +29,40 @@ import { responseWasSelected } from "@/lib/utils";
 
 const useInitialMessages = ({
   chatId,
+  sharedConversationId,
 }: {
   chatId: string | undefined;
+  sharedConversationId: string | undefined;
 }) => {
-  const { data: chatMessages, isLoading } =
-    useChatsServiceGetApiChatsByChatIdMessages(
-      { chatId: chatId || "" },
-      undefined,
-      { enabled: !!chatId },
-    );
+  const {
+    data: chatMessages,
+    isLoading,
+    error: chatError,
+  } = useChatsServiceGetApiChatsByChatIdMessages(
+    { chatId: chatId || "" },
+    undefined,
+    { enabled: !!chatId && !sharedConversationId },
+  );
+
+  const {
+    data: sharedChatData,
+    isLoading: isSharedChatLoading,
+    error: sharedChatError,
+  } = useChatsServiceGetApiChatsSharedBySharedConversationId(
+    { sharedConversationId: sharedConversationId || "" },
+    undefined,
+    { enabled: !!sharedConversationId },
+  );
+
   const previousChatIdRef = useRef<string | undefined>(undefined);
   const [messages, setMessages] = useState<ChatMessageWithDate[] | undefined>(
     undefined,
   );
   const navigate = useNavigate();
+
+  const currentData = sharedConversationId ? sharedChatData : chatMessages;
+  const currentLoading = sharedConversationId ? isSharedChatLoading : isLoading;
+  const currentError = sharedConversationId ? sharedChatError : chatError;
 
   useEffect(() => {
     if (!!previousChatIdRef.current && previousChatIdRef.current !== chatId) {
@@ -54,24 +75,35 @@ const useInitialMessages = ({
   useEffect(() => {
     if (messages?.length) return;
 
-    if (!chatId && !messages) {
+    if (!chatId && !sharedConversationId && !messages) {
       setMessages([]);
       return;
     }
 
-    if (chatId && !chatMessages?.messages.length && !isLoading) {
+    // Only redirect if there's an actual error (like 404), not just empty messages
+    if (chatId && currentError && !currentLoading) {
       navigate("/");
       return;
     }
-    if (!chatMessages?.messages) return;
-    setMessages(
-      chatMessages.messages.map((m) => ({
-        ...m,
-        created_at: new Date(m.created_at),
-        done: true,
-      })),
-    );
-  }, [chatMessages, messages, chatId, isLoading]);
+
+    // If we have data (even if messages array is empty), process it
+    if (currentData && !currentLoading) {
+      setMessages(
+        currentData.messages.map((m) => ({
+          ...m,
+          created_at: new Date(m.created_at),
+          done: true,
+        })),
+      );
+    }
+  }, [
+    currentData,
+    messages,
+    chatId,
+    sharedConversationId,
+    currentLoading,
+    currentError,
+  ]);
   return { messages, setMessages };
 };
 
@@ -273,7 +305,7 @@ const usePendingMessageHandler = ({
 
 const ChatPage = () => {
   const navigate = useNavigate();
-  const { chatId } = useParams();
+  const { chatId, sharedConversationId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { isOpen: isSidebarOpen } = useContext(SidebarContext);
@@ -309,7 +341,10 @@ const ChatPage = () => {
   const { mutateAsync: selectMessage } =
     useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect();
 
-  const { messages, setMessages } = useInitialMessages({ chatId });
+  const { messages, setMessages } = useInitialMessages({
+    chatId,
+    sharedConversationId,
+  });
 
   useInitialPanes({
     messages,
@@ -500,6 +535,7 @@ const ChatPage = () => {
         files,
         modelIds.slice(0, paneCount),
         chatId,
+        sharedConversationId,
       );
       abortStreamingRef.current = abort;
     } catch (error) {

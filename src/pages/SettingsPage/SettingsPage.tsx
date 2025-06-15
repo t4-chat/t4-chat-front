@@ -440,11 +440,11 @@ const SettingsPage: FC = () => {
                                 <h3 className="font-bold text-[var(--text-color)] text-lg">
                                   {util.model_id}
                                 </h3>
-                                <span
+                                {/* <span
                                   className={`text-xs font-medium px-2 py-1 rounded-full ${status.color} ${status.bgLight}`}
                                 >
                                   {status.status}
-                                </span>
+                                </span> */}
                               </div>
                             </div>
                             <div className="text-right">

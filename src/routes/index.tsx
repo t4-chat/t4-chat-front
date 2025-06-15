@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
         element: <ChatPage />,
       },
       {
+        path: "share/:sharedConversationId",
+        element: <ChatPage />,
+      },
+      {
         path: "settings",
         element: (
           <ProtectedRoute>

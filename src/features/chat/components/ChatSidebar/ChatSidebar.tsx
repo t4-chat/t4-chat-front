@@ -7,24 +7,25 @@ import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import Logo from "@/assets/icons/logo.png";
 import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
-import { Link } from "react-router-dom";
 import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import ShareChatModal from "@/components/Modal/ShareChatModal";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import type { Chat } from "@/features/chat/types";
 import { useHotkey } from "@/hooks/general";
+import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 import { cn } from "@/lib/utils";
 import { useChats } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
+import { Share2 } from "lucide-react";
 import { type FC, useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
 import {
   useChatsServiceDeleteApiChats,
+  useChatsServiceGetApiChatsSharedBySharedConversationId,
   useChatsServicePatchApiChatsByChatIdPin,
   useChatsServicePatchApiChatsByChatIdTitle,
 } from "~/openapi/queries/queries";
-import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 // import "./ChatSidebar.scss";
 
 interface ChatSidebarProps {
@@ -59,7 +60,7 @@ const useUpdateBrowserTitle = ({
 const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { chatId: activeChatId } = useParams();
+  const { chatId: activeChatId, sharedConversationId } = useParams();
   const { handleError, handleSuccess } = useMutationErrorHandler();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,6 +73,16 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
     chatIds: [],
   });
 
+  const [shareModalState, setShareModalState] = useState<{
+    isOpen: boolean;
+    chatId: string | null;
+    sharedConversationId?: string | null;
+  }>({
+    isOpen: false,
+    chatId: null,
+    sharedConversationId: null,
+  });
+
   const toggleSidebar = useCallback(() => {
     if (isOpen) {
       onToggle();
@@ -81,6 +92,38 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
 
   const { chats, isLoading } = useChats();
   useUpdateBrowserTitle({ chats });
+
+  // Fetch shared conversation data when viewing a shared chat
+  const { data: sharedChatData } =
+    useChatsServiceGetApiChatsSharedBySharedConversationId(
+      { sharedConversationId: sharedConversationId || "" },
+      undefined,
+      { enabled: !!sharedConversationId },
+    );
+
+  // Create a mock chat object for the shared conversation
+  const sharedChat: Chat | null = useMemo(() => {
+    if (!sharedChatData || !sharedConversationId) return null;
+
+    return {
+      id: `shared-${sharedConversationId}`,
+      title: sharedChatData.title || "Shared Conversation",
+      pinned: false,
+      created_at: new Date(sharedChatData.created_at),
+      updated_at: new Date(sharedChatData.updated_at),
+      messages: sharedChatData.messages?.map((msg) => ({
+        ...msg,
+        previous_message_id: msg.previous_message_id || undefined,
+        created_at: new Date(msg.created_at),
+        model_id: msg.model_id ? Number(msg.model_id) : undefined,
+        attachments: msg.attachments || undefined,
+        selected: msg.selected || undefined,
+      })),
+      shared_conversation: {
+        id: sharedConversationId,
+      },
+    };
+  }, [sharedChatData, sharedConversationId]);
 
   const { mutateAsync: updateChatTitle } =
     useChatsServicePatchApiChatsByChatIdTitle({
@@ -278,6 +321,17 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
     }
   };
 
+  const handleShareModal = (
+    chatId: string,
+    sharedConversationId?: string | null,
+  ) => {
+    setShareModalState({
+      isOpen: true,
+      chatId,
+      sharedConversationId,
+    });
+  };
+
   const formatDate = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -360,9 +414,34 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
           </div>
         ) : (
           <>
-            {filteredChats.length === 0 && (
+            {filteredChats.length === 0 && !sharedChat && (
               <div className="p-6 text-[var(--text-secondary-color)] text-sm text-center">
                 <p>{searchTerm ? "No chats found" : "No recent chats"}</p>
+              </div>
+            )}
+
+            {/* Current shared chat section */}
+            {sharedChat && (
+              <div className="mb-2">
+                <h3 className="m-0 px-4 py-2 font-medium text-[var(--primary-color)] text-xs uppercase tracking-wider">
+                  Current Shared Chat
+                </h3>
+                <ChatListItem
+                  key={sharedChat.id}
+                  chat={sharedChat}
+                  isActive={true}
+                  isSelected={false}
+                  onSelect={() => {}} // No action needed, already viewing
+                  onDelete={() => {}} // Shared chats can't be deleted from sidebar
+                  onRenameSubmit={() => {}} // Shared chats can't be renamed from sidebar
+                  onTogglePin={() => {}} // Shared chats can't be pinned from sidebar
+                  onSelectChange={() => {}} // Shared chats can't be selected for bulk operations
+                  onShare={() =>
+                    handleShareModal(sharedChat.id, sharedConversationId)
+                  }
+                  formatDate={formatDate}
+                  showDropdown={false}
+                />
               </div>
             )}
 
@@ -386,6 +465,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     }
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
+                    }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
                     }
                     formatDate={formatDate}
                   />
@@ -414,6 +496,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
                     }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
+                    }
                     formatDate={formatDate}
                   />
                 ))}
@@ -439,6 +524,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     }
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
+                    }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
                     }
                     formatDate={formatDate}
                   />
@@ -466,6 +554,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
                     }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
+                    }
                     formatDate={formatDate}
                   />
                 ))}
@@ -491,6 +582,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     }
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
+                    }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
                     }
                     formatDate={formatDate}
                   />
@@ -518,6 +612,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
                     onSelectChange={(checked) =>
                       toggleChatSelection(chat.id, checked)
                     }
+                    onShare={() =>
+                      handleShareModal(chat.id, chat.shared_conversation?.id)
+                    }
                     formatDate={formatDate}
                   />
                 ))}
@@ -536,6 +633,20 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
         cancelLabel="Cancel"
         isDanger={true}
       />
+      {shareModalState.chatId && (
+        <ShareChatModal
+          isOpen={shareModalState.isOpen}
+          onClose={() =>
+            setShareModalState({
+              isOpen: false,
+              chatId: null,
+              sharedConversationId: null,
+            })
+          }
+          chatId={shareModalState.chatId}
+          existingSharedConversationId={shareModalState.sharedConversationId}
+        />
+      )}
     </div>
   );
 };
@@ -552,7 +663,9 @@ interface ChatListItemProps {
   onRenameSubmit: (chatId: string, newTitle: string) => void;
   onTogglePin: () => void;
   onSelectChange: (checked: boolean) => void;
+  onShare: () => void;
   formatDate: (date: Date) => string;
+  showDropdown?: boolean;
 }
 
 const ChatListItem: FC<ChatListItemProps> = ({
@@ -564,7 +677,9 @@ const ChatListItem: FC<ChatListItemProps> = ({
   onRenameSubmit,
   onTogglePin,
   onSelectChange,
+  onShare,
   formatDate,
+  showDropdown = true,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -621,8 +736,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
         )}
         <div
           className="flex flex-1 items-center overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-ellipsis whitespace-nowrap"
-          onDoubleClick={startEditing}
-          onClick={(e) => e.stopPropagation()}
+          onDoubleClick={showDropdown ? startEditing : undefined}
         >
           {isEditing ? (
             <input
@@ -641,40 +755,48 @@ const ChatListItem: FC<ChatListItemProps> = ({
         </div>
       </div>
 
-      <DropdownMenu
-        className="flex-shrink-0 ml-auto"
-        trigger={
-          <div className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
-            <MoreIcon width={16} height={16} />
-          </div>
-        }
-        position="left"
-        onOpenChange={setIsMenuOpen}
-        items={[
-          {
-            id: "pin",
-            label: chat.pinned ? "Unpin" : "Pin",
-            icon: <PinIcon width={16} height={16} />,
-            onClick: onTogglePin,
-          },
-          {
-            id: "rename",
-            label: "Rename",
-            icon: <RenameIcon width={16} height={16} />,
-            onClick: () => {
-              setIsEditing(true);
-              setTitleInput(chat.title);
+      {showDropdown && (
+        <DropdownMenu
+          className="flex-shrink-0 ml-auto"
+          trigger={
+            <div className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
+              <MoreIcon width={16} height={16} />
+            </div>
+          }
+          position="left"
+          onOpenChange={setIsMenuOpen}
+          items={[
+            {
+              id: "pin",
+              label: chat.pinned ? "Unpin" : "Pin",
+              icon: <PinIcon width={16} height={16} />,
+              onClick: onTogglePin,
             },
-          },
-          {
-            id: "delete",
-            label: "Delete",
-            icon: <TrashIcon width={16} height={16} />,
-            onClick: onDelete,
-            isDanger: true,
-          },
-        ]}
-      />
+            {
+              id: "share",
+              label: chat.shared_conversation ? "Update Share" : "Share",
+              icon: <Share2 width={16} height={16} />,
+              onClick: onShare,
+            },
+            {
+              id: "rename",
+              label: "Rename",
+              icon: <RenameIcon width={16} height={16} />,
+              onClick: () => {
+                setIsEditing(true);
+                setTitleInput(chat.title);
+              },
+            },
+            {
+              id: "delete",
+              label: "Delete",
+              icon: <TrashIcon width={16} height={16} />,
+              onClick: onDelete,
+              isDanger: true,
+            },
+          ]}
+        />
+      )}
     </button>
   );
 };

@@ -2,6 +2,7 @@ import { useEffect, type FC, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
+import Portal from "@/components/Portal/Portal";
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const Modal: FC<ModalProps> = ({
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
+        event.stopPropagation();
       }
     };
 
@@ -39,33 +41,48 @@ const Modal: FC<ModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div
-      className="top-0 right-0 bottom-0 left-0 z-50 fixed flex justify-center items-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
+    <Portal>
       <div
-        className={cn(
-          "bg-[var(--component-bg-color)] rounded-xl p-4 max-w-[90%] w-[480px] max-h-[90vh] overflow-y-auto relative shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)]",
-          className,
-        )}
-        onClick={(e) => e.stopPropagation()}
+        className="top-0 right-0 bottom-0 left-0 z-50 fixed flex justify-center items-center bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClose();
+          }
+        }}
+        tabIndex={-1}
       >
-        <div className="flex justify-between items-center mb-4">
-          {title && (
-            <h2 className="m-0 text-[var(--text-color)] text-2xl">{title}</h2>
+        <dialog
+          open={isOpen}
+          className={cn(
+            "bg-[var(--component-bg-color)] rounded-xl p-4 max-w-[90%] w-[480px] max-h-[90vh] overflow-y-auto relative shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)] border-0",
+            className,
           )}
-          <Button
-            variant="text"
-            size="icon"
-            onClick={onClose}
-            className="p-1 text-2xl leading-none"
-          >
-            <XIcon size={16} />
-          </Button>
-        </div>
-        <div className="text-[var(--text-color)]">{children}</div>
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.stopPropagation();
+            }
+          }}
+        >
+          <div className="flex justify-between items-center mb-4">
+            {title && (
+              <h2 className="m-0 text-[var(--text-color)] text-2xl">{title}</h2>
+            )}
+            <Button
+              variant="text"
+              size="icon"
+              onClick={onClose}
+              className="p-1 text-2xl leading-none"
+            >
+              <XIcon size={16} />
+            </Button>
+          </div>
+          <div className="text-[var(--text-color)]">{children}</div>
+        </dialog>
       </div>
-    </div>
+    </Portal>
   );
 };
 

@@ -6,7 +6,7 @@ export interface MessageStartEvent {
   message: {
     id: string;
     role: string;
-    model_id: number;
+    model_id: string;
     model_name: string;
     reply_to: string;
   };
@@ -33,7 +33,7 @@ export interface MessageStopEvent {
 
 export interface MessageContentStopEvent {
   type: "message_content_stop";
-  message: { id: string; model_id: number; model_name: string };
+  message: { id: string; model_id: string; model_name: string };
 }
 
 export type StreamEvent =

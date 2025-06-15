@@ -22,4 +22,7 @@ export interface Chat {
   created_at: Date;
   updated_at: Date;
   messages?: ChatMessage[];
+  shared_conversation?: {
+    id: string;
+  } | null;
 }

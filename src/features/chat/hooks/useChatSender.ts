@@ -24,8 +24,9 @@ export const useChatSender = ({
   const send = async (
     content: string,
     files: File[] | undefined,
-    modelIds: (number | string)[],
+    modelIds: string[],
     chatId?: string | null,
+    sharedConversationId?: string | null,
   ) => {
     let attachmentIds: string[] = [];
     if (files && files.length > 0) {
@@ -46,7 +47,7 @@ export const useChatSender = ({
       onEvent,
       onError,
       onDone,
-      options: { chatId },
+      options: { chatId, sharedConversationId },
     });
 
     return { abort };
