@@ -25,7 +25,7 @@ const Layout = () => {
       <SidebarContext.Provider
         value={{ isOpen: isSidebarOpen, onToggle: toggleSidebar }}
       >
-        <div className="flex flex-col bg-[var(--background-color)] min-h-screen text-[var(--text-color)] transition-colors duration-75">
+        <div className="z-10 flex flex-col bg-[var(--background-color)] min-h-screen text-[var(--text-color)] transition-colors duration-75">
           <Header />
           <div className="flex flex-col flex-1 mx-auto w-full">
             <ChatSidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />

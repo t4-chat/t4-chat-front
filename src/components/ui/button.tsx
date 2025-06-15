@@ -11,9 +11,9 @@ const buttonVariants = cva(
           "bg-[var(--primary-color)] text-[var(--text-primary-color)] hover:bg-[var(--primary-color-hover)] disabled:bg-[var(--component-bg-color)] disabled:text-[var(--text-secondary-color)] disabled:hover:bg-[var(--component-bg-color)] shadow-sm",
         secondary:
           "bg-[var(--component-bg-color)] text-[var(--text-primary-color)] border border-[var(--border-color)] hover:bg-[var(--hover-color)] disabled:bg-[var(--component-bg-color)] disabled:text-[var(--text-secondary-color)] disabled:hover:bg-[var(--component-bg-color)] shadow-sm",
-        text: "bg-transparent text-[var(--text-primary-color)] hover:bg-[var(--hover-color)] disabled:bg-transparent disabled:text-[var(--text-secondary-color)] disabled:hover:bg-transparent",
+        text: "bg-transparent backdrop-blur-sm text-[var(--text-primary-color)] hover:bg-[var(--hover-color)] disabled:bg-transparent disabled:text-[var(--text-secondary-color)] disabled:hover:bg-transparent",
         destructive:
-          "bg-[var(--component-bg-color)] text-[var(--error-color)] border border-[var(--border-color)] hover:bg-[var(--hover-color)] disabled:bg-[var(--component-bg-color)] disabled:text-[var(--text-secondary-color)] disabled:hover:bg-[var(--component-bg-color)] shadow-sm",
+          "bg-[var(--component-bg-color)] text-[var(--error-color)] border border-[var(--border-color)] hover:bg-[rgba(var(--error-color-rgb),0.1)] disabled:bg-[var(--component-bg-color)] disabled:text-[var(--text-secondary-color)] disabled:hover:bg-[var(--component-bg-color)] shadow-sm",
         muted:
           "bg-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 disabled:text-gray-400 dark:disabled:text-gray-600",
         link: "text-[var(--primary-color)] underline-offset-4 hover:underline disabled:hover:no-underline disabled:text-[var(--text-secondary-color)] bg-transparent",

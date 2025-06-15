@@ -15,7 +15,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { SidebarContext } from "@/components/Layout/Layout";
-import { Key } from "lucide-react";
+import { Key, XIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ const HomePage: FC = () => {
             <SearchIcon
               width={16}
               height={16}
-              className="top-1/2 left-4 z-10 absolute text-[var(--text-secondary-color)] -translate-y-1/2 transform"
+              className="top-1/2 left-4 absolute text-[var(--text-secondary-color)] -translate-y-1/2 transform"
             />
             <input
               type="text"
@@ -133,14 +134,14 @@ const HomePage: FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button
-                type="button"
-                className="top-1/2 right-4 absolute flex justify-center items-center bg-transparent hover:bg-black/5 p-0 border-none rounded-full w-6 h-6 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] text-xl -translate-y-1/2 cursor-pointer transform"
+              <Button
+                variant="text"
+                className="top-1/2 right-4 absolute flex justify-center items-center bg-transparent p-0 border-none rounded-full w-6 h-6 -translate-y-1/2 cursor-pointer transform"
                 onClick={handleClearSearch}
                 aria-label="Clear search"
               >
-                ×
-              </button>
+                <XIcon className="w-4 h-4" />
+              </Button>
             )}
           </div>
           <div className="flex justify-center items-center gap-4 w-full">
@@ -227,16 +228,16 @@ const HomePage: FC = () => {
                           }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <div className="after:top-0 after:left-0 after:z-10 after:absolute relative flex justify-center items-center after:bg-white shadow-sm hover:shadow-lg mb-4 rounded-2xl w-[4.375rem] sm:w-15 md:w-16 after:w-full h-[4.375rem] sm:h-15 md:h-16 after:h-full overflow-hidden text-white after:content-[''] transition-all duration-100">
+                          <div className="after:top-0 after:left-0 after:absolute relative flex justify-center items-center after:bg-white shadow-sm hover:shadow-lg mb-4 rounded-2xl w-[4.375rem] sm:w-15 md:w-16 after:w-full h-[4.375rem] sm:h-15 md:h-16 after:h-full overflow-hidden text-white after:content-[''] transition-all duration-100">
                             <img
                               src={getProviderIconPath(
                                 model.provider?.slug || "",
                               )}
                               alt={`${model.provider?.name || "Unknown"} icon`}
-                              className="z-20 relative w-full h-full"
+                              className="z-10 relative w-full h-full"
                             />
                           </div>
-                          <div className="flex justify-center items-center gap-1 w-full overflow-hidden font-medium text-[var(--text-primary-color)] text-sm text-center">
+                          <div className="flex justify-center items-center gap-1 w-full overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-center">
                             <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                               {model.name}
                             </span>

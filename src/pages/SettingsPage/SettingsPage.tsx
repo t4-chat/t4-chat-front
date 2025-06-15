@@ -234,7 +234,7 @@ const SettingsPage: FC = () => {
               <div className="space-y-1.5">
                 <label
                   htmlFor="host-id"
-                  className="font-medium text-[var(--text-color)] text-sm"
+                  className="font-medium text-[var(--text-color)] text-base"
                 >
                   Model Host <span className="text-red-500">*</span>
                 </label>
@@ -598,12 +598,12 @@ const SettingsPage: FC = () => {
                       return (
                         <div
                           key={key.id}
-                          className="group relative to-[var(--component-bg-color)]/30 hover:to-[var(--component-bg-color)]/50 bg-gradient-to-br from-[var(--background-color)] hover:shadow-[var(--primary-color)]/5 hover:shadow-lg p-6 border border-[var(--border-color)] hover:border-[var(--primary-color)]/20 rounded-xl transition-all duration-200"
+                          className="group relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl transition-all duration-200"
                         >
                           {/* Header Section */}
                           <div className="flex justify-between items-start mb-6">
                             <div className="flex items-start gap-4">
-                              <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/15 group-hover:from-[var(--primary-color)]/20 to-[var(--primary-color)]/5 group-hover:to-[var(--primary-color)]/10 rounded-xl w-12 h-12 transition-colors duration-200">
+                              <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/15 rounded-xl w-12 h-12 transition-colors duration-200">
                                 <Key className="w-6 h-6 text-[var(--primary-color)]" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -638,7 +638,7 @@ const SettingsPage: FC = () => {
                               <span className="font-medium text-[var(--text-secondary-color)] text-sm">
                                 Provider
                               </span>
-                              <div className="flex items-center gap-2 bg-[var(--component-bg-color)] hover:bg-[var(--component-bg-color)]/80 group-hover:shadow-sm px-3 py-2 rounded-lg font-medium text-[var(--text-color)] text-sm transition-colors">
+                              <div className="flex items-center gap-2 bg-[var(--component-bg-color)] px-3 py-2 rounded-lg font-medium text-[var(--text-color)] text-sm transition-colors">
                                 {getHostIcon(hostName)}
                                 <span className="max-w-32 truncate">
                                   {hostName}
@@ -670,7 +670,7 @@ const SettingsPage: FC = () => {
                               size="sm"
                               onClick={() => setEditingKey(key)}
                               disabled={isCreating || !!editingKey}
-                              className="flex-1 gap-2 hover:bg-[var(--primary-color)]/10 hover:border-[var(--primary-color)]/20 hover:text-[var(--primary-color)]"
+                              className="flex-1 gap-2"
                             >
                               <Edit2 className="w-4 h-4" />
                               Edit

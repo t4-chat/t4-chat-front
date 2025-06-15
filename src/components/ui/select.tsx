@@ -31,7 +31,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-lg border border-[var(--border-color)] bg-[var(--component-bg-color)] px-3 py-2 text-sm text-[var(--text-primary-color)] transition-all duration-100",
+      "flex h-10 w-full items-center justify-between rounded-lg border border-[var(--border-color)] bg-[var(--component-bg-color)] px-3 py-2 text-base text-[var(--text-primary-color)] transition-all duration-100",
       "focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-0 focus:border-[var(--primary-color)]",
       "disabled:cursor-not-allowed disabled:opacity-50",
       "[&>span]:line-clamp-1 data-[placeholder]:text-[var(--text-placeholder-color)] data-[placeholder]:font-normal",
@@ -55,7 +55,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-popover min-w-[8rem] overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--component-bg-color)] text-[var(--text-primary-color)] shadow-lg",
+        "relative z-50 min-w-[8rem] overflow-hidden rounded-lg border border-[var(--border-color)] bg-[var(--component-bg-color)] text-[var(--text-primary-color)] shadow-lg",
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         position === "popper" &&
           "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",

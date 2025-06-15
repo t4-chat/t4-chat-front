@@ -101,15 +101,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
   }, [isOpen]);
 
   return (
-    <div
-      className={cn(
-        "relative inline-block",
-        {
-          "z-dropdown-menu": isOpen,
-        },
-        className,
-      )}
-    >
+    <div className={cn("relative inline-block", className)}>
       <div
         className="flex justify-center items-center cursor-pointer"
         onClick={toggleMenu}
@@ -125,7 +117,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
       {isOpen && (
         <div
           className={cn(
-            `absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg z-dropdown-menu min-w-40 overflow-hidden`,
+            "absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg min-w-40 overflow-hidden z-50",
             {
               "right-0": position === "left",
               "left-0": position === "right",

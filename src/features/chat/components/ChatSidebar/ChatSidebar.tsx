@@ -301,7 +301,7 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 bottom-0 w-full md:w-64 bg-[var(--component-bg-color)] border-r border-[var(--border-color)] transition-all duration-75 z-10 flex flex-col -translate-x-full overflow-hidden",
+        "fixed top-0 left-0 bottom-0 w-full md:w-64 bg-[var(--component-bg-color)] z-20 border-r border-[var(--border-color)] transition-all duration-75 flex flex-col -translate-x-full overflow-hidden",
         isOpen && "translate-x-0 shadow-[0.25rem_0_1rem_rgba(0,0,0,0.1)]",
         isStreaming && "pointer-events-none cursor-not-allowed",
       )}
@@ -641,9 +641,9 @@ const ChatListItem: FC<ChatListItemProps> = ({
       </div>
 
       <DropdownMenu
-        className="z-dropdown [&.menu-open]:z-dropdown-menu flex-shrink-0 ml-auto"
+        className="flex-shrink-0 ml-auto"
         trigger={
-          <div className="z-[inherit] flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
+          <div className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
             <MoreIcon width={16} height={16} />
           </div>
         }

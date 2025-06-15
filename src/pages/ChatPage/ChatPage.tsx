@@ -653,7 +653,7 @@ const ChatPage = () => {
                           setPreviewPaneIndex(index);
                         }}
                         aria-label="Preview chat"
-                        className="top-2 right-2 z-[2] absolute rounded-full w-10 h-10"
+                        className="top-2 right-2 absolute backdrop-blur-sm rounded-full w-10 h-10"
                       >
                         <Maximize2 size={16} />
                       </Button>
@@ -662,9 +662,9 @@ const ChatPage = () => {
                     {isSplitMode &&
                       lastDisplayedMessage?.selected === false &&
                       lastDisplayedMessage.done && (
-                        <div className="right-4 bottom-4 z-10 absolute flex flex-col items-end gap-3">
+                        <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
                           <motion.button
-                            className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-sm transition-all hover:-translate-y-0.5 duration-100 cursor-pointer hover:transform"
+                            className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-base transition-all hover:-translate-y-0.5 duration-100 cursor-pointer hover:transform"
                             onClick={() =>
                               handleUseAnswer({
                                 modelId:
@@ -687,7 +687,7 @@ const ChatPage = () => {
                       <AnimatePresence>
                         {previewPaneIndex === paneIndex && (
                           <motion.div
-                            className="z-modal-backdrop fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
+                            className="z-[9999] fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -709,7 +709,7 @@ const ChatPage = () => {
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
-                                className="top-4 right-4 z-modal absolute rounded-full w-10 h-10 text-xl leading-none"
+                                className="top-4 right-4 absolute rounded-full w-10 h-10 text-xl leading-none"
                               >
                                 <XIcon size={16} />
                               </Button>
@@ -731,7 +731,7 @@ const ChatPage = () => {
                               {isSplitMode &&
                                 lastDisplayedMessage?.selected === false &&
                                 lastDisplayedMessage.done && (
-                                  <div className="right-4 bottom-4 z-10 absolute flex flex-col items-end gap-3">
+                                  <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
                                     <motion.button
                                       className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-sm transition-all hover:-translate-y-0.5 duration-100 cursor-pointer hover:transform"
                                       onClick={() =>
