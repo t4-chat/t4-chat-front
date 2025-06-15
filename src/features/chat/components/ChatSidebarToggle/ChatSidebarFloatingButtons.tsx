@@ -17,7 +17,7 @@ const ChatSidebarFloatingButtons = ({
   };
 
   return (
-    <div className="top-3 left-3 z-[9] fixed flex items-center gap-2">
+    <div className="top-3 left-3 fixed z-fixed-low flex items-center gap-2">
       <Button
         variant="secondary"
         size="icon"

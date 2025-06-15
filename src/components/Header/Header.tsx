@@ -85,7 +85,7 @@ const Header = () => {
   return (
     <>
       {/* Top Right Section - Controls */}
-      <div className="top-3 right-3 z-[100] fixed rounded-xl">
+      <div className="top-3 right-3 z-header fixed rounded-xl">
         <div className="flex items-center gap-1">{renderUserContent()}</div>
       </div>
 

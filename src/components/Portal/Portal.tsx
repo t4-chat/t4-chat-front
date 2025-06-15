@@ -18,7 +18,7 @@ const Portal = ({ children, containerId = "portal-root" }: PortalProps) => {
       portalContainer = document.createElement("div");
       portalContainer.id = containerId;
       portalContainer.style.position = "relative";
-      portalContainer.style.zIndex = "9999";
+      portalContainer.style.zIndex = "var(--z-portal)";
       document.body.appendChild(portalContainer);
     }
 

@@ -40,12 +40,12 @@ const Modal: FC<ModalProps> = ({
 
   return (
     <div
-      className="top-0 right-0 bottom-0 left-0 z-10 fixed flex justify-center items-center bg-black/50 backdrop-blur-sm"
+      className="top-0 right-0 bottom-0 left-0 z-modal-backdrop fixed flex justify-center items-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
         className={cn(
-          "bg-[var(--component-bg-color)] rounded-xl p-4 max-w-[90%] w-[480px] max-h-[90vh] overflow-y-auto relative shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)]",
+          "bg-[var(--component-bg-color)] rounded-xl p-4 max-w-[90%] w-[480px] max-h-[90vh] overflow-y-auto relative shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)] z-modal",
           className,
         )}
         onClick={(e) => e.stopPropagation()}

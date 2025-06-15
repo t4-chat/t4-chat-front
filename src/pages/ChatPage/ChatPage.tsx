@@ -687,7 +687,7 @@ const ChatPage = () => {
                       <AnimatePresence>
                         {previewPaneIndex === paneIndex && (
                           <motion.div
-                            className="z-[1000] fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
+                            className="z-modal-backdrop fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -709,7 +709,7 @@ const ChatPage = () => {
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
-                                className="top-4 right-4 z-10 absolute rounded-full w-10 h-10 text-xl leading-none"
+                                className="top-4 right-4 z-modal absolute rounded-full w-10 h-10 text-xl leading-none"
                               >
                                 <XIcon size={16} />
                               </Button>

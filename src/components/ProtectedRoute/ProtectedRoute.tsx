@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { LoadingScreen } from "../LoadingScreen/LoadingScreen";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

@@ -641,7 +641,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
       </div>
 
       <DropdownMenu
-        className="z-[100] [&.menu-open]:z-[1001] flex-shrink-0 ml-auto"
+        className="z-dropdown [&.menu-open]:z-dropdown-menu flex-shrink-0 ml-auto"
         trigger={
           <div className="z-[inherit] flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
             <MoreIcon width={16} height={16} />

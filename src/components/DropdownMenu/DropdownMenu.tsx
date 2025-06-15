@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect, type FC } from "react";
 
 export interface DropdownMenuItem {
@@ -101,7 +102,13 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
 
   return (
     <div
-      className={`relative inline-block ${isOpen ? "z-[1001]" : ""} ${className}`}
+      className={cn(
+        "relative inline-block",
+        {
+          "z-dropdown-menu": isOpen,
+        },
+        className,
+      )}
     >
       <div
         className="flex justify-center items-center cursor-pointer"
@@ -117,7 +124,13 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
 
       {isOpen && (
         <div
-          className={`absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg z-[1000] min-w-40 overflow-hidden ${position === "left" ? "right-0" : "left-0"}`}
+          className={cn(
+            `absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg z-dropdown-menu min-w-40 overflow-hidden`,
+            {
+              "right-0": position === "left",
+              "left-0": position === "right",
+            },
+          )}
           ref={menuRef}
           onClick={handleMenuClick}
         >

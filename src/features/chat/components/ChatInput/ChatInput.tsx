@@ -1,13 +1,12 @@
 import SendIcon from "@/assets/icons/send.svg?react";
-import { FilePreview } from "@/components/FilePreview/FilePreview";
-import { FileUpload } from "@/components/FileUpload/FileUpload";
+import FilePreview from "@/components/FilePreview/FilePreview";
+import FileUpload from "@/components/FileUpload/FileUpload";
 import type { ModelSelectOption } from "@/components/ModelSelect/ModelSelect";
 import ModelSelect from "@/components/ModelSelect/ModelSelect";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface IChatInputProps {
   onSend: (message: string, files?: File[]) => void;

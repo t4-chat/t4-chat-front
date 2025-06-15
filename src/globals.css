@@ -48,6 +48,22 @@ html {
   --text-placeholder-color: rgba(26, 26, 26, 0.4);
   --error-color-rgb: 244, 67, 54;
 
+  /* Z-Index System - Structured layering */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed-low: 30;
+  --z-fixed: 40;
+  --z-sidebar: 50;
+  --z-header: 60;
+  --z-dropdown-menu: 70;
+  --z-tooltip: 80;
+  --z-popover: 90;
+  --z-modal-backdrop: 100;
+  --z-modal: 110;
+  --z-toast: 120;
+  --z-portal: 9999;
+
   /* shadcn-ui variables mapped to our colors */
   --background: var(--background-color);
   --foreground: var(--text-color);

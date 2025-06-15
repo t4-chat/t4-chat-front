@@ -3,7 +3,7 @@ import ModelSelect, {
 } from "@/components/ModelSelect/ModelSelect";
 
 // import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
-import { ChatMessage } from "@/features/chat/components/ChatMessage/ChatMessage";
+import ChatMessage from "@/features/chat/components/ChatMessage/ChatMessage";
 import ScrollToBottomButton from "@/features/chat/components/ScrollToBottomButton/ScrollToBottomButton";
 import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
 import { type FC, memo, useEffect, useMemo, useRef, useState } from "react";

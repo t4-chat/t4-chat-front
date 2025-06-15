@@ -127,7 +127,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
           </SelectTrigger>
           <SelectContent
             className={cn(
-              "bg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-lg shadow-lg z-50 min-w-[var(--radix-select-trigger-width)] max-h-80 overflow-hidden data-[state=open]:animate-[dropdown-slide-down_200ms_both] data-[state=closed]:animate-[dropdown-slide-up_200ms_both]",
+              "bg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-lg shadow-lg z-popover min-w-[var(--radix-select-trigger-width)] max-h-80 overflow-hidden data-[state=open]:animate-[dropdown-slide-down_200ms_both] data-[state=closed]:animate-[dropdown-slide-up_200ms_both]",
               dropdownPosition,
             )}
             side={dropdownPosition}
