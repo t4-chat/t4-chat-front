@@ -88,7 +88,6 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
       onToggle();
     }
   }, [isOpen, onToggle]);
-  useHotkey("Escape", toggleSidebar);
 
   const { chats, isLoading } = useChats();
   useUpdateBrowserTitle({ chats });

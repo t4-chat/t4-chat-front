@@ -231,6 +231,14 @@ const useInitialPanes = ({
       (m) =>
         m.previous_message_id === lastUserMessage.id && m.role === "assistant",
     );
+
+    // Fix: If there are no assistant messages, fallback to 1 pane
+    if (assistantMessages.length === 0) {
+      currentSearchParams.set("panes", "1");
+      setSearchParams(currentSearchParams);
+      return;
+    }
+
     const selectedMessages = assistantMessages.filter(
       (m) => m.selected === true || m.selected === null,
     );
@@ -525,7 +533,7 @@ const ChatPage = () => {
             content: msg,
             role: "user",
             created_at: new Date(),
-            attachments: files,
+            attachments: null,
           },
         ];
       });
@@ -555,6 +563,14 @@ const ChatPage = () => {
     paneCount,
     modelIds,
   });
+
+  useEffect(() => {
+    if (!chatId) return;
+    // Reset isStreaming when leaving the page (unmount)
+    return () => {
+      setIsStreaming(false);
+    };
+  }, [chatId]);
 
   if (!messages || !paneCount || !modelIds || !availableModels) {
     return (
