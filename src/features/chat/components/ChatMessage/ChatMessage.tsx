@@ -13,6 +13,7 @@ interface ChatMessageProps extends Omit<ChatMessageType, "id"> {
   modelName?: string;
   modelIconPath?: string;
   created_at?: Date;
+  scrollContainer?: HTMLElement | null;
 }
 
 interface AttachmentInfo {
@@ -31,6 +32,7 @@ const ChatMessage = ({
   modelName,
   modelIconPath,
   created_at,
+  scrollContainer,
 }: ChatMessageProps) => {
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
@@ -148,8 +150,6 @@ const ChatMessage = ({
     const el = messageRef.current;
     if (!el) return;
 
-    const scrollContainer = el.closest(".chat-messages") as HTMLElement | null;
-
     const updatePosition = () => {
       const rect = el.getBoundingClientRect();
       const containerRect = scrollContainer?.getBoundingClientRect() ?? {
@@ -183,7 +183,7 @@ const ChatMessage = ({
       scrollContainer?.removeEventListener("scroll", updatePosition);
       window.removeEventListener("resize", updatePosition);
     };
-  }, []);
+  }, [scrollContainer]);
 
   const downloadFile = async (fileId: string) => {
     if (isDownloading[fileId]) return;

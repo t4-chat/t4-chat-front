@@ -178,6 +178,7 @@ const Pane: FC<PaneProps> = ({
                     attachments={message.attachments}
                     modelName={modelInfo.name}
                     modelIconPath={modelInfo.iconPath}
+                    scrollContainer={messagesContainerRef.current}
                   />
                   {/* TODO: add loading indicator 
                    {isLoading &&
