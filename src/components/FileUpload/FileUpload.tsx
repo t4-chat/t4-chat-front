@@ -9,7 +9,7 @@ export interface FileUploadProps {
   disabled?: boolean;
 }
 
-export const FileUpload = ({
+const FileUpload = ({
   onFilesSelected,
   maxFiles = 3,
   accept = "*",
@@ -90,3 +90,5 @@ export const FileUpload = ({
     </div>
   );
 };
+
+export default FileUpload;

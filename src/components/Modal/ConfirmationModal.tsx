@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Modal } from "./Modal";
+import Modal from "./Modal";
 import { Button } from "@/components/ui/button";
 
 interface ConfirmationModalProps {
@@ -13,7 +13,7 @@ interface ConfirmationModalProps {
   isDanger?: boolean;
 }
 
-export const ConfirmationModal: FC<ConfirmationModalProps> = ({
+const ConfirmationModal: FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -49,3 +49,5 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
     </Modal>
   );
 };
+
+export default ConfirmationModal;

@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { Header } from "@/components/Header/Header";
-import { ChatSidebar } from "@/features/chat/components/ChatSidebar/ChatSidebar";
+import Header from "@/components/Header/Header";
+import ChatSidebar from "@/features/chat/components/ChatSidebar/ChatSidebar";
 import { createContext, useState } from "react";
-import { ChatSidebarFloatingButtons } from "@/features/chat/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
-import { ChatSidebarBackdrop } from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
+import ChatSidebarFloatingButtons from "@/features/chat/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
+import ChatSidebarBackdrop from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
 
 export const SidebarContext = createContext<{
   isOpen: boolean;
@@ -14,7 +14,7 @@ export const SidebarContext = createContext<{
   onToggle: () => {},
 });
 
-export const Layout = () => {
+const Layout = () => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -41,3 +41,5 @@ export const Layout = () => {
     </ThemeProvider>
   );
 };
+
+export default Layout;

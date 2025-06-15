@@ -7,7 +7,7 @@ interface ChatSidebarFloatingButtonsProps {
   onToggle: () => void;
 }
 
-export const ChatSidebarFloatingButtons = ({
+const ChatSidebarFloatingButtons = ({
   onToggle,
 }: ChatSidebarFloatingButtonsProps) => {
   const navigate = useNavigate();
@@ -39,3 +39,5 @@ export const ChatSidebarFloatingButtons = ({
     </div>
   );
 };
+
+export default ChatSidebarFloatingButtons;

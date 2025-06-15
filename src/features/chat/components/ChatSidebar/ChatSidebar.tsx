@@ -6,9 +6,9 @@ import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import Logo from "@/assets/icons/logo.png";
-import { DropdownMenu } from "@/components/DropdownMenu/DropdownMenu";
+import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
 import { Link } from "react-router-dom";
-import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Chat } from "@/features/chat/types";
@@ -56,11 +56,7 @@ const useUpdateBrowserTitle = ({
   }, [activeChatId, chats]);
 };
 
-export const ChatSidebar = ({
-  isOpen,
-  onToggle,
-  isStreaming,
-}: ChatSidebarProps) => {
+const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { chatId: activeChatId } = useParams();
@@ -543,6 +539,8 @@ export const ChatSidebar = ({
     </div>
   );
 };
+
+export default ChatSidebar;
 
 // ChatListItem component to keep the main component cleaner
 interface ChatListItemProps {

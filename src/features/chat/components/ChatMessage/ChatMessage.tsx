@@ -22,7 +22,7 @@ interface AttachmentInfo {
   isLoading: boolean;
 }
 
-export const ChatMessage = ({
+const ChatMessage = ({
   content,
   role,
   attachments,
@@ -487,3 +487,5 @@ export const ChatMessage = ({
     </div>
   );
 };
+
+export default ChatMessage;

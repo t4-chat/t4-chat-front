@@ -11,7 +11,7 @@ interface ModalProps {
   className?: string;
 }
 
-export const Modal: FC<ModalProps> = ({
+const Modal: FC<ModalProps> = ({
   isOpen,
   onClose,
   children,
@@ -68,3 +68,5 @@ export const Modal: FC<ModalProps> = ({
     </div>
   );
 };
+
+export default Modal;

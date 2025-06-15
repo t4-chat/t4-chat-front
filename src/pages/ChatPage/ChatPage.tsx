@@ -1,8 +1,8 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
 import { SidebarContext } from "@/components/Layout/Layout";
-import { LoadingScreen } from "@/components/LoadingScreen/LoadingScreen";
-import { LoginModal } from "@/components/LoginModal/LoginModal";
-import { Portal } from "@/components/Portal/Portal";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import LoginModal from "@/components/LoginModal/LoginModal";
+import Portal from "@/components/Portal/Portal";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import ChatInput from "@/features/chat/components/ChatInput/ChatInput";
@@ -12,7 +12,7 @@ import Pane, {
 import useChatSender from "@/features/chat/hooks/useChatSender";
 import { useHotkey } from "@/hooks/general";
 import type { StreamEvent } from "@/utils/apiUtils";
-import { keepPreviousData, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Maximize2, XIcon } from "lucide-react";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -271,7 +271,7 @@ const usePendingMessageHandler = ({
   }, [isAuthenticated, pendingMessage, modelIds, paneCount]);
 };
 
-export const ChatPage = () => {
+const ChatPage = () => {
   const navigate = useNavigate();
   const { chatId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -564,7 +564,6 @@ export const ChatPage = () => {
                 id: `split-pane-${index}`,
                 index,
               })).map(({ id, index }, paneIndex) => {
-                console.log("messages", messages);
                 // Displaying messages in Panes
                 // - When panes === 1, display all messages but the selected === false
                 // - (Optional) For messages where assistantResponse1.selected === false && assistantResponse2.selected === true && assistantResponse1.previous_message_id === assistantResponse2.previous_message_id, show a visible indicator that this message was split previously. We might let users pick another response and "branch out" later
@@ -839,3 +838,5 @@ export const ChatPage = () => {
     </div>
   );
 };
+
+export default ChatPage;

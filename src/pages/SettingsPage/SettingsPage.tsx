@@ -42,9 +42,9 @@ import type {
   HostApiKeyResponseSchema,
   HostApiKeyUpdateSchema,
 } from "~/openapi/requests/types.gen";
-import { ConfirmationModal } from "@/components/Modal/ConfirmationModal";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 
-export const SettingsPage: FC = () => {
+const SettingsPage: FC = () => {
   const [activeTab, setActiveTab] = useState<"utilization" | "api-keys">(
     "utilization",
   );
@@ -734,3 +734,5 @@ export const SettingsPage: FC = () => {
     </div>
   );
 };
+
+export default SettingsPage;

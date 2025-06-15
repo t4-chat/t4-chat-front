@@ -17,7 +17,7 @@ import {
 import { SidebarContext } from "@/components/Layout/Layout";
 import { Key } from "lucide-react";
 
-export const HomePage: FC = () => {
+const HomePage: FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [categorizationMode, setCategorizationMode] = useState<
@@ -266,3 +266,5 @@ export const HomePage: FC = () => {
     </TooltipProvider>
   );
 };
+
+export default HomePage;

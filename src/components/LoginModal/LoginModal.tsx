@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/context/AuthContext";
-import { Modal } from "@/components/Modal/Modal";
+import Modal from "@/components/Modal/Modal";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -11,10 +11,9 @@ interface LoginModalProps {
 
 interface GoogleCredentialResponse {
   credential?: string;
-  select_by?: string;
 }
 
-export const LoginModal: FC<LoginModalProps> = ({
+const LoginModal: FC<LoginModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
@@ -76,3 +75,5 @@ export const LoginModal: FC<LoginModalProps> = ({
     </Modal>
   );
 };
+
+export default LoginModal;

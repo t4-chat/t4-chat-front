@@ -6,7 +6,7 @@ interface FilePreviewProps {
   onRemove: () => void;
 }
 
-export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
+const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,3 +87,5 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
     </div>
   );
 };
+
+export default FilePreview;

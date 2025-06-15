@@ -5,7 +5,7 @@ interface ChatSidebarToggleProps {
   onClick: () => void;
 }
 
-export const ChatSidebarToggle = ({ onClick }: ChatSidebarToggleProps) => {
+const ChatSidebarToggle = ({ onClick }: ChatSidebarToggleProps) => {
   return (
     <Button
       variant="secondary"
@@ -18,3 +18,5 @@ export const ChatSidebarToggle = ({ onClick }: ChatSidebarToggleProps) => {
     </Button>
   );
 };
+
+export default ChatSidebarToggle;

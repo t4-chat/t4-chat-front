@@ -1,9 +1,10 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import { Layout } from "@/components/Layout/Layout";
-import { ChatPage } from "@/pages/ChatPage/ChatPage";
-import { SettingsPage } from "@/pages/SettingsPage/SettingsPage";
+import { createBrowserRouter } from "react-router-dom";
+import Layout from "@/components/Layout/Layout";
+import ChatPage from "@/pages/ChatPage/ChatPage";
+import SettingsPage from "@/pages/SettingsPage/SettingsPage";
 import { AuthProvider } from "@/context/AuthContext";
-import { HomePage } from "@/pages/HomePage/HomePage";
+import HomePage from "@/pages/HomePage/HomePage";
+import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <SettingsPage />,
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

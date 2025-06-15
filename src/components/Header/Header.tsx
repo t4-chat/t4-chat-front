@@ -1,10 +1,9 @@
 import LogoutIcon from "@/assets/icons/logout.svg?react";
 import UserIcon from "@/assets/icons/user.svg?react";
-import {
-  DropdownMenu,
+import DropdownMenu, {
   type DropdownMenuItem,
 } from "@/components/DropdownMenu/DropdownMenu";
-import { LoginModal } from "@/components/LoginModal/LoginModal";
+import LoginModal from "@/components/LoginModal/LoginModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
@@ -12,31 +11,13 @@ import { Settings } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Header = () => {
-  const { isAuthenticated, user, logout, isLoading, isAdmin } = useAuth();
-  // const { currentTheme, setTheme } = useTheme();
+const Header = () => {
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
-
-  // const handleThemeChange = () => {
-  //   const nextTheme: ThemeType = currentTheme === "light" ? "dark" : "light";
-  //   setTheme(nextTheme);
-  // };
-
-  // // Get the appropriate icon for the current theme
-  // const getThemeIcon = (theme: ThemeType) => {
-  //   switch (theme) {
-  //     case "light":
-  //       return <Moon size={16} />; // Show moon icon to switch to dark
-  //     case "dark":
-  //       return <Sun size={16} />; // Show sun icon to switch to light
-  //     default:
-  //       return <Settings size={16} />;
-  //   }
-  // };
 
   const userName = user ? `${user.first_name} ${user.last_name}` : "";
   const hasProfileImage =
@@ -105,22 +86,12 @@ export const Header = () => {
     <>
       {/* Top Right Section - Controls */}
       <div className="top-3 right-3 z-[100] fixed rounded-xl">
-        <div className="flex items-center gap-1">
-          {renderUserContent()}
-          {/* <Button
-            variant="text"
-            size="icon"
-            onClick={handleThemeChange}
-            aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}
-            title={`Current: ${currentTheme}. Click to switch theme`}
-            className="rounded-full w-8 h-8"
-          >
-            {getThemeIcon(currentTheme)}
-          </Button> */}
-        </div>
+        <div className="flex items-center gap-1">{renderUserContent()}</div>
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </>
   );
 };
+
+export default Header;

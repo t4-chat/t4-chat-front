@@ -15,17 +15,11 @@ import {
 import { cn } from "@/lib/utils";
 import { Key } from "lucide-react";
 
-interface IProviderOption {
-  id: string;
-  name: string;
-}
-
 export interface ModelSelectOption {
   value: string;
   label: string;
   iconPath?: string;
   hasApiKey?: boolean;
-  provider?: IProviderOption;
 }
 
 interface IModelSelectProps {

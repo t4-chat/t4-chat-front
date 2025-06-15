@@ -16,7 +16,7 @@ interface DropdownMenuProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export const DropdownMenu: FC<DropdownMenuProps> = ({
+const DropdownMenu: FC<DropdownMenuProps> = ({
   trigger,
   items,
   position = "right",
@@ -150,3 +150,5 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     </div>
   );
 };
+
+export default DropdownMenu;

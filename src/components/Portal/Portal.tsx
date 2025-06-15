@@ -6,10 +6,7 @@ interface PortalProps {
   containerId?: string;
 }
 
-export const Portal = ({
-  children,
-  containerId = "portal-root",
-}: PortalProps) => {
+const Portal = ({ children, containerId = "portal-root" }: PortalProps) => {
   const [container, setContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -41,3 +38,5 @@ export const Portal = ({
 
   return createPortal(children, container);
 };
+
+export default Portal;
