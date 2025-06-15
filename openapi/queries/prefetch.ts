@@ -59,6 +59,24 @@ export const prefetchUseChatsServiceGetApiChatsByChatIdMessages = (
     }),
     queryFn: () => ChatsService.getApiChatsByChatIdMessages({ chatId }),
   });
+export const prefetchUseChatsServiceGetApiChatsSharedBySharedConversationId = (
+  queryClient: QueryClient,
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn({
+        sharedConversationId,
+      }),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }),
+  });
 export const prefetchUseUsersServiceGetApiUsersCurrent = (
   queryClient: QueryClient,
 ) =>

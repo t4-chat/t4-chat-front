@@ -96,6 +96,31 @@ export const useChatsServiceGetApiChatsByChatIdMessagesSuspense = <
       ChatsService.getApiChatsByChatIdMessages({ chatId }) as TData,
     ...options,
   });
+export const useChatsServiceGetApiChatsSharedBySharedConversationIdSuspense = <
+  TData = Common.ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useSuspenseQuery<TData, TError>({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn(
+        { sharedConversationId },
+        queryKey,
+      ),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }) as TData,
+    ...options,
+  });
 export const useUsersServiceGetApiUsersCurrentSuspense = <
   TData = Common.UsersServiceGetApiUsersCurrentDefaultResponse,
   TError = unknown,

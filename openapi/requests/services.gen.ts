@@ -22,6 +22,12 @@ import type {
   PatchApiChatsByChatIdPinResponse,
   PatchApiChatsByChatIdMessagesByMessageIdSelectData,
   PatchApiChatsByChatIdMessagesByMessageIdSelectResponse,
+  PostApiChatsByChatIdShareData,
+  PostApiChatsByChatIdShareResponse,
+  GetApiChatsSharedBySharedConversationIdData,
+  GetApiChatsSharedBySharedConversationIdResponse,
+  DeleteApiChatsShareData,
+  DeleteApiChatsShareResponse,
   PostApiAuthGoogleData,
   PostApiAuthGoogleResponse,
   GetApiUsersCurrentResponse,
@@ -275,6 +281,71 @@ export class ChatsService {
         chat_id: data.chatId,
         message_id: data.messageId,
       },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Share Chat
+   * @param data The data for the request.
+   * @param data.chatId
+   * @returns ShareChatResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiChatsByChatIdShare(
+    data: PostApiChatsByChatIdShareData,
+  ): CancelablePromise<PostApiChatsByChatIdShareResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/chats/{chat_id}/share",
+      path: {
+        chat_id: data.chatId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Shared Chat
+   * @param data The data for the request.
+   * @param data.sharedConversationId
+   * @returns ChatResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiChatsSharedBySharedConversationId(
+    data: GetApiChatsSharedBySharedConversationIdData,
+  ): CancelablePromise<GetApiChatsSharedBySharedConversationIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/chats/shared/{shared_conversation_id}",
+      path: {
+        shared_conversation_id: data.sharedConversationId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Unshare Chats
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiChatsShare(
+    data: DeleteApiChatsShareData,
+  ): CancelablePromise<DeleteApiChatsShareResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/chats/share",
+      body: data.requestBody,
+      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },

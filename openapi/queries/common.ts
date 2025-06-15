@@ -87,6 +87,27 @@ export const UseChatsServiceGetApiChatsByChatIdMessagesKeyFn = (
   useChatsServiceGetApiChatsByChatIdMessagesKey,
   ...(queryKey ?? [{ chatId }]),
 ];
+export type ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse =
+  Awaited<
+    ReturnType<typeof ChatsService.getApiChatsSharedBySharedConversationId>
+  >;
+export type ChatsServiceGetApiChatsSharedBySharedConversationIdQueryResult<
+  TData = ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useChatsServiceGetApiChatsSharedBySharedConversationIdKey =
+  "ChatsServiceGetApiChatsSharedBySharedConversationId";
+export const UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn = (
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useChatsServiceGetApiChatsSharedBySharedConversationIdKey,
+  ...(queryKey ?? [{ sharedConversationId }]),
+];
 export type UsersServiceGetApiUsersCurrentDefaultResponse = Awaited<
   ReturnType<typeof UsersService.getApiUsersCurrent>
 >;
@@ -299,6 +320,9 @@ export type ChatsServicePostApiChatsMutationResult = Awaited<
 export type ChatsServicePostApiChatsConversationMutationResult = Awaited<
   ReturnType<typeof ChatsService.postApiChatsConversation>
 >;
+export type ChatsServicePostApiChatsByChatIdShareMutationResult = Awaited<
+  ReturnType<typeof ChatsService.postApiChatsByChatIdShare>
+>;
 export type AuthenticationServicePostApiAuthGoogleMutationResult = Awaited<
   ReturnType<typeof AuthenticationService.postApiAuthGoogle>
 >;
@@ -346,6 +370,9 @@ export type ChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelectMutationRe
   >;
 export type ChatsServiceDeleteApiChatsMutationResult = Awaited<
   ReturnType<typeof ChatsService.deleteApiChats>
+>;
+export type ChatsServiceDeleteApiChatsShareMutationResult = Awaited<
+  ReturnType<typeof ChatsService.deleteApiChatsShare>
 >;
 export type AdminServiceDeleteApiAdminAiModelsByAiModelIdMutationResult =
   Awaited<ReturnType<typeof AdminService.deleteApiAdminAiModelsByAiModelId>>;

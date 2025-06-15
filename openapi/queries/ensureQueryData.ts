@@ -61,6 +61,25 @@ export const ensureUseChatsServiceGetApiChatsByChatIdMessagesData = (
     }),
     queryFn: () => ChatsService.getApiChatsByChatIdMessages({ chatId }),
   });
+export const ensureUseChatsServiceGetApiChatsSharedBySharedConversationIdData =
+  (
+    queryClient: QueryClient,
+    {
+      sharedConversationId,
+    }: {
+      sharedConversationId: string;
+    },
+  ) =>
+    queryClient.ensureQueryData({
+      queryKey:
+        Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn({
+          sharedConversationId,
+        }),
+      queryFn: () =>
+        ChatsService.getApiChatsSharedBySharedConversationId({
+          sharedConversationId,
+        }),
+    });
 export const ensureUseUsersServiceGetApiUsersCurrentData = (
   queryClient: QueryClient,
 ) =>

@@ -29,6 +29,7 @@ import type {
   HostApiKeyCreateSchema,
   HostApiKeyUpdateSchema,
   MultiModelCompletionRequestSchema,
+  UnshareChatsRequestSchema,
   UpdateChatTitleRequestSchema,
 } from "../requests/types.gen";
 import * as Common from "./common";
@@ -112,6 +113,31 @@ export const useChatsServiceGetApiChatsByChatIdMessages = <
     ),
     queryFn: () =>
       ChatsService.getApiChatsByChatIdMessages({ chatId }) as TData,
+    ...options,
+  });
+export const useChatsServiceGetApiChatsSharedBySharedConversationId = <
+  TData = Common.ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn(
+        { sharedConversationId },
+        queryKey,
+      ),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }) as TData,
     ...options,
   });
 export const useUsersServiceGetApiUsersCurrent = <
@@ -392,6 +418,37 @@ export const useChatsServicePostApiChatsConversation = <
     mutationFn: ({ requestBody }) =>
       ChatsService.postApiChatsConversation({
         requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useChatsServicePostApiChatsByChatIdShare = <
+  TData = Common.ChatsServicePostApiChatsByChatIdShareMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        chatId: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      chatId: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ chatId }) =>
+      ChatsService.postApiChatsByChatIdShare({
+        chatId,
       }) as unknown as Promise<TData>,
     ...options,
   });
@@ -874,6 +931,37 @@ export const useChatsServiceDeleteApiChats = <
   >({
     mutationFn: ({ requestBody }) =>
       ChatsService.deleteApiChats({ requestBody }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useChatsServiceDeleteApiChatsShare = <
+  TData = Common.ChatsServiceDeleteApiChatsShareMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: UnshareChatsRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: UnshareChatsRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      ChatsService.deleteApiChatsShare({
+        requestBody,
+      }) as unknown as Promise<TData>,
     ...options,
   });
 export const useAdminServiceDeleteApiAdminAiModelsByAiModelId = <

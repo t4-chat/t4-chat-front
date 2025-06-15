@@ -325,6 +325,17 @@ export const $ChatListItemResponseSchema = {
       title: "Pinned",
       description: "Whether the chat is pinned",
     },
+    shared_conversation: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/SharedConversationResponseSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
+      description: "The shared conversation",
+    },
   },
   type: "object",
   required: ["id", "title", "user_id", "created_at", "updated_at", "pinned"],
@@ -521,6 +532,17 @@ export const $ChatResponseSchema = {
       type: "boolean",
       title: "Pinned",
       description: "Whether the chat is pinned",
+    },
+    shared_conversation: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/SharedConversationResponseSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
+      description: "The shared conversation",
     },
     messages: {
       items: {
@@ -920,10 +942,51 @@ export const $MultiModelCompletionRequestSchema = {
       $ref: "#/components/schemas/ChatMessageRequestSchema",
       description: "The message of the chat",
     },
+    shared_conversation_id: {
+      anyOf: [
+        {
+          type: "string",
+          format: "uuid",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Shared Conversation Id",
+      description: "The id of the shared conversation",
+    },
   },
   type: "object",
   required: ["model_ids", "message"],
   title: "MultiModelCompletionRequestSchema",
+} as const;
+
+export const $ShareChatResponseSchema = {
+  properties: {
+    shared_conversation_id: {
+      type: "string",
+      format: "uuid",
+      title: "Shared Conversation Id",
+      description: "The id of the shared conversation",
+    },
+  },
+  type: "object",
+  required: ["shared_conversation_id"],
+  title: "ShareChatResponseSchema",
+} as const;
+
+export const $SharedConversationResponseSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The id of the shared conversation",
+    },
+  },
+  type: "object",
+  required: ["id"],
+  title: "SharedConversationResponseSchema",
 } as const;
 
 export const $TokenResponseSchema = {
@@ -1015,6 +1078,23 @@ export const $UnifiedAggregatedUsage = {
   type: "object",
   required: ["prompt_tokens", "completion_tokens", "total_tokens"],
   title: "UnifiedAggregatedUsage",
+} as const;
+
+export const $UnshareChatsRequestSchema = {
+  properties: {
+    shared_conversation_ids: {
+      items: {
+        type: "string",
+        format: "uuid",
+      },
+      type: "array",
+      title: "Shared Conversation Ids",
+      description: "The ids of the shared conversations to unshare",
+    },
+  },
+  type: "object",
+  required: ["shared_conversation_ids"],
+  title: "UnshareChatsRequestSchema",
 } as const;
 
 export const $UpdateChatTitleRequestSchema = {
