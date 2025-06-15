@@ -622,6 +622,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
         <div
           className="flex flex-1 items-center overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-ellipsis whitespace-nowrap"
           onDoubleClick={startEditing}
+          onClick={(e) => e.stopPropagation()}
         >
           {isEditing ? (
             <input
