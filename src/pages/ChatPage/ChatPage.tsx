@@ -26,6 +26,7 @@ import {
 } from "~/openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
 import { responseWasSelected } from "@/lib/utils";
+import { toast } from "sonner";
 
 const useInitialMessages = ({
   chatId,
@@ -430,6 +431,12 @@ const ChatPage = () => {
     ) => {
       if (!paneCount) return;
       switch (event.type) {
+        case "error":
+          toast.error(
+            event.error || "An unknown error occurred during streaming.",
+          );
+          setIsStreaming(false);
+          break;
         case "message_start":
           setIsStreaming(true);
           setMessages((prev) => {
@@ -454,9 +461,7 @@ const ChatPage = () => {
               },
             ];
           });
-
           break;
-
         case "message_content":
           if (event.message_id) {
             setMessages((prev) => {
@@ -489,24 +494,19 @@ const ChatPage = () => {
           if (chatId !== event.chat.id) {
             navigate(`/chat/${event.chat.id}?${searchParams.toString()}`);
           }
-
           break;
-
         default:
           break;
       }
     },
     onError: (err) => {
-      // TODO: add alert here to show error
-      // think about how to handle when one model returned error, but other models returned content
-      console.error("onStreamError", err);
+      toast.error(err instanceof Error ? err.message : String(err));
       setIsStreaming(false);
     },
     onDone: () => {
       if (abortStreamingRef.current) {
         abortStreamingRef.current = null;
       }
-      // TODO: make it smarter, fetch only when new chat was created
       queryClient.invalidateQueries({
         queryKey: UseChatsServiceGetApiChatsKeyFn(),
       });
@@ -516,7 +516,6 @@ const ChatPage = () => {
 
   const sendMessage = async (msg: string, files?: File[]) => {
     if (!msg.trim() && (!files || files.length === 0)) return;
-
     if (!isAuthenticated) {
       setPendingMessage(msg);
       setIsLoginModalOpen(true);
