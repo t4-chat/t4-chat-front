@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -36,6 +37,7 @@ import {
   useHostApiKeysServicePutApiHostApiKeysByKeyId,
   useHostApiKeysServiceDeleteApiHostApiKeysByKeyId,
   useAdminServiceGetApiAdminModelHosts,
+  useAiModelsServiceGetApiAiModels,
 } from "../../../openapi/queries/queries";
 import type {
   HostApiKeyCreateSchema,
@@ -82,6 +84,9 @@ const SettingsPage: FC = () => {
   // Fetch model hosts for the dropdown
   const { data: modelHosts = [], isLoading: modelHostsLoading } =
     useAdminServiceGetApiAdminModelHosts();
+
+  // Fetch model information
+  const { data: models = [] } = useAiModelsServiceGetApiAiModels();
 
   // Mutations
   const createApiKeyMutation = useHostApiKeysServicePostApiHostApiKeys({
@@ -156,38 +161,50 @@ const SettingsPage: FC = () => {
     );
   };
 
-  // Helper function to get status color and icon
+  // Helper function to get model name from ID
+  const getModelName = (modelId: string) => {
+    const model = models.find((m) => m.id === modelId);
+    return model?.name || modelId;
+  };
+
+  // Helper function to get status color, icon, and explanation
   const getUtilizationStatus = (percentage: number) => {
     if (percentage >= 90)
       return {
-        color: "text-red-400 dark:text-red-300",
-        bg: "bg-red-400 dark:bg-red-500",
-        bgLight: "bg-red-50 dark:bg-red-950/50",
-        icon: <AlertTriangle className="w-5 h-5" />,
+        border: "border-red-400 dark:border-red-500",
+        fill: "bg-red-400 dark:bg-red-500",
+        icon: (
+          <AlertTriangle className="w-4 h-4 text-red-400 dark:text-red-300" />
+        ),
         status: "Critical",
+        explanation: "Near or over token limit",
       };
     if (percentage >= 70)
       return {
-        color: "text-orange-400 dark:text-orange-300",
-        bg: "bg-orange-400 dark:bg-orange-500",
-        bgLight: "bg-orange-50 dark:bg-orange-950/50",
-        icon: <Zap className="w-5 h-5" />,
+        border: "border-orange-400 dark:border-orange-500",
+        fill: "bg-orange-400 dark:bg-orange-500",
+        icon: <Zap className="w-5 h-5 text-orange-400 dark:text-orange-300" />,
         status: "High",
+        explanation: "High usage, approaching limit",
       };
     if (percentage >= 40)
       return {
-        color: "text-blue-400 dark:text-blue-300",
-        bg: "bg-blue-400 dark:bg-blue-500",
-        bgLight: "bg-blue-50 dark:bg-blue-950/50",
-        icon: <BarChart3 className="w-5 h-5" />,
+        border: "border-blue-400 dark:border-blue-500",
+        fill: "bg-blue-400 dark:bg-blue-500",
+        icon: (
+          <BarChart3 className="w-5 h-5 text-blue-400 dark:text-blue-300" />
+        ),
         status: "Moderate",
+        explanation: "Moderate usage",
       };
     return {
-      color: "text-green-400 dark:text-green-300",
-      bg: "bg-green-400 dark:bg-green-500",
-      bgLight: "bg-green-50 dark:bg-green-950/50",
-      icon: <CheckCircle className="w-5 h-5" />,
+      border: "border-green-400 dark:border-green-500",
+      fill: "bg-green-400 dark:bg-green-500",
+      icon: (
+        <CheckCircle className="w-5 h-5 text-green-400 dark:text-green-300" />
+      ),
       status: "Healthy",
+      explanation: "Low usage",
     };
   };
 
@@ -423,72 +440,111 @@ const SettingsPage: FC = () => {
                     </div>
                   </div>
                 ) : utilization ? (
-                  <div className="gap-4 grid md:grid-cols-1 lg:grid-cols-2">
-                    {utilization.utilizations.map((util) => {
-                      const status = getUtilizationStatus(util.percentage);
-                      return (
-                        <div
-                          key={util.model_id}
-                          className="relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl"
-                        >
-                          <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                              <div className={`${status.color}`}>
-                                {status.icon}
-                              </div>
-                              <div>
-                                <h3 className="font-bold text-[var(--text-color)] text-lg">
-                                  {util.model_id}
-                                </h3>
-                                {/* <span
-                                  className={`text-xs font-medium px-2 py-1 rounded-full ${status.color} ${status.bgLight}`}
-                                >
-                                  {status.status}
-                                </span> */}
-                              </div>
+                  // Group utilization by provider
+                  (() => {
+                    // Map model_id to model and provider
+                    const modelMap = models.reduce(
+                      (acc, model) => {
+                        acc[model.id] = model;
+                        return acc;
+                      },
+                      {} as Record<string, (typeof models)[number]>,
+                    );
+                    // Group by provider name
+                    const grouped: Record<
+                      string,
+                      {
+                        providerName: string;
+                        providerSlug: string;
+                        utilizations: typeof utilization.utilizations;
+                      }
+                    > = {};
+                    for (const util of utilization.utilizations) {
+                      const model = modelMap[util.model_id];
+                      const providerName = model?.provider?.name || "Unknown";
+                      const providerSlug = model?.provider?.slug || "unknown";
+                      if (!grouped[providerName]) {
+                        grouped[providerName] = {
+                          providerName,
+                          providerSlug,
+                          utilizations: [],
+                        };
+                      }
+                      grouped[providerName].utilizations.push(util);
+                    }
+                    return (
+                      <div className="space-y-8">
+                        {Object.values(grouped).map((group) => (
+                          <div key={group.providerName}>
+                            <div className="flex items-center gap-2 mb-4">
+                              <img
+                                src={
+                                  providerIconPaths[
+                                    group.providerSlug as keyof typeof providerIconPaths
+                                  ] || providerIconPaths.default
+                                }
+                                alt={`${group.providerName} icon`}
+                                className="w-6 h-6 object-contain"
+                              />
+                              <span className="font-semibold text-[var(--text-color)] text-lg">
+                                {group.providerName}
+                              </span>
                             </div>
-                            <div className="text-right">
-                              <div
-                                className={`text-2xl font-bold ${status.color}`}
-                              >
-                                {util.percentage}%
-                              </div>
+                            <div className="gap-4 grid md:grid-cols-1 lg:grid-cols-2">
+                              {group.utilizations.map((util) => {
+                                const modelName = getModelName(util.model_id);
+                                const modelIcon = getHostIcon(modelName);
+                                return (
+                                  <div
+                                    key={util.model_id}
+                                    className="relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl"
+                                  >
+                                    <div className="flex justify-between items-start mb-4">
+                                      <div className="flex items-center gap-3">
+                                        <span className="flex justify-center items-center w-5 h-5">
+                                          {modelIcon}
+                                        </span>
+                                        <span className="font-bold text-[var(--text-color)] text-lg">
+                                          {modelName}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-[var(--text-secondary-color)]">
+                                          Tokens used
+                                        </span>
+                                        <span className="font-medium text-[var(--text-color)]">
+                                          {util.total_tokens.toLocaleString()} /{" "}
+                                          {util.max_tokens.toLocaleString()}
+                                        </span>
+                                      </div>
+                                      <div className="relative">
+                                        <div className="bg-[var(--border-color)] rounded-full h-2 overflow-hidden">
+                                          <div
+                                            className={`relative rounded-full h-2 overflow-hidden transition-all duration-1000 ease-out ${getUtilizationStatus(util.percentage).fill}`}
+                                            style={{
+                                              width: `${Math.min(util.percentage * 100, 100)}%`,
+                                            }}
+                                          >
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className="flex justify-between text-[var(--text-secondary-color)] text-xs">
+                                        <span>0%</span>
+                                        <span>100%</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </div>
-
-                          <div className="space-y-3">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-[var(--text-secondary-color)]">
-                                Tokens used
-                              </span>
-                              <span className="font-medium text-[var(--text-color)]">
-                                {util.total_tokens.toLocaleString()} /{" "}
-                                {util.max_tokens.toLocaleString()}
-                              </span>
-                            </div>
-
-                            <div className="relative">
-                              <div className="bg-[var(--border-color)] rounded-full h-2 overflow-hidden">
-                                <div
-                                  className={`${status.bg} rounded-full h-2 transition-all duration-1000 ease-out relative overflow-hidden`}
-                                  style={{
-                                    width: `${Math.min(util.percentage, 100)}%`,
-                                  }}
-                                >
-                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex justify-between text-[var(--text-secondary-color)] text-xs">
-                              <span>0%</span>
-                              <span>100%</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        ))}
+                      </div>
+                    );
+                  })()
                 ) : (
                   <div className="flex flex-col justify-center items-center py-12 text-center">
                     <div className="flex justify-center items-center bg-[var(--component-bg-color)] mb-4 rounded-full w-16 h-16">
