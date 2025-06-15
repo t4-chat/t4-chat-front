@@ -1,43 +1,42 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
-import { useTheme, type ThemeType } from "@/context/ThemeContext";
-import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
-import { Shield, Settings, Moon, Sun } from "lucide-react";
-import { LoginModal } from "@/components/LoginModal/LoginModal";
-import { Button } from "@/components/ui/button";
+import UserIcon from "@/assets/icons/user.svg?react";
 import {
   DropdownMenu,
   type DropdownMenuItem,
 } from "@/components/DropdownMenu/DropdownMenu";
+import { LoginModal } from "@/components/LoginModal/LoginModal";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { useMinimumLoading } from "@/hooks/useMinimumLoading";
+import { Settings } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const { isAuthenticated, user, logout, isLoading, isAdmin } = useAuth();
-  const { currentTheme, setTheme } = useTheme();
+  // const { currentTheme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
 
-  const handleThemeChange = () => {
-    const nextTheme: ThemeType = currentTheme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-  };
+  // const handleThemeChange = () => {
+  //   const nextTheme: ThemeType = currentTheme === "light" ? "dark" : "light";
+  //   setTheme(nextTheme);
+  // };
 
-  // Get the appropriate icon for the current theme
-  const getThemeIcon = (theme: ThemeType) => {
-    switch (theme) {
-      case "light":
-        return <Moon size={16} />; // Show moon icon to switch to dark
-      case "dark":
-        return <Sun size={16} />; // Show sun icon to switch to light
-      default:
-        return <Settings size={16} />;
-    }
-  };
+  // // Get the appropriate icon for the current theme
+  // const getThemeIcon = (theme: ThemeType) => {
+  //   switch (theme) {
+  //     case "light":
+  //       return <Moon size={16} />; // Show moon icon to switch to dark
+  //     case "dark":
+  //       return <Sun size={16} />; // Show sun icon to switch to light
+  //     default:
+  //       return <Settings size={16} />;
+  //   }
+  // };
 
   const userName = user ? `${user.first_name} ${user.last_name}` : "";
   const hasProfileImage =
@@ -108,7 +107,7 @@ export const Header = () => {
       <div className="top-3 right-3 z-[100] fixed rounded-xl">
         <div className="flex items-center gap-1">
           {renderUserContent()}
-          <Button
+          {/* <Button
             variant="text"
             size="icon"
             onClick={handleThemeChange}
@@ -117,7 +116,7 @@ export const Header = () => {
             className="rounded-full w-8 h-8"
           >
             {getThemeIcon(currentTheme)}
-          </Button>
+          </Button> */}
         </div>
       </div>
 

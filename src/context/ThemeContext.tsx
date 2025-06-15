@@ -20,7 +20,7 @@ export const ThemeProvider: FC<{
     const saved = localStorage.getItem("theme");
     return saved && availableThemes.includes(saved as ThemeType)
       ? (saved as ThemeType)
-      : "light";
+      : "dark";
   });
 
   useEffect(() => {
