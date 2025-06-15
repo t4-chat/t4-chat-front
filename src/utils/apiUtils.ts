@@ -36,13 +36,20 @@ export interface MessageContentStopEvent {
   message: { id: string; model_id: string; model_name: string };
 }
 
+export interface ErrorStreamEvent {
+  type: "error";
+  error: string;
+  code?: number;
+}
+
 export type StreamEvent =
   | MessageStartEvent
   | MessageContentEvent
   | MessageContentStopEvent
   | ChatMetadataEvent
   | MessageStopEvent
-  | DoneEvent;
+  | DoneEvent
+  | ErrorStreamEvent;
 
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;
