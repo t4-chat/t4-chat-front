@@ -543,7 +543,8 @@ const ChatPage = () => {
     }
   };
 
-  useHotkey("Escape", handleEscape);
+  // Only register the high-priority escape handler when there's actually a preview open
+  useHotkey("Escape", handleEscape, previewPaneIndex !== undefined ? 10 : -1);
 
   usePendingMessageHandler({
     isAuthenticated,
@@ -798,71 +799,70 @@ const ChatPage = () => {
               })}
             </div>
           </motion.div>
-        </LayoutGroup>
 
-        <motion.div
-          className="flex justify-center mt-4"
-          layoutId="chat-input"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.15, delay: 0.1 }}
-        >
-          <ChatInput
-            onPaneCountChange={(count) => {
-              const newSearchParams = new URLSearchParams(searchParams);
-              newSearchParams.set("panes", count.toString());
-              setSearchParams(newSearchParams);
-            }}
-            onModelChange={(modelId) => {
-              updateSelectedModels(modelId, 0);
-            }}
-            onSplitToggle={(value) => {
-              const newSearchParams = new URLSearchParams(searchParams);
-              if (value) {
-                newSearchParams.set("panes", "2");
-              } else {
-                newSearchParams.set("panes", "1");
-              }
-              setSearchParams(newSearchParams);
-            }}
-            responseWasSelected={responseWasSelected(messages || [])}
-            onSend={(msg, files) => {
-              if (!responseWasSelected(messages || [])) {
-                setMessages((prev) => {
-                  const newMessages = [...(prev || [])];
-                  const lastUserMessage = newMessages.findLast(
-                    (m) => m.role === "user",
-                  );
-                  if (lastUserMessage) {
-                    const assistantMessage = newMessages.find(
-                      (v) => v.previous_message_id === lastUserMessage.id,
+          <motion.div
+            className="flex justify-center mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.15, delay: 0.1 }}
+          >
+            <ChatInput
+              onPaneCountChange={(count) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.set("panes", count.toString());
+                setSearchParams(newSearchParams);
+              }}
+              onModelChange={(modelId) => {
+                updateSelectedModels(modelId, 0);
+              }}
+              onSplitToggle={(value) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                if (value) {
+                  newSearchParams.set("panes", "2");
+                } else {
+                  newSearchParams.set("panes", "1");
+                }
+                setSearchParams(newSearchParams);
+              }}
+              responseWasSelected={responseWasSelected(messages || [])}
+              onSend={(msg, files) => {
+                if (!responseWasSelected(messages || [])) {
+                  setMessages((prev) => {
+                    const newMessages = [...(prev || [])];
+                    const lastUserMessage = newMessages.findLast(
+                      (m) => m.role === "user",
                     );
-                    if (assistantMessage) {
-                      assistantMessage.selected = true;
+                    if (lastUserMessage) {
+                      const assistantMessage = newMessages.find(
+                        (v) => v.previous_message_id === lastUserMessage.id,
+                      );
+                      if (assistantMessage) {
+                        assistantMessage.selected = true;
+                      }
                     }
-                  }
-                  return newMessages;
-                });
-                // setIsSelectModalOpen(true);
-              }
-              sendMessage(msg, files);
-            }}
-            isLoading={isStreaming}
-            modelOptions={availableModels?.map((m) => ({
-              value: m.id.toString(),
-              label: m.name,
-              iconPath:
-                providerIconPaths[
-                  m.provider?.slug as keyof typeof providerIconPaths
-                ],
-              hasApiKey: m.has_api_key,
-            }))}
-            selectedModel={isSplitMode ? undefined : modelIds[0]}
-            isSplitMode={isSplitMode}
-            paneCount={paneCount}
-          />
-        </motion.div>
+                    return newMessages;
+                  });
+                  // setIsSelectModalOpen(true);
+                }
+                sendMessage(msg, files);
+              }}
+              isLoading={isStreaming}
+              modelOptions={availableModels?.map((m) => ({
+                value: m.id.toString(),
+                label: m.name,
+                iconPath:
+                  providerIconPaths[
+                    m.provider?.slug as keyof typeof providerIconPaths
+                  ],
+                hasApiKey: m.has_api_key,
+              }))}
+              selectedModel={isSplitMode ? undefined : modelIds[0]}
+              isSplitMode={isSplitMode}
+              paneCount={paneCount}
+            />
+          </motion.div>
+        </LayoutGroup>
       </motion.div>
 
       <LoginModal

@@ -154,11 +154,10 @@ const ChatInput: FC<IChatInputProps> = ({
           <AnimatePresence mode="wait">
             {modelOptions && selectedModel && onModelChange && (
               <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                animate={{ opacity: 1, scaleX: 1 }}
-                exit={{ opacity: 0, scaleX: 0 }}
+                initial={{ opacity: 0, translateY: 10 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                exit={{ opacity: 0, translateY: 10 }}
                 transition={{ duration: 0.1, ease: "easeInOut" }}
-                style={{ transformOrigin: "left center" }}
                 className="min-w-40"
               >
                 <ModelSelect
@@ -177,11 +176,10 @@ const ChatInput: FC<IChatInputProps> = ({
           <AnimatePresence>
             {isSplitMode && onPaneCountChange && (
               <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                animate={{ opacity: 1, scaleX: 1 }}
-                exit={{ opacity: 0, scaleX: 0 }}
+                initial={{ opacity: 0, translateY: 10 }}
+                animate={{ opacity: 1, translateY: 0 }}
+                exit={{ opacity: 0, translateY: 10 }}
                 transition={{ duration: 0.1, ease: "easeInOut" }}
-                style={{ transformOrigin: "left center" }}
               >
                 <ModelSelect
                   options={[
