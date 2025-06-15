@@ -709,6 +709,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
       await finishEditing();
     } else if (e.key === "Escape") {
       e.preventDefault();
+      e.stopPropagation();
       setIsEditing(false);
       setTitleInput(chat.title);
     }

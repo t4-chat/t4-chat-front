@@ -26,7 +26,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const toggleMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -80,7 +80,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, onOpenChange]);
 
   // Close menu when pressing Escape
   useEffect(() => {
@@ -88,6 +88,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
       if (event.key === "Escape") {
         setIsOpen(false);
         onOpenChange?.(false);
+        event.stopPropagation();
       }
     };
 
@@ -98,21 +99,20 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
     return () => {
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen]);
+  }, [isOpen, onOpenChange]);
 
   return (
     <div className={cn("relative inline-block", className)}>
-      <div
-        className="flex justify-center items-center cursor-pointer"
+      <button
+        type="button"
+        className="flex justify-center items-center bg-transparent p-0 border-none cursor-pointer"
         onClick={toggleMenu}
         onKeyDown={handleKeyDown}
         ref={triggerRef}
-        tabIndex={0}
-        role="button"
         aria-expanded={isOpen}
       >
         {trigger}
-      </div>
+      </button>
 
       {isOpen && (
         <div

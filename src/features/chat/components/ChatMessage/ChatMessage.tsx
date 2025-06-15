@@ -12,6 +12,7 @@ interface ChatMessageProps extends Omit<ChatMessageType, "id"> {
   disableMarkdown?: boolean;
   modelName?: string;
   modelIconPath?: string;
+  created_at?: Date;
 }
 
 interface AttachmentInfo {
@@ -29,6 +30,7 @@ const ChatMessage = ({
   disableMarkdown = false,
   modelName,
   modelIconPath,
+  created_at,
 }: ChatMessageProps) => {
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
@@ -206,6 +208,46 @@ const ChatMessage = ({
     } catch (error) {
       // Silent error handling
     }
+  };
+
+  const formatTimestamp = (date?: Date) => {
+    if (!date) return "";
+
+    const now = new Date();
+    const diffInMilliseconds = now.getTime() - date.getTime();
+    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    // If it's today, show time
+    if (diffInDays === 0) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    // If it's yesterday
+    if (diffInDays === 1) {
+      return `Yesterday ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    }
+
+    // If it's within a week, show day and time
+    if (diffInDays < 7) {
+      return date.toLocaleDateString([], {
+        weekday: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    // Otherwise show full date and time
+    return date.toLocaleDateString([], {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -467,18 +509,28 @@ const ChatMessage = ({
           </div>
         )}
 
-        {role === "assistant" && (modelName || modelIconPath) && (
-          <div className="flex items-center gap-1 opacity-70 mt-4 pt-3 border-[var(--border-color)] border-t">
-            {modelIconPath && (
-              <img
-                src={modelIconPath}
-                alt={modelName || "AI Model"}
-                className="rounded-sm w-4 h-4 object-contain"
-              />
+        {((role === "assistant" && (modelName || modelIconPath)) ||
+          created_at) && (
+          <div className="flex justify-between items-center gap-2 opacity-70 mt-4 pt-3 border-[var(--border-color)] border-t">
+            {role === "assistant" && (modelName || modelIconPath) && (
+              <div className="flex items-center gap-1">
+                {modelIconPath && (
+                  <img
+                    src={modelIconPath}
+                    alt={modelName || "AI Model"}
+                    className="rounded-sm w-4 h-4 object-contain"
+                  />
+                )}
+                {modelName && (
+                  <span className="font-medium text-[var(--text-secondary-color)] text-xs">
+                    {modelName}
+                  </span>
+                )}
+              </div>
             )}
-            {modelName && (
+            {created_at && (
               <span className="font-medium text-[var(--text-secondary-color)] text-xs">
-                {modelName}
+                {formatTimestamp(created_at)}
               </span>
             )}
           </div>
