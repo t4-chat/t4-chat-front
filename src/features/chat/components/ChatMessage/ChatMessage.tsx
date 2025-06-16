@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -14,6 +14,7 @@ interface ChatMessageProps extends Omit<ChatMessageType, "id"> {
   modelIconPath?: string;
   created_at?: Date;
   scrollContainer?: HTMLElement | null;
+  reasoning?: string;
 }
 
 interface AttachmentInfo {
@@ -33,6 +34,7 @@ const ChatMessage = ({
   modelIconPath,
   created_at,
   scrollContainer,
+  reasoning,
 }: ChatMessageProps) => {
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
@@ -47,6 +49,7 @@ const ChatMessage = ({
   );
   const [sideOffset, setSideOffset] = useState(8);
   const [copied, setCopied] = useState(false);
+  const [showReasoning, setShowReasoning] = useState(true);
 
   // Reset on unmount
   useEffect(() => {
@@ -301,6 +304,27 @@ const ChatMessage = ({
         )}
       </button>
       <div className="text-[var(--text-primary-color)] text-base break-words leading-6 whitespace-pre-wrap">
+        {reasoning && (
+          <div className="mb-2">
+            <button
+              type="button"
+              onClick={() => setShowReasoning(!showReasoning)}
+              className="flex items-center gap-2 mb-1 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] text-sm transition-colors duration-150"
+            >
+              {showReasoning ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+              <span className="font-medium">Reasoning</span>
+            </button>
+            {showReasoning && (
+              <div className="bg-black/5 p-2 rounded-md text-[var(--text-secondary-color)] text-sm italic animate-[fadeIn_0.2s_ease-in-out]">
+                {reasoning}
+              </div>
+            )}
+          </div>
+        )}
         {disableMarkdown ? (
           <div>{content}</div>
         ) : (

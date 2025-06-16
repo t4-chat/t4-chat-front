@@ -1,5 +1,5 @@
 import ModelSelect, {
-  type ModelSelectOption,
+  type SearchableSelectOption,
 } from "@/components/ModelSelect/ModelSelect";
 
 // import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
@@ -28,13 +28,14 @@ export type ChatMessageWithDate = Omit<
 > & {
   created_at: Date;
   done?: boolean;
+  reasoning?: string;
 };
 
 type PaneProps = {
   messages: ChatMessageWithDate[];
   showModelSelectorTop: boolean;
   modelId: string;
-  modelOptions: ModelSelectOption[];
+  modelOptions: SearchableSelectOption[];
 } & (
   | {
       showModelSelectorTop: false;
@@ -131,7 +132,7 @@ const Pane: FC<PaneProps> = ({
       {showModelSelectorTop && modelOptions && modelId && (
         <div className="top-3 left-3 z-10 absolute flex items-center bg-transparent backdrop-blur-[10px] border-[var(--border-color)] border-b border-none rounded-md">
           <ModelSelect
-            options={modelOptions as ModelSelectOption[]}
+            options={modelOptions}
             value={modelId}
             onChange={(modelId) => {
               if ("onModelChange" in props) {
@@ -179,6 +180,7 @@ const Pane: FC<PaneProps> = ({
                     modelName={modelInfo.name}
                     modelIconPath={modelInfo.iconPath}
                     scrollContainer={messagesContainerRef.current}
+                    reasoning={message.reasoning}
                   />
                   {/* TODO: add loading indicator 
                    {isLoading &&

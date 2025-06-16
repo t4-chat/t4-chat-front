@@ -95,6 +95,7 @@ const useInitialMessages = ({
           ...m,
           created_at: new Date(m.created_at),
           done: true,
+          reasoning: "",
         })),
       );
     }
@@ -469,6 +470,7 @@ const ChatPage = () => {
                 selected: paneCount > 1 ? false : null,
                 done: false,
                 previous_message_id: event.message.reply_to,
+                reasoning: "",
               },
             ];
           });
@@ -487,6 +489,30 @@ const ChatPage = () => {
             });
           }
           break;
+        case "reasoning_content":
+          if (event.message_id) {
+            setMessages((prev) => {
+              const newMessages = [...(prev || [])];
+              const assistantMessage = newMessages.find(
+                (msg) => msg.id === event.message_id,
+              );
+              if (assistantMessage) {
+                assistantMessage.reasoning =
+                  (assistantMessage.reasoning || "") + event.content?.text;
+              } else {
+                newMessages.push({
+                  id: event.message_id,
+                  content: "",
+                  role: "assistant",
+                  model_id: event.model_id,
+                  created_at: new Date(),
+                  reasoning: event.content.text,
+                });
+              }
+              return newMessages;
+            });
+          }
+          break;
         case "message_content_stop":
           if (event.message_id) {
             setMessages((prev) => {
@@ -496,6 +522,7 @@ const ChatPage = () => {
               );
               if (assistantMessage) {
                 assistantMessage.done = true;
+                assistantMessage.reasoning = "";
               }
               return newMessages;
             });

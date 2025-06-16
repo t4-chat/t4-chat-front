@@ -1,7 +1,7 @@
 import SendIcon from "@/assets/icons/send.svg?react";
 import FilePreview from "@/components/FilePreview/FilePreview";
 import FileUpload from "@/components/FileUpload/FileUpload";
-import type { ModelSelectOption } from "@/components/ModelSelect/ModelSelect";
+import type { SearchableSelectOption } from "@/components/ModelSelect/ModelSelect";
 import ModelSelect from "@/components/ModelSelect/ModelSelect";
 import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ interface IChatInputProps {
   onSend: (message: string, files?: File[]) => void;
   isLoading?: boolean;
   placeholder?: string;
-  modelOptions?: ModelSelectOption[];
+  modelOptions?: SearchableSelectOption[];
   selectedModel?: string;
   onModelChange?: (value: string) => void;
   isSplitMode?: boolean;
