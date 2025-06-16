@@ -6,7 +6,6 @@ import DropdownMenu, {
 import LoginModal from "@/components/LoginModal/LoginModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -39,54 +38,46 @@ const Header = () => {
     },
   ];
 
-  const userTrigger = (
-    <Button
-      variant="text"
-      size="icon"
-      title={userName}
-      className="rounded-full"
-    >
-      {hasProfileImage ? (
-        <img
-          src={user.profile_image_url || undefined}
-          alt={userName}
-          className="border border-[var(--border-color)] rounded-full w-6 h-6 object-cover"
-        />
-      ) : (
-        <UserIcon className="w-5 h-5" />
-      )}
-    </Button>
-  );
-  const { isMinimumLoading } = useMinimumLoading({
-    initialLoading: isLoading,
-  });
-
-  const renderUserContent = () => {
-    if (isMinimumLoading) {
-      return null;
-    }
-    if (isAuthenticated) {
-      return (
-        <DropdownMenu
-          trigger={userTrigger}
-          items={userMenuItems}
-          position="left"
-          className="[&_.dropdown-menu]:mt-2 [&_.dropdown-menu-icon_svg]:w-4 [&_.dropdown-menu]:min-w-[120px] [&_.dropdown-menu-icon_svg]:h-4"
-        />
-      );
-    }
-    return (
-      <Button onClick={openLoginModal} size="sm" className="text-xs">
-        Login
-      </Button>
-    );
-  };
-
   return (
     <>
       {/* Top Right Section - Controls */}
       <div className="top-3 right-3 z-10 fixed rounded-xl">
-        <div className="flex items-center gap-1">{renderUserContent()}</div>
+        <div className="flex items-center gap-1">
+          {isLoading ? null : isAuthenticated ? (
+            <DropdownMenu
+              trigger={
+                <Button
+                  variant="text"
+                  size="icon"
+                  title={userName}
+                  className="rounded-full"
+                >
+                  {hasProfileImage ? (
+                    <img
+                      src={user.profile_image_url || undefined}
+                      alt={userName}
+                      className="border border-[var(--border-color)] rounded-full w-6 h-6 object-cover"
+                    />
+                  ) : (
+                    <UserIcon className="w-5 h-5" />
+                  )}
+                </Button>
+              }
+              items={userMenuItems}
+              position="left"
+              className="[&_.dropdown-menu]:mt-2 [&_.dropdown-menu-icon_svg]:w-4 [&_.dropdown-menu]:min-w-[120px] [&_.dropdown-menu-icon_svg]:h-4"
+            />
+          ) : (
+            <Button
+              onClick={openLoginModal}
+              size="sm"
+              className="text-xs"
+              variant="secondary"
+            >
+              Login
+            </Button>
+          )}
+        </div>
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />

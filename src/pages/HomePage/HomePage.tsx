@@ -151,7 +151,7 @@ const HomePage: FC = () => {
     <TooltipProvider>
       <div
         className={cn(
-          "flex flex-col items-center w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-75",
+          "flex flex-col w-full px-6 py-8 bg-[var(--background-color)] transition-all duration-75 grow items-center justify-center",
           { "md:pl-64": isSidebarOpen },
         )}
       >

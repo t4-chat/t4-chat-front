@@ -15,15 +15,15 @@ import {
 import { cn } from "@/lib/utils";
 import { Key } from "lucide-react";
 
-export interface ModelSelectOption {
+export interface SearchableSelectOption {
   value: string;
   label: string;
   iconPath?: string;
   hasApiKey?: boolean;
 }
 
-interface IModelSelectProps {
-  options: ModelSelectOption[];
+interface ISearchableSelectProps {
+  options: SearchableSelectOption[];
   value: string;
   onChange: (value: string) => void;
   className?: string;
@@ -33,7 +33,7 @@ interface IModelSelectProps {
   variant?: "default" | "input";
 }
 
-const ModelSelect: FC<IModelSelectProps> = ({
+const SearchableSelect: FC<ISearchableSelectProps> = ({
   options,
   placeholder = "Search models...",
   value,
@@ -207,4 +207,4 @@ const ModelSelect: FC<IModelSelectProps> = ({
   );
 };
 
-export default ModelSelect;
+export default SearchableSelect;
