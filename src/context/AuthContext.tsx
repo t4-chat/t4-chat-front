@@ -14,7 +14,11 @@ import {
 } from "~/openapi/queries/queries";
 import type { UserResponseSchema } from "~/openapi/requests/types.gen";
 import { useQueryClient } from "@tanstack/react-query";
-import { UseUsersServiceGetApiUsersCurrentKeyFn } from "~/openapi/queries/common";
+import {
+  UseUsersServiceGetApiUsersCurrentKeyFn,
+  UseAiModelsServiceGetApiAiModelsKeyFn,
+  UseChatsServiceGetApiChatsKeyFn,
+} from "~/openapi/queries/common";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
 import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 
@@ -71,6 +75,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         tokenService.setToken(data.access_token);
         setIsAdmin(getIsAdminFromToken());
         refetchUser();
+        queryClient.invalidateQueries({
+          queryKey: UseAiModelsServiceGetApiAiModelsKeyFn(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsKeyFn(),
+        });
         handleSuccess("Signed in successfully");
       },
       // onError: (error) => handleError(error, "Authentication failed"),
@@ -87,6 +97,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setIsAdmin(false);
     queryClient.clear();
     queryClient.setQueryData(UseUsersServiceGetApiUsersCurrentKeyFn(), null);
+    queryClient.invalidateQueries({
+      queryKey: UseAiModelsServiceGetApiAiModelsKeyFn(),
+    });
+    queryClient.invalidateQueries({
+      queryKey: UseChatsServiceGetApiChatsKeyFn(),
+    });
     navigate("/");
   };
 

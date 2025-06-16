@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
 
@@ -56,8 +57,9 @@ export type ErrorCallback = (error: Error) => void;
 export type DoneCallback = () => void;
 
 export const useChats = () => {
+  const { isAuthenticated } = useAuth();
   const { data: chats, ...other } = useChatsServiceGetApiChats(undefined, {
-    enabled: !!tokenService.getToken(),
+    enabled: isAuthenticated,
   });
 
   if (!chats) {
