@@ -80,7 +80,6 @@ const SettingsPage: FC = () => {
     isLoading: apiKeysLoading,
     refetch: refetchApiKeys,
   } = useHostApiKeysServiceGetApiHostApiKeys();
-
   // Fetch model hosts for the dropdown
   const { data: modelHosts = [], isLoading: modelHostsLoading } =
     useAdminServiceGetApiAdminModelHosts();
@@ -150,6 +149,10 @@ const SettingsPage: FC = () => {
       iconPath = providerIconPaths.awsnova;
     } else if (name.includes("ollama")) {
       iconPath = providerIconPaths.ollama;
+    } else if (name.includes("openrouter")) {
+      iconPath = providerIconPaths.openrouter;
+    } else if (name.includes("groq")) {
+      iconPath = providerIconPaths.groq;
     }
 
     return (
