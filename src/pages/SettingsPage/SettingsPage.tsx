@@ -39,7 +39,6 @@ import {
   useHostApiKeysServicePutApiHostApiKeysByKeyId,
   useHostApiKeysServiceDeleteApiHostApiKeysByKeyId,
   useAdminServiceGetApiAdminModelHosts,
-  useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChatsShared,
   useChatsServiceDeleteApiChatsShare,
 } from "../../../openapi/queries/queries";
@@ -48,6 +47,7 @@ import {
   UseChatsServiceGetApiChatsKeyFn,
   UseChatsServiceGetApiChatsSharedKeyFn,
 } from "~/openapi/queries/common";
+import { useFilteredAiModels } from "@/utils/apiUtils";
 
 const SettingsPage: FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -88,7 +88,7 @@ const SettingsPage: FC = () => {
     useAdminServiceGetApiAdminModelHosts();
 
   // Fetch model information
-  const { data: models = [] } = useAiModelsServiceGetApiAiModels();
+  const { data: models = [] } = useFilteredAiModels();
 
   // Mutations
   const createApiKeyMutation = useHostApiKeysServicePostApiHostApiKeys({

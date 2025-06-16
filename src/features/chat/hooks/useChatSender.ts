@@ -1,7 +1,7 @@
 import { useFilesServicePostApiFilesUpload } from "~/openapi/queries/queries";
 import { ChatService } from "@/services/chatService";
 import type { StreamEvent } from "@/utils/apiUtils";
-import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
+import { useMutationErrorHandler } from "@/hooks/general";
 
 interface UseChatSenderOptions {
   onEvent: (

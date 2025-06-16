@@ -114,6 +114,10 @@ export type AiModelResponseSchema = {
    */
   has_api_key?: boolean;
   /**
+   * Whether the model is only available with BYOK
+   */
+  only_with_byok?: boolean;
+  /**
    * The provider of the model
    */
   provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;

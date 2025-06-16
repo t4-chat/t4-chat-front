@@ -11,7 +11,7 @@ import Pane, {
 } from "@/features/chat/components/Pane/Pane";
 import useChatSender from "@/features/chat/hooks/useChatSender";
 import { useHotkey } from "@/hooks/general";
-import type { StreamEvent } from "@/utils/apiUtils";
+import { useFilteredAiModels, type StreamEvent } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Maximize2, XIcon } from "lucide-react";
@@ -19,15 +19,35 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
 import {
-  useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChatsByChatIdMessages,
   useChatsServiceGetApiChatsSharedBySharedConversationId,
   useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect,
 } from "~/openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
-import { responseWasSelected } from "@/lib/utils";
 import { toast } from "sonner";
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
+
+export const responseWasSelected = (
+  messages: Pick<
+    ChatMessageWithDate,
+    "id" | "role" | "previous_message_id" | "selected"
+  >[],
+) => {
+  if (!messages) return true;
+  const lastUserMessage = [...messages].findLast((m) => m.role === "user");
+
+  if (!lastUserMessage?.id) return true;
+
+  const responses = messages.filter(
+    (m) =>
+      m.previous_message_id === lastUserMessage.id && m.role === "assistant",
+  );
+  if (responses.length > 1) {
+    return responses.some((r) => r.selected === true);
+  }
+
+  return true;
+};
 
 const useInitialMessages = ({
   chatId,
@@ -360,7 +380,7 @@ const ChatPage = () => {
     };
   }, [chatId]);
 
-  const { data: availableModels } = useAiModelsServiceGetApiAiModels();
+  const { data: availableModels } = useFilteredAiModels();
   const { mutateAsync: selectMessage } =
     useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect();
 

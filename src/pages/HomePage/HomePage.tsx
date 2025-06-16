@@ -11,9 +11,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
-import { useMinimumLoading } from "@/hooks/useMinimumLoading";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -25,6 +23,8 @@ import {
 import { SidebarContext } from "@/components/Layout/Layout";
 import { Key, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMinimumLoading } from "@/hooks/general";
+import { useFilteredAiModels } from "@/utils/apiUtils";
 
 const HomePage: FC = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const HomePage: FC = () => {
     data: models = [],
     isLoading: isModelsLoading,
     error,
-  } = useAiModelsServiceGetApiAiModels();
+  } = useFilteredAiModels();
 
   const { isMinimumLoading } = useMinimumLoading({
     initialLoading: isModelsLoading,

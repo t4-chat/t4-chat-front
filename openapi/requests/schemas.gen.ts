@@ -215,6 +215,12 @@ export const $AiModelResponseSchema = {
       description: "Whether the model has an API key",
       default: false,
     },
+    only_with_byok: {
+      type: "boolean",
+      title: "Only With Byok",
+      description: "Whether the model is only available with BYOK",
+      default: false,
+    },
     provider: {
       anyOf: [
         {

@@ -1,6 +1,25 @@
 import { useAuth } from "@/context/AuthContext";
+import { useMemo } from "react";
 import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
-import { tokenService } from "~/openapi/requests/core/OpenAPI";
+import { useAiModelsServiceGetApiAiModels } from "../../openapi/queries/queries";
+import type { AiModelResponseSchema } from "../../openapi/requests/types.gen";
+
+export const useFilteredAiModels = () => {
+  const { data: models = [], ...modelsQuery } =
+    useAiModelsServiceGetApiAiModels();
+
+  const filteredModels = useMemo(() => {
+    return models.filter((model: AiModelResponseSchema) => {
+      // Show model if it doesn't require BYOK or if user has an API key for it
+      return !model.only_with_byok || model.has_api_key;
+    });
+  }, [models]);
+
+  return {
+    ...modelsQuery,
+    data: filteredModels,
+  };
+};
 
 export interface MessageStartEvent {
   type: "message_start";

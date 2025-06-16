@@ -20,7 +20,7 @@ import {
   UseChatsServiceGetApiChatsKeyFn,
 } from "~/openapi/queries/common";
 import { tokenService } from "~/openapi/requests/core/OpenAPI";
-import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
+import { useMutationErrorHandler } from "@/hooks/general";
 
 interface TokenPayload {
   admin?: boolean;

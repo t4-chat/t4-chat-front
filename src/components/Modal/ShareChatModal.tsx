@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, Trash2 } from "lucide-react";
-import { useMutationErrorHandler } from "@/hooks/useMutationErrorHandler";
 import {
   useChatsServicePostApiChatsByChatIdShare,
   useChatsServiceDeleteApiChatsShare,
@@ -12,6 +11,7 @@ import {
   UseChatsServiceGetApiChatsSharedKeyFn,
 } from "~/openapi/queries/common";
 import Modal from "./Modal";
+import { useMutationErrorHandler } from "@/hooks/general";
 
 interface ShareChatModalProps {
   isOpen: boolean;
