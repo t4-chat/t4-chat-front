@@ -7,6 +7,10 @@ export type AdminMessageRequestSchema = {
 export type AdminSendMessageRequestSchema = {
   model_id: string;
   message: AdminMessageRequestSchema;
+  /**
+   * The options for the completion
+   */
+  options?: CompletionOptionsRequestSchema | null;
 };
 
 export type AdminSendMessageResponseSchema = {
@@ -270,6 +274,13 @@ export type ChatResponseSchema = {
   messages: Array<ChatMessageResponseSchema>;
 };
 
+export type CompletionOptionsRequestSchema = {
+  /**
+   * The tools to use for the completion
+   */
+  tools?: Array<string>;
+};
+
 export type DeleteChatsRequestSchema = {
   /**
    * The ids of the chats to delete
@@ -479,6 +490,10 @@ export type MultiModelCompletionRequestSchema = {
    * The id of the shared conversation
    */
   shared_conversation_id?: string | null;
+  /**
+   * The options for the completion
+   */
+  options?: CompletionOptionsRequestSchema | null;
 };
 
 export type ShareChatResponseSchema = {

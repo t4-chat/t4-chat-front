@@ -22,6 +22,17 @@ export const $AdminSendMessageRequestSchema = {
     message: {
       $ref: "#/components/schemas/AdminMessageRequestSchema",
     },
+    options: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/CompletionOptionsRequestSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
+      description: "The options for the completion",
+    },
   },
   type: "object",
   required: ["model_id", "message"],
@@ -566,6 +577,22 @@ export const $ChatResponseSchema = {
   title: "ChatResponseSchema",
 } as const;
 
+export const $CompletionOptionsRequestSchema = {
+  properties: {
+    tools: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Tools",
+      description: "The tools to use for the completion",
+      default: [],
+    },
+  },
+  type: "object",
+  title: "CompletionOptionsRequestSchema",
+} as const;
+
 export const $DeleteChatsRequestSchema = {
   properties: {
     chat_ids: {
@@ -954,6 +981,17 @@ export const $MultiModelCompletionRequestSchema = {
       ],
       title: "Shared Conversation Id",
       description: "The id of the shared conversation",
+    },
+    options: {
+      anyOf: [
+        {
+          $ref: "#/components/schemas/CompletionOptionsRequestSchema",
+        },
+        {
+          type: "null",
+        },
+      ],
+      description: "The options for the completion",
     },
   },
   type: "object",

@@ -43,6 +43,13 @@ export interface ErrorStreamEvent {
   code?: number;
 }
 
+export interface ReasoningContentEvent {
+  type: "reasoning_content";
+  model_id: string;
+  message_id: string;
+  content: { text: string; type: string };
+}
+
 export type StreamEvent =
   | MessageStartEvent
   | MessageContentEvent
@@ -50,7 +57,8 @@ export type StreamEvent =
   | ChatMetadataEvent
   | MessageStopEvent
   | DoneEvent
-  | ErrorStreamEvent;
+  | ErrorStreamEvent
+  | ReasoningContentEvent;
 
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;
