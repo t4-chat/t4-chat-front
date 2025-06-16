@@ -117,7 +117,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({
       {isOpen && (
         <div
           className={cn(
-            "absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg min-w-40 overflow-hidden z-50",
+            "absolute top-full mt-1 bg-[var(--component-bg-color)] rounded-md shadow-lg min-w-40 overflow-hidden z-50 border border-[var(--border-color)]",
             {
               "right-0": position === "left",
               "left-0": position === "right",
