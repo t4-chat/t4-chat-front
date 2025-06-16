@@ -975,6 +975,49 @@ export const $ShareChatResponseSchema = {
   title: "ShareChatResponseSchema",
 } as const;
 
+export const $SharedConversationChatResponseSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The id of the chat",
+    },
+    title: {
+      type: "string",
+      title: "Title",
+      description: "The title of the chat",
+    },
+  },
+  type: "object",
+  required: ["id", "title"],
+  title: "SharedConversationChatResponseSchema",
+} as const;
+
+export const $SharedConversationListItemResponseSchema = {
+  properties: {
+    id: {
+      type: "string",
+      format: "uuid",
+      title: "Id",
+      description: "The id of the shared conversation",
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      title: "Created At",
+      description: "The creation date of the shared conversation",
+    },
+    chat: {
+      $ref: "#/components/schemas/SharedConversationChatResponseSchema",
+      description: "The shared chat information",
+    },
+  },
+  type: "object",
+  required: ["id", "created_at", "chat"],
+  title: "SharedConversationListItemResponseSchema",
+} as const;
+
 export const $SharedConversationResponseSchema = {
   properties: {
     id: {
@@ -1186,11 +1229,9 @@ export const $UserResponseSchema = {
 
 export const $UtilizationResponseSchema = {
   properties: {
-    model_id: {
-      type: "string",
-      format: "uuid",
-      title: "Model Id",
-      description: "The id of the model used",
+    model: {
+      $ref: "#/components/schemas/AiProviderModelResponseSchema",
+      description: "The model used",
     },
     total_tokens: {
       type: "integer",
@@ -1209,7 +1250,7 @@ export const $UtilizationResponseSchema = {
     },
   },
   type: "object",
-  required: ["model_id", "total_tokens", "max_tokens", "percentage"],
+  required: ["model", "total_tokens", "max_tokens", "percentage"],
   title: "UtilizationResponseSchema",
 } as const;
 

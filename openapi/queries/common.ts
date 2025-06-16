@@ -50,6 +50,39 @@ export const UseChatsServiceGetApiChatsKeyFn = (queryKey?: Array<unknown>) => [
   useChatsServiceGetApiChatsKey,
   ...(queryKey ?? []),
 ];
+export type ChatsServiceGetApiChatsSharedDefaultResponse = Awaited<
+  ReturnType<typeof ChatsService.getApiChatsShared>
+>;
+export type ChatsServiceGetApiChatsSharedQueryResult<
+  TData = ChatsServiceGetApiChatsSharedDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useChatsServiceGetApiChatsSharedKey =
+  "ChatsServiceGetApiChatsShared";
+export const UseChatsServiceGetApiChatsSharedKeyFn = (
+  queryKey?: Array<unknown>,
+) => [useChatsServiceGetApiChatsSharedKey, ...(queryKey ?? [])];
+export type ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse =
+  Awaited<
+    ReturnType<typeof ChatsService.getApiChatsSharedBySharedConversationId>
+  >;
+export type ChatsServiceGetApiChatsSharedBySharedConversationIdQueryResult<
+  TData = ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+> = UseQueryResult<TData, TError>;
+export const useChatsServiceGetApiChatsSharedBySharedConversationIdKey =
+  "ChatsServiceGetApiChatsSharedBySharedConversationId";
+export const UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn = (
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: Array<unknown>,
+) => [
+  useChatsServiceGetApiChatsSharedBySharedConversationIdKey,
+  ...(queryKey ?? [{ sharedConversationId }]),
+];
 export type ChatsServiceGetApiChatsByChatIdDefaultResponse = Awaited<
   ReturnType<typeof ChatsService.getApiChatsByChatId>
 >;
@@ -86,27 +119,6 @@ export const UseChatsServiceGetApiChatsByChatIdMessagesKeyFn = (
 ) => [
   useChatsServiceGetApiChatsByChatIdMessagesKey,
   ...(queryKey ?? [{ chatId }]),
-];
-export type ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse =
-  Awaited<
-    ReturnType<typeof ChatsService.getApiChatsSharedBySharedConversationId>
-  >;
-export type ChatsServiceGetApiChatsSharedBySharedConversationIdQueryResult<
-  TData = ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
-  TError = unknown,
-> = UseQueryResult<TData, TError>;
-export const useChatsServiceGetApiChatsSharedBySharedConversationIdKey =
-  "ChatsServiceGetApiChatsSharedBySharedConversationId";
-export const UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn = (
-  {
-    sharedConversationId,
-  }: {
-    sharedConversationId: string;
-  },
-  queryKey?: Array<unknown>,
-) => [
-  useChatsServiceGetApiChatsSharedBySharedConversationIdKey,
-  ...(queryKey ?? [{ sharedConversationId }]),
 ];
 export type UsersServiceGetApiUsersCurrentDefaultResponse = Awaited<
   ReturnType<typeof UsersService.getApiUsersCurrent>

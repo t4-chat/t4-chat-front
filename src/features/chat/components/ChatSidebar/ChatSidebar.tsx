@@ -19,7 +19,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Share2 } from "lucide-react";
 import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
+import {
+  UseChatsServiceGetApiChatsKeyFn,
+  UseChatsServiceGetApiChatsSharedKeyFn,
+} from "~/openapi/queries/common";
 import {
   useChatsServiceDeleteApiChats,
   useChatsServiceGetApiChatsSharedBySharedConversationId,
@@ -129,6 +132,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: UseChatsServiceGetApiChatsKeyFn(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsSharedKeyFn(),
         });
         handleSuccess("Chat title updated successfully");
       },
@@ -718,10 +724,11 @@ const ChatListItem: FC<ChatListItemProps> = ({
     <button
       type="button"
       className={cn(
-        "w-full py-2 px-4 cursor-pointer border-l-4 border-transparent transition-all duration-75 relative flex items-center hover:bg-[var(--hover-color)] text-left bg-transparent border-t-0 border-r-0 border-b-0",
+        "w-full cursor-pointer border-l-4 border-transparent transition-all duration-75 relative flex items-center hover:bg-[var(--hover-color)] text-left bg-transparent border-t-0 border-r-0 border-b-0",
         isActive &&
           "bg-[rgba(var(--primary-color-rgb),0.1)] border-l-[var(--primary-color)]",
         "gap-2",
+        "py-2 px-4",
       )}
       onClick={onSelect}
       aria-label={`Select chat: ${chat.title}`}
@@ -759,7 +766,7 @@ const ChatListItem: FC<ChatListItemProps> = ({
         <DropdownMenu
           className="flex-shrink-0 ml-auto"
           trigger={
-            <div className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
+            <div className="flex justify-center items-center bg-transparent hover:bg-[var(--hover-color)] rounded-full text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-colors duration-75">
               <MoreIcon width={16} height={16} />
             </div>
           }

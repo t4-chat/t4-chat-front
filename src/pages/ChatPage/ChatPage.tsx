@@ -27,6 +27,7 @@ import {
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
 import { responseWasSelected } from "@/lib/utils";
 import { toast } from "sonner";
+import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
 
 const useInitialMessages = ({
   chatId,
@@ -315,12 +316,25 @@ const usePendingMessageHandler = ({
 const ChatPage = () => {
   const navigate = useNavigate();
   const { chatId, sharedConversationId } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
   const { isAuthenticated } = useAuth();
-
+  const { isOpen: isSidebarOpen, onToggle: toggleSidebar } =
+    useContext(SidebarContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  const {
+    data: sharedChatData,
+    isLoading: isSharedChatLoading,
+    error: sharedChatError,
+  } = useChatsServiceGetApiChatsSharedBySharedConversationId(
+    { sharedConversationId: sharedConversationId || "" },
+    undefined,
+    { enabled: !!sharedConversationId },
+  );
 
   const paneCount = searchParams.get("panes")
     ? Number(searchParams.get("panes"))
@@ -331,9 +345,6 @@ const ChatPage = () => {
   const [previewPaneIndex, setPreviewPaneIndex] = useState<number | undefined>(
     undefined,
   );
-  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
   const abortStreamingRef = useRef<() => void>(null);
 
@@ -570,6 +581,16 @@ const ChatPage = () => {
       setIsStreaming(false);
     };
   }, [chatId]);
+
+  // If we're trying to access a shared chat that doesn't exist or was unshared
+  if (sharedConversationId && !isSharedChatLoading && sharedChatError) {
+    return (
+      <NotFoundPage
+        title="Chat Not Found"
+        message="This chat has been unshared or doesn't exist."
+      />
+    );
+  }
 
   if (!messages || !paneCount || !modelIds || !availableModels) {
     return (

@@ -1,38 +1,37 @@
-import type { FC } from "react";
-import { useState, useContext, useEffect } from "react";
-import { useForm } from "@tanstack/react-form";
-import { SidebarContext } from "@/components/Layout/Layout";
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import ModelSelect, {
-  type ModelSelectOption,
-} from "@/components/ModelSelect/ModelSelect";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  BarChart3,
-  Shield,
-  Plus,
-  Edit2,
-  Trash2,
-  AlertTriangle,
-  Zap,
-  TrendingUp,
-  CheckCircle,
-  Key,
-  Server,
-} from "lucide-react";
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
+import { SidebarContext } from "@/components/Layout/Layout";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import SearchableSelect from "@/components/ModelSelect/ModelSelect";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
+import { useForm } from "@tanstack/react-form";
+import {
+  AlertTriangle,
+  BarChart3,
+  CheckCircle,
+  Edit2,
+  Key,
+  Plus,
+  Share2,
+  Shield,
+  Trash2,
+  TrendingUp,
+  Zap,
+  ExternalLink,
+} from "lucide-react";
+import type { FC } from "react";
+import { useContext, useEffect, useState } from "react";
+import type {
+  HostApiKeyCreateSchema,
+  HostApiKeyResponseSchema,
+  HostApiKeyUpdateSchema,
+  UnshareChatsRequestSchema,
+  UtilizationsResponseSchema,
+} from "~/openapi/requests/types.gen";
 import {
   useUtilizationServiceGetApiUtilization,
   useHostApiKeysServiceGetApiHostApiKeys,
@@ -41,18 +40,19 @@ import {
   useHostApiKeysServiceDeleteApiHostApiKeysByKeyId,
   useAdminServiceGetApiAdminModelHosts,
   useAiModelsServiceGetApiAiModels,
+  useChatsServiceGetApiChatsShared,
+  useChatsServiceDeleteApiChatsShare,
 } from "../../../openapi/queries/queries";
-import type {
-  HostApiKeyCreateSchema,
-  HostApiKeyResponseSchema,
-  HostApiKeyUpdateSchema,
-} from "~/openapi/requests/types.gen";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  UseChatsServiceGetApiChatsKeyFn,
+  UseChatsServiceGetApiChatsSharedKeyFn,
+} from "~/openapi/queries/common";
 
 const SettingsPage: FC = () => {
-  const [activeTab, setActiveTab] = useState<"utilization" | "api-keys">(
-    "utilization",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "utilization" | "api-keys" | "shared-chats"
+  >("utilization");
   const [editingKey, setEditingKey] = useState<HostApiKeyResponseSchema | null>(
     null,
   );
@@ -261,7 +261,7 @@ const SettingsPage: FC = () => {
                 >
                   Model Host <span className="text-red-500">*</span>
                 </label>
-                <ModelSelect
+                <SearchableSelect
                   options={modelHosts.map((host) => ({
                     value: host.id,
                     label: host.name,
@@ -377,10 +377,10 @@ const SettingsPage: FC = () => {
         <Tabs
           value={activeTab}
           onValueChange={(value) =>
-            setActiveTab(value as "utilization" | "api-keys")
+            setActiveTab(value as "utilization" | "api-keys" | "shared-chats")
           }
         >
-          <TabsList className="grid grid-cols-2 bg-[var(--component-bg-color)] mx-auto p-1 border border-[var(--border-color)] rounded-xl w-full max-w-md">
+          <TabsList className="grid grid-cols-3 bg-[var(--component-bg-color)] mx-auto p-1 border border-[var(--border-color)] rounded-xl w-full max-w-md">
             <TabsTrigger
               value="utilization"
               className={cn(
@@ -398,6 +398,15 @@ const SettingsPage: FC = () => {
               )}
             >
               API Keys
+            </TabsTrigger>
+            <TabsTrigger
+              value="shared-chats"
+              className={cn(
+                "data-[state=active]:bg-[var(--primary-color)] data-[state=active]:shadow-sm rounded-lg font-medium text-[var(--text-secondary-color)] data-[state=active]:text-white",
+                isMounted && "transition-all duration-100",
+              )}
+            >
+              Shared Chats
             </TabsTrigger>
           </TabsList>
 
@@ -452,11 +461,11 @@ const SettingsPage: FC = () => {
                       {
                         providerName: string;
                         providerSlug: string;
-                        utilizations: typeof utilization.utilizations;
+                        utilizations: UtilizationsResponseSchema["utilizations"];
                       }
                     > = {};
                     for (const util of utilization.utilizations) {
-                      const model = modelMap[util.model_id];
+                      const model = modelMap[util.model.id];
                       const providerName = model?.provider?.name || "Unknown";
                       const providerSlug = model?.provider?.slug || "unknown";
                       if (!grouped[providerName]) {
@@ -488,11 +497,11 @@ const SettingsPage: FC = () => {
                             </div>
                             <div className="gap-4 grid md:grid-cols-1 lg:grid-cols-2">
                               {group.utilizations.map((util) => {
-                                const modelName = getModelName(util.model_id);
+                                const modelName = getModelName(util.model.id);
                                 const modelIcon = getHostIcon(modelName);
                                 return (
                                   <div
-                                    key={util.model_id}
+                                    key={util.model.id}
                                     className="relative to-[var(--component-bg-color)]/30 bg-gradient-to-br from-[var(--background-color)] p-6 border border-[var(--border-color)] rounded-xl"
                                   >
                                     <div className="flex justify-between items-start mb-4">
@@ -768,6 +777,17 @@ const SettingsPage: FC = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent
+            value="shared-chats"
+            className={cn(
+              "space-y-6 mt-8",
+              isMounted &&
+                "animate-in fade-in-0 slide-in-from-bottom-2 duration-75",
+            )}
+          >
+            <SharedChatsTab />
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -784,6 +804,260 @@ const SettingsPage: FC = () => {
         isDanger={true}
       />
     </div>
+  );
+};
+
+const SharedChatsTab: FC = () => {
+  const [selectedChats, setSelectedChats] = useState<Set<string>>(new Set());
+  const [unshareModalState, setUnshareModalState] = useState<{
+    isOpen: boolean;
+    chatIds: string[];
+    title: string;
+  }>({
+    isOpen: false,
+    chatIds: [],
+    title: "",
+  });
+
+  const queryClient = useQueryClient();
+
+  const { data: sharedChats = [], isLoading: isLoadingSharedChats } =
+    useChatsServiceGetApiChatsShared();
+
+  const unshareChat = useChatsServiceDeleteApiChatsShare({
+    onSuccess: () => {
+      setUnshareModalState({ isOpen: false, chatIds: [], title: "" });
+      setSelectedChats(new Set());
+      queryClient.invalidateQueries({
+        queryKey: UseChatsServiceGetApiChatsSharedKeyFn(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: UseChatsServiceGetApiChatsKeyFn(),
+      });
+    },
+  });
+
+  const handleUnshare = async () => {
+    if (unshareModalState.chatIds.length > 0) {
+      const requestBody: UnshareChatsRequestSchema = {
+        shared_conversation_ids: unshareModalState.chatIds,
+      };
+      unshareChat.mutate({ requestBody });
+    }
+  };
+
+  const toggleChatSelection = (chatId: string) => {
+    setSelectedChats((prev) => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(chatId)) {
+        newSelection.delete(chatId);
+      } else {
+        newSelection.add(chatId);
+      }
+      return newSelection;
+    });
+  };
+
+  const toggleAllChats = () => {
+    if (selectedChats.size === sharedChats.length) {
+      setSelectedChats(new Set());
+    } else {
+      setSelectedChats(new Set(sharedChats.map((chat) => chat.id)));
+    }
+  };
+
+  const handleBulkUnshare = () => {
+    const selectedChatIds = Array.from(selectedChats);
+    const selectedCount = selectedChatIds.length;
+    setUnshareModalState({
+      isOpen: true,
+      chatIds: selectedChatIds,
+      title: `${selectedCount} selected chat${selectedCount > 1 ? "s" : ""}`,
+    });
+  };
+
+  return (
+    <Card className="bg-[var(--component-bg-color)] shadow-lg border-[var(--border-color)] rounded-xl overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-[var(--primary-color)]/5 to-[var(--primary-color)]/10 pb-6 border-[var(--border-color)] border-b">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="flex justify-center items-center bg-[var(--primary-color)]/10 rounded-lg w-10 h-10">
+              <Share2 className="w-5 h-5 text-[var(--primary-color)]" />
+            </div>
+            <div>
+              <CardTitle className="font-semibold text-[var(--text-color)] text-xl">
+                Shared Chats
+              </CardTitle>
+              <p className="mt-1 text-[var(--text-secondary-color)] text-sm">
+                Manage your shared chat conversations
+              </p>
+            </div>
+          </div>
+          {selectedChats.size > 0 && (
+            <Button
+              variant="destructive"
+              onClick={handleBulkUnshare}
+              disabled={unshareChat.isPending}
+              className="gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              Unshare Selected ({selectedChats.size})
+            </Button>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        {isLoadingSharedChats ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="space-y-3 text-center">
+              <div className="mx-auto border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-8 h-8 animate-spin" />
+              <p className="text-[var(--text-secondary-color)]">
+                Loading shared chats...
+              </p>
+            </div>
+          </div>
+        ) : sharedChats.length > 0 ? (
+          <div className="relative overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-[var(--background-color)] text-[var(--text-secondary-color)]">
+                <tr>
+                  <th scope="col" className="p-4">
+                    <Checkbox
+                      checked={
+                        selectedChats.size === sharedChats.length &&
+                        sharedChats.length > 0
+                      }
+                      onCheckedChange={toggleAllChats}
+                      className="data-[state=checked]:bg-[var(--primary-color)] data-[state=checked]:border-[var(--primary-color)]"
+                    />
+                  </th>
+                  <th scope="col" className="px-6 py-4 font-medium">
+                    Chat Title
+                  </th>
+                  <th scope="col" className="px-6 py-4 font-medium">
+                    Share Date
+                  </th>
+                  {/* <th scope="col" className="px-6 py-4 font-medium">
+                    Status
+                  </th> */}
+                  <th scope="col" className="px-6 py-4 font-medium text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-[var(--border-color)] divide-y">
+                {sharedChats.map((chat) => (
+                  <tr
+                    key={chat.id}
+                    className={cn(
+                      "transition-colors cursor-pointer",
+                      selectedChats.has(chat.id) &&
+                        "bg-[var(--primary-color)]/5",
+                    )}
+                    onClick={(e) => {
+                      // Don't toggle if clicking on action buttons
+                      const target = e.target as HTMLElement;
+                      if (target.closest("button")) return;
+                      toggleChatSelection(chat.id);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggleChatSelection(chat.id);
+                      }
+                    }}
+                    tabIndex={0}
+                  >
+                    <td className="p-4">
+                      <Checkbox
+                        checked={selectedChats.has(chat.id)}
+                        onCheckedChange={() => toggleChatSelection(chat.id)}
+                        className="data-[state=checked]:bg-[var(--primary-color)] data-[state=checked]:border-[var(--primary-color)]"
+                      />
+                    </td>
+                    <td className="px-6 py-4 font-medium text-[var(--text-color)]">
+                      {chat.chat.title || "Untitled Chat"}
+                    </td>
+                    <td className="px-6 py-4 text-[var(--text-color)]">
+                      {new Date(chat.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </td>
+                    {/* <td className="px-6 py-4">
+                      <span className="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-2.5 py-1 border border-blue-200 dark:border-blue-800/30 rounded-full font-medium text-blue-700 dark:text-blue-300 text-xs">
+                        Shared
+                      </span>
+                    </td> */}
+                    <td className="px-6 py-4">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            window.open(`/share/${chat.id}`, "_blank")
+                          }
+                          className="h-8"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setUnshareModalState({
+                              isOpen: true,
+                              chatIds: [chat.id],
+                              title: chat.chat.title || "Untitled Chat",
+                            });
+                          }}
+                          disabled={unshareChat.isPending}
+                          className="h-8"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center py-16 text-center">
+            <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--primary-color)]/5 mb-6 rounded-2xl w-20 h-20">
+              <Share2 className="w-12 h-12 text-[var(--text-secondary-color)]" />
+            </div>
+            <h3 className="mb-2 font-semibold text-[var(--text-color)] text-xl">
+              No shared chats
+            </h3>
+            <p className="mb-6 max-w-sm text-[var(--text-secondary-color)] text-sm">
+              You haven't shared any chat conversations yet. Share a chat to
+              make it accessible via a public link.
+            </p>
+          </div>
+        )}
+      </CardContent>
+
+      <ConfirmationModal
+        isOpen={unshareModalState.isOpen}
+        onClose={() =>
+          setUnshareModalState({ isOpen: false, chatIds: [], title: "" })
+        }
+        onConfirm={handleUnshare}
+        title="Unshare Chat"
+        message={
+          unshareModalState.chatIds.length > 1
+            ? `Are you sure you want to unshare ${unshareModalState.chatIds.length} chats? This will revoke access to all shared links.`
+            : `Are you sure you want to unshare "${unshareModalState.title}"? This will revoke access to the shared link.`
+        }
+        confirmLabel="Unshare"
+        cancelLabel="Cancel"
+        isDanger={true}
+      />
+    </Card>
   );
 };
 

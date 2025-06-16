@@ -33,6 +33,31 @@ export const prefetchUseChatsServiceGetApiChats = (queryClient: QueryClient) =>
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(),
     queryFn: () => ChatsService.getApiChats(),
   });
+export const prefetchUseChatsServiceGetApiChatsShared = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseChatsServiceGetApiChatsSharedKeyFn(),
+    queryFn: () => ChatsService.getApiChatsShared(),
+  });
+export const prefetchUseChatsServiceGetApiChatsSharedBySharedConversationId = (
+  queryClient: QueryClient,
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn({
+        sharedConversationId,
+      }),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }),
+  });
 export const prefetchUseChatsServiceGetApiChatsByChatId = (
   queryClient: QueryClient,
   {
@@ -58,24 +83,6 @@ export const prefetchUseChatsServiceGetApiChatsByChatIdMessages = (
       chatId,
     }),
     queryFn: () => ChatsService.getApiChatsByChatIdMessages({ chatId }),
-  });
-export const prefetchUseChatsServiceGetApiChatsSharedBySharedConversationId = (
-  queryClient: QueryClient,
-  {
-    sharedConversationId,
-  }: {
-    sharedConversationId: string;
-  },
-) =>
-  queryClient.prefetchQuery({
-    queryKey:
-      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn({
-        sharedConversationId,
-      }),
-    queryFn: () =>
-      ChatsService.getApiChatsSharedBySharedConversationId({
-        sharedConversationId,
-      }),
   });
 export const prefetchUseUsersServiceGetApiUsersCurrent = (
   queryClient: QueryClient,

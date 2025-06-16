@@ -5,6 +5,7 @@ import SettingsPage from "@/pages/SettingsPage/SettingsPage";
 import { AuthProvider } from "@/context/AuthContext";
 import HomePage from "@/pages/HomePage/HomePage";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
             <SettingsPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

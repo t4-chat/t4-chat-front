@@ -72,6 +72,44 @@ export const useChatsServiceGetApiChats = <
     queryFn: () => ChatsService.getApiChats() as TData,
     ...options,
   });
+export const useChatsServiceGetApiChatsShared = <
+  TData = Common.ChatsServiceGetApiChatsSharedDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseChatsServiceGetApiChatsSharedKeyFn(queryKey),
+    queryFn: () => ChatsService.getApiChatsShared() as TData,
+    ...options,
+  });
+export const useChatsServiceGetApiChatsSharedBySharedConversationId = <
+  TData = Common.ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn(
+        { sharedConversationId },
+        queryKey,
+      ),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }) as TData,
+    ...options,
+  });
 export const useChatsServiceGetApiChatsByChatId = <
   TData = Common.ChatsServiceGetApiChatsByChatIdDefaultResponse,
   TError = unknown,
@@ -113,31 +151,6 @@ export const useChatsServiceGetApiChatsByChatIdMessages = <
     ),
     queryFn: () =>
       ChatsService.getApiChatsByChatIdMessages({ chatId }) as TData,
-    ...options,
-  });
-export const useChatsServiceGetApiChatsSharedBySharedConversationId = <
-  TData = Common.ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
-  TError = unknown,
-  TQueryKey extends Array<unknown> = unknown[],
->(
-  {
-    sharedConversationId,
-  }: {
-    sharedConversationId: string;
-  },
-  queryKey?: TQueryKey,
-  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
-) =>
-  useQuery<TData, TError>({
-    queryKey:
-      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn(
-        { sharedConversationId },
-        queryKey,
-      ),
-    queryFn: () =>
-      ChatsService.getApiChatsSharedBySharedConversationId({
-        sharedConversationId,
-      }) as TData,
     ...options,
   });
 export const useUsersServiceGetApiUsersCurrent = <

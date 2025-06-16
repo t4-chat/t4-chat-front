@@ -7,7 +7,10 @@ import {
   useChatsServiceDeleteApiChatsShare,
 } from "~/openapi/queries/queries";
 import { useQueryClient } from "@tanstack/react-query";
-import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
+import {
+  UseChatsServiceGetApiChatsKeyFn,
+  UseChatsServiceGetApiChatsSharedKeyFn,
+} from "~/openapi/queries/common";
 import Modal from "./Modal";
 
 interface ShareChatModalProps {
@@ -37,6 +40,9 @@ const ShareChatModal = ({
         queryClient.invalidateQueries({
           queryKey: UseChatsServiceGetApiChatsKeyFn(),
         });
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsSharedKeyFn(),
+        });
         handleSuccess("Share link created successfully");
       },
       onError: (error) => handleError(error, "Failed to create share link"),
@@ -48,6 +54,9 @@ const ShareChatModal = ({
         setSharedConversationId(null);
         queryClient.invalidateQueries({
           queryKey: UseChatsServiceGetApiChatsKeyFn(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: UseChatsServiceGetApiChatsSharedKeyFn(),
         });
         handleSuccess("Chat unshared successfully");
       },
@@ -132,7 +141,7 @@ const ShareChatModal = ({
                 type="text"
                 value={shareUrl || ""}
                 readOnly
-                className="flex-1 bg-transparent outline-none text-[var(--text-primary-color)] text-sm"
+                className="flex-1 bg-transparent outline-none text-[var(--text-primary-color)] text-sm truncate"
               />
               <button
                 type="button"

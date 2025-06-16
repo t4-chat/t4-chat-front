@@ -488,6 +488,32 @@ export type ShareChatResponseSchema = {
   shared_conversation_id: string;
 };
 
+export type SharedConversationChatResponseSchema = {
+  /**
+   * The id of the chat
+   */
+  id: string;
+  /**
+   * The title of the chat
+   */
+  title: string;
+};
+
+export type SharedConversationListItemResponseSchema = {
+  /**
+   * The id of the shared conversation
+   */
+  id: string;
+  /**
+   * The creation date of the shared conversation
+   */
+  created_at: string;
+  /**
+   * The shared chat information
+   */
+  chat: SharedConversationChatResponseSchema;
+};
+
 export type SharedConversationResponseSchema = {
   /**
    * The id of the shared conversation
@@ -560,9 +586,9 @@ export type UserResponseSchema = {
 
 export type UtilizationResponseSchema = {
   /**
-   * The id of the model used
+   * The model used
    */
-  model_id: string;
+  model: AiProviderModelResponseSchema;
   /**
    * The total number of tokens used
    */
@@ -639,6 +665,28 @@ export type DeleteApiChatsData = {
 
 export type DeleteApiChatsResponse = unknown;
 
+export type PostApiChatsConversationData = {
+  requestBody: MultiModelCompletionRequestSchema;
+};
+
+export type PostApiChatsConversationResponse = unknown;
+
+export type GetApiChatsSharedResponse =
+  Array<SharedConversationListItemResponseSchema>;
+
+export type GetApiChatsSharedBySharedConversationIdData = {
+  sharedConversationId: string;
+};
+
+export type GetApiChatsSharedBySharedConversationIdResponse =
+  ChatResponseSchema;
+
+export type DeleteApiChatsShareData = {
+  requestBody: UnshareChatsRequestSchema;
+};
+
+export type DeleteApiChatsShareResponse = unknown;
+
 export type GetApiChatsByChatIdData = {
   chatId: string;
 };
@@ -650,12 +698,6 @@ export type GetApiChatsByChatIdMessagesData = {
 };
 
 export type GetApiChatsByChatIdMessagesResponse = ChatMessagesResponseSchema;
-
-export type PostApiChatsConversationData = {
-  requestBody: MultiModelCompletionRequestSchema;
-};
-
-export type PostApiChatsConversationResponse = unknown;
 
 export type PatchApiChatsByChatIdTitleData = {
   chatId: string;
@@ -683,19 +725,6 @@ export type PostApiChatsByChatIdShareData = {
 };
 
 export type PostApiChatsByChatIdShareResponse = ShareChatResponseSchema;
-
-export type GetApiChatsSharedBySharedConversationIdData = {
-  sharedConversationId: string;
-};
-
-export type GetApiChatsSharedBySharedConversationIdResponse =
-  ChatResponseSchema;
-
-export type DeleteApiChatsShareData = {
-  requestBody: UnshareChatsRequestSchema;
-};
-
-export type DeleteApiChatsShareResponse = unknown;
 
 export type PostApiAuthGoogleData = {
   requestBody: GoogleAuthRequestSchema;
@@ -910,6 +939,61 @@ export type $OpenApiTs = {
       };
     };
   };
+  "/api/chats/conversation": {
+    post: {
+      req: PostApiChatsConversationData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/chats/shared": {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<SharedConversationListItemResponseSchema>;
+      };
+    };
+  };
+  "/api/chats/shared/{shared_conversation_id}": {
+    get: {
+      req: GetApiChatsSharedBySharedConversationIdData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: ChatResponseSchema;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
+  "/api/chats/share": {
+    delete: {
+      req: DeleteApiChatsShareData;
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown;
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError;
+      };
+    };
+  };
   "/api/chats/{chat_id}": {
     get: {
       req: GetApiChatsByChatIdData;
@@ -933,21 +1017,6 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: ChatMessagesResponseSchema;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
-      };
-    };
-  };
-  "/api/chats/conversation": {
-    post: {
-      req: PostApiChatsConversationData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: unknown;
         /**
          * Validation Error
          */
@@ -1008,36 +1077,6 @@ export type $OpenApiTs = {
          * Successful Response
          */
         200: ShareChatResponseSchema;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
-      };
-    };
-  };
-  "/api/chats/shared/{shared_conversation_id}": {
-    get: {
-      req: GetApiChatsSharedBySharedConversationIdData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: ChatResponseSchema;
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError;
-      };
-    };
-  };
-  "/api/chats/share": {
-    delete: {
-      req: DeleteApiChatsShareData;
-      res: {
-        /**
-         * Successful Response
-         */
-        200: unknown;
         /**
          * Validation Error
          */

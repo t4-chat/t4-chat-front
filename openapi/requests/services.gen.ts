@@ -10,12 +10,17 @@ import type {
   PostApiChatsResponse,
   DeleteApiChatsData,
   DeleteApiChatsResponse,
+  PostApiChatsConversationData,
+  PostApiChatsConversationResponse,
+  GetApiChatsSharedResponse,
+  GetApiChatsSharedBySharedConversationIdData,
+  GetApiChatsSharedBySharedConversationIdResponse,
+  DeleteApiChatsShareData,
+  DeleteApiChatsShareResponse,
   GetApiChatsByChatIdData,
   GetApiChatsByChatIdResponse,
   GetApiChatsByChatIdMessagesData,
   GetApiChatsByChatIdMessagesResponse,
-  PostApiChatsConversationData,
-  PostApiChatsConversationResponse,
   PatchApiChatsByChatIdTitleData,
   PatchApiChatsByChatIdTitleResponse,
   PatchApiChatsByChatIdPinData,
@@ -24,10 +29,6 @@ import type {
   PatchApiChatsByChatIdMessagesByMessageIdSelectResponse,
   PostApiChatsByChatIdShareData,
   PostApiChatsByChatIdShareResponse,
-  GetApiChatsSharedBySharedConversationIdData,
-  GetApiChatsSharedBySharedConversationIdResponse,
-  DeleteApiChatsShareData,
-  DeleteApiChatsShareResponse,
   PostApiAuthGoogleData,
   PostApiAuthGoogleResponse,
   GetApiUsersCurrentResponse,
@@ -152,6 +153,82 @@ export class ChatsService {
   }
 
   /**
+   * Send Message
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiChatsConversation(
+    data: PostApiChatsConversationData,
+  ): CancelablePromise<PostApiChatsConversationResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/chats/conversation",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Shared Chats
+   * @returns SharedConversationListItemResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiChatsShared(): CancelablePromise<GetApiChatsSharedResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/chats/shared",
+    });
+  }
+
+  /**
+   * Get Shared Chat
+   * @param data The data for the request.
+   * @param data.sharedConversationId
+   * @returns ChatResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiChatsSharedBySharedConversationId(
+    data: GetApiChatsSharedBySharedConversationIdData,
+  ): CancelablePromise<GetApiChatsSharedBySharedConversationIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/chats/shared/{shared_conversation_id}",
+      path: {
+        shared_conversation_id: data.sharedConversationId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Unshare Chats
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiChatsShare(
+    data: DeleteApiChatsShareData,
+  ): CancelablePromise<DeleteApiChatsShareResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/chats/share",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
    * Get Chat
    * @param data The data for the request.
    * @param data.chatId
@@ -189,27 +266,6 @@ export class ChatsService {
       path: {
         chat_id: data.chatId,
       },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Send Message
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Successful Response
-   * @throws ApiError
-   */
-  public static postApiChatsConversation(
-    data: PostApiChatsConversationData,
-  ): CancelablePromise<PostApiChatsConversationResponse> {
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/chats/conversation",
-      body: data.requestBody,
-      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },
@@ -303,49 +359,6 @@ export class ChatsService {
       path: {
         chat_id: data.chatId,
       },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Get Shared Chat
-   * @param data The data for the request.
-   * @param data.sharedConversationId
-   * @returns ChatResponseSchema Successful Response
-   * @throws ApiError
-   */
-  public static getApiChatsSharedBySharedConversationId(
-    data: GetApiChatsSharedBySharedConversationIdData,
-  ): CancelablePromise<GetApiChatsSharedBySharedConversationIdResponse> {
-    return __request(OpenAPI, {
-      method: "GET",
-      url: "/api/chats/shared/{shared_conversation_id}",
-      path: {
-        shared_conversation_id: data.sharedConversationId,
-      },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Unshare Chats
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Successful Response
-   * @throws ApiError
-   */
-  public static deleteApiChatsShare(
-    data: DeleteApiChatsShareData,
-  ): CancelablePromise<DeleteApiChatsShareResponse> {
-    return __request(OpenAPI, {
-      method: "DELETE",
-      url: "/api/chats/share",
-      body: data.requestBody,
-      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },
