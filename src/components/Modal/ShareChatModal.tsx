@@ -155,17 +155,10 @@ const ShareChatModal = ({
 
             <div className="flex gap-2">
               <Button
-                onClick={copyToClipboard}
-                variant="secondary"
-                className="flex-1"
-              >
-                {copyState === "copied" ? "Copied!" : "Copy Link"}
-              </Button>
-              <Button
                 onClick={handleUnshareChat}
                 disabled={isUnsharing}
                 variant="destructive"
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 w-full"
               >
                 <Trash2 size={16} />
                 {isUnsharing ? "Removing..." : "Unshare"}

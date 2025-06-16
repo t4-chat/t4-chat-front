@@ -1,6 +1,14 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
-import { useContext, useMemo, useState, type FC } from "react";
+import {
+  useContext,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  type FC,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAiModelsServiceGetApiAiModels } from "../../../openapi/queries/queries";
@@ -104,6 +112,40 @@ const HomePage: FC = () => {
   };
 
   const { isOpen: isSidebarOpen } = useContext(SidebarContext);
+
+  const [truncatedModels, setTruncatedModels] = useState<Set<string>>(
+    new Set(),
+  );
+  const modelRefs = useRef<{ [key: string]: HTMLSpanElement | null }>({});
+
+  const updateTruncation = useCallback(() => {
+    const newTruncatedModels = new Set<string>();
+
+    Object.entries(modelRefs.current).forEach(([modelId, element]) => {
+      if (element && element.scrollWidth > element.clientWidth) {
+        newTruncatedModels.add(modelId);
+      }
+    });
+
+    setTruncatedModels(newTruncatedModels);
+  }, []);
+
+  // Check truncation on window resize
+  useEffect(() => {
+    window.addEventListener("resize", updateTruncation);
+    updateTruncation(); // Initial check
+
+    return () => {
+      window.removeEventListener("resize", updateTruncation);
+    };
+  }, [updateTruncation]);
+
+  // Update truncation when models change
+  useEffect(() => {
+    // Use a small delay to ensure the DOM has updated
+    const timeoutId = setTimeout(updateTruncation, 0);
+    return () => clearTimeout(timeoutId);
+  }, [updateTruncation]);
 
   return (
     <TooltipProvider>
@@ -215,6 +257,7 @@ const HomePage: FC = () => {
                           key={model.id}
                           className="flex flex-col items-center w-full hover:scale-105 active:scale-95 transition-transform duration-100 cursor-pointer"
                           onClick={() => handleTileClick(model)}
+                          data-e2e="model-tile"
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{
@@ -237,10 +280,33 @@ const HomePage: FC = () => {
                               className="z-10 relative w-full h-full"
                             />
                           </div>
-                          <div className="flex justify-center items-center gap-1 w-full overflow-hidden font-medium text-[var(--text-primary-color)] text-base text-center">
-                            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                              {model.name}
-                            </span>
+                          <div className="flex justify-center items-center gap-1 w-full font-medium text-[var(--text-primary-color)] text-base text-center">
+                            <div className="flex-1 min-w-0">
+                              {truncatedModels.has(model.id) ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span
+                                      className="block overflow-hidden text-ellipsis whitespace-nowrap"
+                                      ref={(el) => {
+                                        modelRefs.current[model.id] = el;
+                                      }}
+                                    >
+                                      {model.name}
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>{model.name}</TooltipContent>
+                                </Tooltip>
+                              ) : (
+                                <span
+                                  className="block overflow-hidden text-ellipsis whitespace-nowrap"
+                                  ref={(el) => {
+                                    modelRefs.current[model.id] = el;
+                                  }}
+                                >
+                                  {model.name}
+                                </span>
+                              )}
+                            </div>
                             {model.has_api_key && (
                               <Tooltip>
                                 <TooltipTrigger asChild>
