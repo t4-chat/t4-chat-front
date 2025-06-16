@@ -30,6 +30,7 @@ interface IModelSelectProps {
   dropdownPosition?: "bottom" | "top";
   placeholder?: string;
   disabled?: boolean;
+  variant?: "default" | "input";
 }
 
 const ModelSelect: FC<IModelSelectProps> = ({
@@ -40,6 +41,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
   className = "",
   dropdownPosition = "bottom",
   disabled = false,
+  variant = "default",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,7 +95,15 @@ const ModelSelect: FC<IModelSelectProps> = ({
             className,
           )}
         >
-          <SelectTrigger className="[&>svg:last-child]:hidden relative flex justify-start items-center bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] data-[state=open]:shadow-none px-2 py-0.5 border data-[state=open]:border-[var(--primary-color)] hover:border-[rgba(var(--primary-color-rgb),0.2)] border-transparent min-h-8 text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] text-sm transition-all duration-100 cursor-pointer">
+          <SelectTrigger
+            className={cn(
+              "relative flex justify-start items-center min-h-8 text-sm transition-all duration-100 cursor-pointer",
+              variant === "default" &&
+                "[&>svg:last-child]:hidden bg-transparent hover:bg-[rgba(var(--primary-color-rgb),0.1)] data-[state=open]:shadow-none px-2 py-0.5 border data-[state=open]:border-[var(--primary-color)] hover:border-[rgba(var(--primary-color-rgb),0.2)] border-transparent text-[var(--text-secondary-color)] hover:text-[var(--primary-color)]",
+              variant === "input" &&
+                "h-10 w-full rounded-lg border border-[var(--border-color)] bg-[var(--component-bg-color)] px-3 py-2 text-[var(--text-primary-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-0 focus:border-[var(--primary-color)]",
+            )}
+          >
             <div className="flex flex-1 items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
               {selectedOption ? (
                 <>
@@ -120,7 +130,7 @@ const ModelSelect: FC<IModelSelectProps> = ({
                 </>
               ) : (
                 <span className="text-[var(--text-placeholder-color)]">
-                  Select model
+                  {placeholder}
                 </span>
               )}
             </div>

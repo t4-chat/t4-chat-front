@@ -8,6 +8,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ModelSelect, {
+  type ModelSelectOption,
+} from "@/components/ModelSelect/ModelSelect";
 import {
   Select,
   SelectContent,
@@ -258,29 +261,19 @@ const SettingsPage: FC = () => {
                 >
                   Model Host <span className="text-red-500">*</span>
                 </label>
-                <Select
+                <ModelSelect
+                  options={modelHosts.map((host) => ({
+                    value: host.id,
+                    label: host.name,
+                    iconPath: getHostIcon(host.name).props.src,
+                  }))}
                   value={field.state.value}
-                  onValueChange={(value) => field.handleChange(value)}
+                  onChange={(value) => field.handleChange(value)}
                   disabled={modelHostsLoading}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select Model Host" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {modelHosts.map((host) => (
-                      <SelectItem
-                        key={host.id}
-                        value={host.id}
-                        className="pl-2"
-                      >
-                        <div className="flex items-center gap-2">
-                          {getHostIcon(host.name)}
-                          <span>{host.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  placeholder="Select Model Host"
+                  variant="input"
+                  className="w-full"
+                />
               </div>
             )}
           </form.Field>

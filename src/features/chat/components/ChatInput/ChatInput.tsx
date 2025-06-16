@@ -188,6 +188,7 @@ const ChatInput: FC<IChatInputProps> = ({
                     { value: "4", label: "4 panes" },
                     { value: "6", label: "6 panes" },
                   ]}
+                  placeholder="Select number of panes"
                   value={paneCount.toString()}
                   onChange={(v) =>
                     handlePaneCountChange(Number.parseInt(v, 10))

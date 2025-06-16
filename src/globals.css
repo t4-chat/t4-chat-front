@@ -10,6 +10,10 @@ html {
   font-size: 16px;
 }
 
+body {
+  width: 100vw !important;
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 15px;
