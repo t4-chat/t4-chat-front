@@ -25,6 +25,7 @@ export const useChatSender = ({
     content: string,
     files: File[] | undefined,
     modelIds: string[],
+    tools: string[] | undefined,
     chatId?: string | null,
     sharedConversationId?: string | null,
   ) => {
@@ -47,7 +48,7 @@ export const useChatSender = ({
       onEvent,
       onError,
       onDone,
-      options: { chatId, sharedConversationId },
+      options: { chatId, sharedConversationId, tools },
     });
 
     return { abort };

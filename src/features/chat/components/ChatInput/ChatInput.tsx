@@ -7,14 +7,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Search, Image } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface IChatInputProps {
-  onSend: (message: string, files?: File[]) => void;
+  onSend: (message: string, files?: File[], tools?: string[]) => void;
   isLoading?: boolean;
   placeholder?: string;
   modelOptions?: SearchableSelectOption[];
   selectedModel?: string;
   onModelChange?: (value: string) => void;
+  selectedTools?: string[];
+  onToolsChange?: (value: string[]) => void;
   isSplitMode?: boolean;
   onSplitToggle?: (value: boolean) => void;
   paneCount: number;
@@ -30,6 +34,8 @@ const ChatInput: FC<IChatInputProps> = ({
   onSplitToggle,
   selectedModel,
   onModelChange,
+  selectedTools = [],
+  onToolsChange,
   responseWasSelected,
   isSplitMode = false,
   paneCount,
@@ -59,7 +65,11 @@ const ChatInput: FC<IChatInputProps> = ({
 
   const handleSend = () => {
     if ((message.trim() || files.length > 0) && !isLoading) {
-      onSend(message, files.length > 0 ? files : undefined);
+      onSend(
+        message,
+        files.length > 0 ? files : undefined,
+        selectedTools.length > 0 ? selectedTools : undefined,
+      );
       setMessage("");
       setFiles([]);
 
@@ -68,6 +78,16 @@ const ChatInput: FC<IChatInputProps> = ({
         textareaRef.current.style.height = "auto";
       }
     }
+  };
+
+  const toggleTool = (tool: string) => {
+    if (!onToolsChange) return;
+
+    const newTools = selectedTools.includes(tool)
+      ? selectedTools.filter((t) => t !== tool)
+      : [...selectedTools, tool];
+
+    onToolsChange(newTools);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -106,7 +126,7 @@ const ChatInput: FC<IChatInputProps> = ({
 
   return (
     <div
-      className="pb-[env(safe-area-inset-bottom)] relative flex flex-col bg-[var(--background-color)] focus-within:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)] border border-[var(--border-color)] focus-within:border-[var(--primary-color)] rounded-3xl w-full max-w-5xl transition-all duration-100"
+      className="pb-[env(safe-area-inset-bottom)] relative flex flex-col bg-[var(--background-color)] focus-within:shadow-[0_0_0_0.125rem_rgba(var(--primary-color-rgb),0.2)] border border-[var(--border-color)] focus-within:border-[var(--primary-color)] rounded-[12px] w-full max-w-5xl transition-all duration-100"
       onClick={() => {
         if (textareaRef.current) {
           textareaRef.current.focus();
@@ -143,14 +163,14 @@ const ChatInput: FC<IChatInputProps> = ({
         placeholder={placeholder}
       />
 
-      <div className="flex justify-between items-center px-2 py-1 pb-2 pl-3 border-t-0">
+      <div className="flex justify-between items-center px-2 py-2 border-t-0">
         {!responseWasSelected && !!textareaRef.current?.value.length && (
           <div className="flex items-center gap-1.5 bg-amber-300/20 shadow-sm px-3 py-1.5 rounded-lg font-bold text-amber-300 text-xs">
             <span>💡</span>
             <span>First response will be used by default</span>
           </div>
         )}
-        <div className="relative flex items-center min-w-40">
+        <div className="relative flex items-center gap-2">
           <AnimatePresence mode="wait">
             {modelOptions && selectedModel && onModelChange && (
               <motion.div
@@ -170,6 +190,40 @@ const ChatInput: FC<IChatInputProps> = ({
               </motion.div>
             )}
           </AnimatePresence>
+          {onToolsChange && (
+            <motion.div
+              initial={{ opacity: 0, translateY: 10 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0, translateY: 10 }}
+              transition={{ duration: 0.1, ease: "easeInOut" }}
+              className="flex gap-2"
+            >
+              <Button
+                variant={
+                  selectedTools.includes("web_search") ? "text" : "secondary"
+                }
+                size="sm"
+                onClick={() => toggleTool("web_search")}
+                className={cn(
+                  "gap-2 h-10",
+                  selectedTools.includes("web_search") &&
+                    "text-primary border-transparent border",
+                )}
+              >
+                <Search className="w-4 h-4" />
+                Search
+              </Button>
+              {/* <Button
+                  variant={selectedTools.includes("image") ? "primary" : "text"}
+                  size="sm"
+                  onClick={() => toggleTool("image")}
+                  className="gap-2"
+                >
+                  <Image className="w-4 h-4" />
+                  Image
+                </Button> */}
+            </motion.div>
+          )}
         </div>
 
         <div className="flex items-center gap-1">

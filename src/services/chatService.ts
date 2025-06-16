@@ -40,14 +40,16 @@ export class ChatService {
       chatId?: string | null;
       sharedConversationId?: string | null;
       abortSignal?: AbortSignal;
+      tools?: string[];
     };
   }): () => void {
-    const { abortSignal, sharedConversationId } = options || {};
+    const { abortSignal, sharedConversationId, tools } = options || {};
 
     const body: MultiModelCompletionRequestSchema = {
       message,
       model_ids: modelIds,
       shared_conversation_id: sharedConversationId || undefined,
+      options: tools && tools.length > 0 ? { tools } : undefined,
     };
 
     const controller = new AbortController();

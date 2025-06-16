@@ -347,6 +347,8 @@ const ChatPage = () => {
     undefined,
   );
 
+  const selectedTools = searchParams.get("tools")?.split(",") || [];
+
   const abortStreamingRef = useRef<() => void>(null);
 
   useEffect(() => {
@@ -578,7 +580,8 @@ const ChatPage = () => {
       const { abort } = await send(
         msg,
         files,
-        modelIds.slice(0, paneCount),
+        modelIds,
+        selectedTools.length > 0 ? selectedTools : undefined,
         chatId,
         sharedConversationId,
       );
@@ -877,6 +880,12 @@ const ChatPage = () => {
             transition={{ duration: 0.15, delay: 0.1 }}
           >
             <ChatInput
+              selectedTools={selectedTools}
+              onToolsChange={(tools) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.set("tools", tools.join(","));
+                setSearchParams(newSearchParams);
+              }}
               onPaneCountChange={(count) => {
                 const newSearchParams = new URLSearchParams(searchParams);
                 newSearchParams.set("panes", count.toString());
