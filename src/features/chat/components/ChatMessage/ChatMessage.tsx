@@ -263,16 +263,16 @@ const ChatMessage = ({
       <button
         className={cn(
           "absolute bg-transparent border-none text-[var(--text-secondary-color)] cursor-pointer p-2 rounded-sm opacity-0 group-hover:opacity-100 hover:opacity-100 transition-opacity duration-75 hover:bg-black/5",
-          placement === "top" && "-top-10",
-          placement === "bottom" && "-bottom-10",
+          placement === "top" && "-top-8",
+          placement === "bottom" && "-bottom-8",
           placement === "side" && "top-1/2 -translate-y-1/2",
           role === "user"
             ? placement === "side"
-              ? "-left-10"
-              : "-right-4"
+              ? "-left-8"
+              : "-right-2"
             : placement === "side"
-              ? "-right-10"
-              : "-left-4",
+              ? "-right-8"
+              : "-left-2",
         )}
         style={placement === "side" ? { top: sideOffset } : undefined}
         onClick={handleCopy}
