@@ -715,24 +715,27 @@ const ChatPage = () => {
                       lastDisplayedMessage?.selected === false &&
                       lastDisplayedMessage.done && (
                         <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
-                          <motion.button
-                            className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-base transition-all hover:-translate-y-0.5 duration-100 cursor-pointer hover:transform"
-                            onClick={() =>
-                              handleUseAnswer({
-                                modelId:
-                                  lastDisplayedMessage.model_id?.toString() ||
-                                  "",
-                                messageId: lastDisplayedMessage.id,
-                              })
-                            }
-                            type="button"
+                          <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.1 }}
                           >
-                            Use this answer
-                          </motion.button>
+                            <Button
+                              variant="secondary"
+                              onClick={() =>
+                                handleUseAnswer({
+                                  modelId:
+                                    lastDisplayedMessage.model_id?.toString() ||
+                                    "",
+                                  messageId: lastDisplayedMessage.id,
+                                })
+                              }
+                              type="button"
+                            >
+                              Use this answer
+                            </Button>
+                          </motion.div>
                         </div>
                       )}
                     <Portal containerId={`preview-pane-${paneIndex}`}>
@@ -784,24 +787,27 @@ const ChatPage = () => {
                                 lastDisplayedMessage?.selected === false &&
                                 lastDisplayedMessage.done && (
                                   <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
-                                    <motion.button
-                                      className="bg-[var(--sidebar-primary)] hover:opacity-90 shadow-md hover:shadow-lg px-4 py-2 border-none rounded-md font-medium text-[var(--sidebar-primary-foreground)] text-sm transition-all hover:-translate-y-0.5 duration-100 cursor-pointer hover:transform"
-                                      onClick={() =>
-                                        handleUseAnswer({
-                                          modelId:
-                                            lastDisplayedMessage.model_id?.toString() ||
-                                            "",
-                                          messageId: lastDisplayedMessage.id,
-                                        })
-                                      }
-                                      type="button"
+                                    <motion.div
                                       initial={{ opacity: 0, y: 10 }}
                                       animate={{ opacity: 1, y: 0 }}
                                       exit={{ opacity: 0, y: 10 }}
                                       transition={{ duration: 0.1 }}
                                     >
-                                      Use this answer
-                                    </motion.button>
+                                      <Button
+                                        variant="secondary"
+                                        onClick={() =>
+                                          handleUseAnswer({
+                                            modelId:
+                                              lastDisplayedMessage.model_id?.toString() ||
+                                              "",
+                                            messageId: lastDisplayedMessage.id,
+                                          })
+                                        }
+                                        type="button"
+                                      >
+                                        Use this answer
+                                      </Button>
+                                    </motion.div>
                                   </div>
                                 )}
                             </motion.div>

@@ -214,27 +214,37 @@ const ChatMessage = ({
     if (!date) return "";
 
     const now = new Date();
-    const diffInMilliseconds = now.getTime() - date.getTime();
-    const diffInMinutes = Math.floor(diffInMilliseconds / (1000 * 60));
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
+    const messageDate = new Date(date);
+
+    // Reset time part for date comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const messageDay = new Date(
+      messageDate.getFullYear(),
+      messageDate.getMonth(),
+      messageDate.getDate(),
+    );
 
     // If it's today, show time
-    if (diffInDays === 0) {
-      return date.toLocaleTimeString([], {
+    if (messageDay.getTime() === today.getTime()) {
+      return messageDate.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       });
     }
 
     // If it's yesterday
-    if (diffInDays === 1) {
-      return `Yesterday ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    if (messageDay.getTime() === yesterday.getTime()) {
+      return `Yesterday ${messageDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
     }
 
     // If it's within a week, show day and time
+    const diffInDays = Math.floor(
+      (today.getTime() - messageDay.getTime()) / (1000 * 60 * 60 * 24),
+    );
     if (diffInDays < 7) {
-      return date.toLocaleDateString([], {
+      return messageDate.toLocaleDateString([], {
         weekday: "short",
         hour: "2-digit",
         minute: "2-digit",
@@ -242,7 +252,7 @@ const ChatMessage = ({
     }
 
     // Otherwise show full date and time
-    return date.toLocaleDateString([], {
+    return messageDate.toLocaleDateString([], {
       month: "short",
       day: "numeric",
       hour: "2-digit",
@@ -298,42 +308,42 @@ const ChatMessage = ({
             remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => (
-                <h1 className="mt-6 mb-2 font-semibold text-[1.6em] leading-tight">
+                <h1 className="mt-4 mb-1 font-semibold text-[1.6em] leading-tight">
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="mt-6 mb-2 font-semibold text-[1.4em] leading-tight">
+                <h2 className="mt-4 mb-1 font-semibold text-[1.4em] leading-tight">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="mt-6 mb-2 font-semibold text-[1.2em] leading-tight">
+                <h3 className="mt-3 mb-1 font-semibold text-[1.2em] leading-tight">
                   {children}
                 </h3>
               ),
               h4: ({ children }) => (
-                <h4 className="mt-6 mb-2 font-semibold text-[1.1em] leading-tight">
+                <h4 className="mt-3 mb-1 font-semibold text-[1.1em] leading-tight">
                   {children}
                 </h4>
               ),
               h5: ({ children }) => (
-                <h5 className="mt-6 mb-2 font-semibold text-[1em] leading-tight">
+                <h5 className="mt-2 mb-1 font-semibold text-[1em] leading-tight">
                   {children}
                 </h5>
               ),
               h6: ({ children }) => (
-                <h6 className="mt-6 mb-2 font-semibold text-[1em] leading-tight">
+                <h6 className="mt-2 mb-1 font-semibold text-[1em] leading-tight">
                   {children}
                 </h6>
               ),
               ul: ({ children }) => (
-                <ul className="mt-2 mb-2 pl-6">{children}</ul>
+                <ul className="mt-1 mb-1 pl-6">{children}</ul>
               ),
               ol: ({ children }) => (
-                <ol className="mt-2 mb-2 pl-6">{children}</ol>
+                <ol className="mt-1 mb-1 pl-6">{children}</ol>
               ),
-              li: ({ children }) => <li className="mb-1">{children}</li>,
+              li: ({ children }) => <li className="mb-0.5">{children}</li>,
               a: ({ children, href }) => (
                 <a
                   href={href}
@@ -343,13 +353,13 @@ const ChatMessage = ({
                 </a>
               ),
               blockquote: ({ children }) => (
-                <blockquote className="my-2 px-4 py-2 border-[var(--border-color)] border-l-4 text-[var(--text-secondary-color)]">
+                <blockquote className="my-1 px-4 py-1 border-[var(--border-color)] border-l-4 text-[var(--text-secondary-color)]">
                   {children}
                 </blockquote>
               ),
               p: ({ children }) => <p className="mb-1">{children}</p>,
               table: ({ children }) => (
-                <table className="my-4 w-full border-collapse">
+                <table className="my-2 w-full border-collapse">
                   {children}
                 </table>
               ),
@@ -367,7 +377,7 @@ const ChatMessage = ({
                 <img src={src} alt={alt} className="rounded-sm max-w-full" />
               ),
               hr: () => (
-                <hr className="my-4 border-[var(--border-color)] border-0 border-t" />
+                <hr className="my-2 border-[var(--border-color)] border-0 border-t" />
               ),
               code: ({
                 inline,
@@ -381,7 +391,7 @@ const ChatMessage = ({
               }) => {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
-                  <div className="bg-black/[0.05] my-4 p-4 rounded-md overflow-x-auto">
+                  <div className="bg-black/[0.05] my-2 p-4 rounded-md overflow-x-auto">
                     <SyntaxHighlighter
                       // @ts-ignore
                       style={atomDark}
