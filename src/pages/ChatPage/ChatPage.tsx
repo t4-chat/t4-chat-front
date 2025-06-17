@@ -336,24 +336,18 @@ const ChatPage = () => {
   const navigate = useNavigate();
   const { chatId, sharedConversationId } = useParams();
   const { isAuthenticated } = useAuth();
-  const { isOpen: isSidebarOpen, onToggle: toggleSidebar } =
-    useContext(SidebarContext);
+  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const {
-    data: sharedChatData,
-    isLoading: isSharedChatLoading,
-    error: sharedChatError,
-  } = useChatsServiceGetApiChatsSharedBySharedConversationId(
-    { sharedConversationId: sharedConversationId || "" },
-    undefined,
-    { enabled: !!sharedConversationId },
-  );
+  const { isLoading: isSharedChatLoading, error: sharedChatError } =
+    useChatsServiceGetApiChatsSharedBySharedConversationId(
+      { sharedConversationId: sharedConversationId || "" },
+      undefined,
+      { enabled: !!sharedConversationId },
+    );
 
   const paneCount = searchParams.get("panes")
     ? Number(searchParams.get("panes"))
