@@ -3,7 +3,7 @@ import { SidebarContext } from "@/components/Layout/Layout";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import LoginModal from "@/components/LoginModal/LoginModal";
 import Portal from "@/components/Portal/Portal";
-import { useAuth } from "@/utils/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import ChatInput from "@/components/ChatInput/ChatInput";
 import Pane, { type ChatMessageWithDate } from "@/components/Pane/Pane";

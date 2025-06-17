@@ -5,7 +5,7 @@ import DropdownMenu, {
 } from "@/components/DropdownMenu/DropdownMenu";
 import LoginModal from "@/components/LoginModal/LoginModal";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/utils/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Settings } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

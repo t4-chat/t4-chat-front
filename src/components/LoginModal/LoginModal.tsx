@@ -1,6 +1,6 @@
 import { type FC, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import { useAuth } from "@/utils/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import Modal from "@/components/Modal/Modal";
 import { Button } from "@/components/ui/button";
 

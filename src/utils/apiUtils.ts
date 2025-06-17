@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
 import { useAiModelsServiceGetApiAiModels } from "../../openapi/queries/queries";
 import type { AiModelResponseSchema } from "../../openapi/requests/types.gen";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export const useFilteredAiModels = () => {
   const { data: models = [], ...modelsQuery } =

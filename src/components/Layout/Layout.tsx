@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { ThemeProvider } from "@/utils/ThemeContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import ChatSidebar from "@/components/ChatSidebar/ChatSidebar";
 import { createContext, useState } from "react";
 import ChatSidebarFloatingButtons from "@/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
