@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { ThemeProvider } from "@/context/ThemeContext";
-import Header from "@/components/Header/Header";
-import ChatSidebar from "@/features/chat/components/ChatSidebar/ChatSidebar";
+import { ThemeProvider } from "@/utils/ThemeContext";
+import ChatSidebar from "@/components/ChatSidebar/ChatSidebar";
 import { createContext, useState } from "react";
-import ChatSidebarFloatingButtons from "@/features/chat/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
-import ChatSidebarBackdrop from "@/features/chat/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
+import ChatSidebarFloatingButtons from "@/components/ChatSidebarToggle/ChatSidebarFloatingButtons";
+import ChatSidebarBackdrop from "@/components/ChatSidebarBackdrop/ChatSidebarBackdrop";
+import Header from "../Header/Header";
 
 export const SidebarContext = createContext<{
   isOpen: boolean;

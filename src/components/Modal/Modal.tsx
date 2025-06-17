@@ -1,5 +1,5 @@
 import { useEffect, type FC, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
 import Portal from "@/components/Portal/Portal";

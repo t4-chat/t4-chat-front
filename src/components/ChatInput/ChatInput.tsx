@@ -8,7 +8,7 @@ import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Search, Image } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 interface IChatInputProps {
   onSend: (message: string, files?: File[], tools?: string[]) => void;

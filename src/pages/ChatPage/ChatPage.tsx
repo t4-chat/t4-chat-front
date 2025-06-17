@@ -3,14 +3,12 @@ import { SidebarContext } from "@/components/Layout/Layout";
 import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
 import LoginModal from "@/components/LoginModal/LoginModal";
 import Portal from "@/components/Portal/Portal";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/utils/AuthContext";
 import { Button } from "@/components/ui/button";
-import ChatInput from "@/features/chat/components/ChatInput/ChatInput";
-import Pane, {
-  type ChatMessageWithDate,
-} from "@/features/chat/components/Pane/Pane";
-import useChatSender from "@/features/chat/hooks/useChatSender";
-import { useHotkey } from "@/hooks/general";
+import ChatInput from "@/components/ChatInput/ChatInput";
+import Pane, { type ChatMessageWithDate } from "@/components/Pane/Pane";
+import useChatSender from "@/utils/hooks";
+import { useHotkey } from "@/utils/hooks";
 import { useFilteredAiModels, type StreamEvent } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";

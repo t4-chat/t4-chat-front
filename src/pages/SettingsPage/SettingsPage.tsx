@@ -1,13 +1,12 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers/index";
 import { SidebarContext } from "@/components/Layout/Layout";
-import ConfirmationModal from "@/components/Modal/ConfirmationModal";
-import SearchableSelect from "@/components/ModelSelect/ModelSelect";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { useForm } from "@tanstack/react-form";
 import {
   AlertTriangle,
@@ -48,6 +47,8 @@ import {
   UseChatsServiceGetApiChatsSharedKeyFn,
 } from "~/openapi/queries/common";
 import { useFilteredAiModels } from "@/utils/apiUtils";
+import ConfirmationModal from "@/components/Modal/ConfirmationModal";
+import SearchableSelect from "@/components/ModelSelect/ModelSelect";
 
 const SettingsPage: FC = () => {
   const [activeTab, setActiveTab] = useState<

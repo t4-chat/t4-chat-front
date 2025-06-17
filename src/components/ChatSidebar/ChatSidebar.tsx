@@ -10,9 +10,9 @@ import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
 import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 import ShareChatModal from "@/components/Modal/ShareChatModal";
 import { Button } from "@/components/ui/button";
-import type { Chat } from "@/features/chat/types";
-import { useMutationErrorHandler } from "@/hooks/general";
-import { cn } from "@/lib/utils";
+import type { Chat } from "@/types/chat";
+import { useMutationErrorHandler } from "@/utils/hooks";
+import { cn } from "@/utils";
 import { useChats } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Share2 } from "lucide-react";
@@ -116,7 +116,7 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
         ...msg,
         previous_message_id: msg.previous_message_id || undefined,
         created_at: new Date(msg.created_at),
-        model_id: msg.model_id ? Number(msg.model_id) : undefined,
+        model_id: msg.model_id ? msg.model_id.toString() : undefined,
         attachments: msg.attachments || undefined,
         selected: msg.selected || undefined,
       })),

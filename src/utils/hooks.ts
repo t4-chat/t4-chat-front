@@ -1,6 +1,65 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiError } from "~/openapi/requests";
+import { useFilesServicePostApiFilesUpload } from "~/openapi/queries/queries";
+import { ChatService } from "@/services/chatService";
+import type { StreamEvent } from "@/utils/apiUtils";
+
+interface UseChatSenderOptions {
+  onEvent: (
+    event: StreamEvent & { message_id?: string; model_id?: number },
+  ) => void;
+  onError: (error: unknown) => void;
+  onDone: () => void;
+}
+
+export const useChatSender = ({
+  onEvent,
+  onError,
+  onDone,
+}: UseChatSenderOptions) => {
+  const { handleError, handleSuccess } = useMutationErrorHandler();
+  const { mutateAsync: upload } = useFilesServicePostApiFilesUpload({
+    onSuccess: () => handleSuccess("File uploaded successfully"),
+    onError: (error) => handleError(error, "Failed to upload file"),
+  });
+  const send = async (
+    content: string,
+    files: File[] | undefined,
+    modelIds: string[],
+    tools: string[] | undefined,
+    chatId?: string | null,
+    sharedConversationId?: string | null,
+  ) => {
+    let attachmentIds: string[] = [];
+    if (files && files.length > 0) {
+      const results = await Promise.all(
+        files.map((file) => upload({ formData: { file } })),
+      );
+      attachmentIds = results.map((r) => r.file_id);
+    }
+
+    const abort = new ChatService().streamChat({
+      message: {
+        content,
+        // role: "user",
+        attachments: attachmentIds.length > 0 ? attachmentIds : undefined,
+        chat_id: chatId || undefined,
+      },
+      modelIds,
+      onEvent,
+      onError,
+      onDone,
+      options: { chatId, sharedConversationId, tools },
+    });
+
+    return { abort };
+  };
+
+  return { send };
+};
+
+export default useChatSender;
 
 interface LegacyApiError {
   message?: string;

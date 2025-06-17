@@ -3,12 +3,12 @@ import ModelSelect, {
 } from "@/components/ModelSelect/ModelSelect";
 
 // import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
-import ChatMessage from "@/features/chat/components/ChatMessage/ChatMessage";
-import ScrollToBottomButton from "@/features/chat/components/ScrollToBottomButton/ScrollToBottomButton";
-import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
+import ChatMessage from "@/components/ChatMessage/ChatMessage";
+import ScrollToBottomButton from "@/components/ScrollToBottomButton/ScrollToBottomButton";
+import type { ChatMessage as ChatMessageType } from "@/types/chat";
 import { type FC, memo, useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 interface ModelOption {
   value: string;

@@ -4,11 +4,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import type { ChatMessage as ChatMessageType } from "@/features/chat/types";
+import type { ChatMessageWithDate } from "@/components/Pane/Pane";
 import { fileService } from "@/services/fileService";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
-interface ChatMessageProps extends Omit<ChatMessageType, "id"> {
+interface ChatMessageProps
+  extends Omit<ChatMessageWithDate, "id" | "created_at"> {
   disableMarkdown?: boolean;
   modelName?: string;
   modelIconPath?: string;

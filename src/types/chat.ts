@@ -1,13 +1,8 @@
-export interface ChatMessage {
-  id?: string;
-  role?: "user" | "assistant";
-  content: string;
-  attachments?: string[] | null;
-  previous_message_id?: string;
-  created_at?: Date;
-  chat_id?: string;
-  model_id?: number;
-  selected?: boolean;
+import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
+
+export interface ChatMessage extends ChatMessageResponseSchema {
+  done?: boolean;
+  reasoning?: string;
 }
 
 export interface AIModel {

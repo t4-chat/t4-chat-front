@@ -11,7 +11,7 @@ import {
   UseChatsServiceGetApiChatsSharedKeyFn,
 } from "~/openapi/queries/common";
 import Modal from "./Modal";
-import { useMutationErrorHandler } from "@/hooks/general";
+import { useMutationErrorHandler } from "@/utils/hooks";
 
 interface ShareChatModalProps {
   isOpen: boolean;

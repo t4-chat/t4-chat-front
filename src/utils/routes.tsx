@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
 import ChatPage from "@/pages/ChatPage/ChatPage";
 import SettingsPage from "@/pages/SettingsPage/SettingsPage";
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider } from "@/utils/AuthContext";
 import HomePage from "@/pages/HomePage/HomePage";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";

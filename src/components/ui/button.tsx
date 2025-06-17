@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const buttonVariants = cva(
   "flex justify-center items-center disabled:opacity-50 rounded-lg focus-visible:outline-none focus-visible:ring-[var(--primary-color)] focus-visible:ring-2 focus-visible:ring-offset-0 font-medium [&_svg]:text-current text-sm transition-all duration-100 disabled:cursor-not-allowed",
