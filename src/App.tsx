@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "sonner";
-import { router } from "./utils/routes";
+import { router } from "./routes";
 import "./styles/globals.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
