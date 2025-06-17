@@ -1,5 +1,5 @@
 import { type ChangeEvent, useRef } from "react";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 import { Button } from "@/components/ui/button";
 
 export interface FileUploadProps {

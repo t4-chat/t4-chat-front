@@ -6,7 +6,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import type { ChatMessageWithDate } from "@/components/Pane/Pane";
 import { fileService } from "@/services/fileService";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 
 interface ChatMessageProps
   extends Omit<ChatMessageWithDate, "id" | "created_at"> {

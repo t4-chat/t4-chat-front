@@ -1,4 +1,4 @@
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 import { useState, useRef, useEffect, type FC } from "react";
 
 export interface DropdownMenuItem {

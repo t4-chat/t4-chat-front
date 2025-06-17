@@ -24,7 +24,7 @@ import { Key, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFilteredAiModels } from "@/utils/apiUtils";
 import { useMinimumLoading } from "@/utils/hooks";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 
 const HomePage: FC = () => {
   const navigate = useNavigate();

@@ -12,7 +12,7 @@ import ShareChatModal from "@/components/Modal/ShareChatModal";
 import { Button } from "@/components/ui/button";
 import type { Chat } from "@/types/chat";
 import { useMutationErrorHandler } from "@/utils/hooks";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 import { useChats } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { Share2 } from "lucide-react";

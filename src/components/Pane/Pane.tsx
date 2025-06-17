@@ -8,7 +8,7 @@ import ScrollToBottomButton from "@/components/ScrollToBottomButton/ScrollToBott
 import type { ChatMessage as ChatMessageType } from "@/types/chat";
 import { type FC, memo, useEffect, useMemo, useRef, useState } from "react";
 import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 
 interface ModelOption {
   value: string;

@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/generalUtils";
 import { Key } from "lucide-react";
 
 export interface SearchableSelectOption {
