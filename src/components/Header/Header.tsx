@@ -6,11 +6,15 @@ import DropdownMenu, {
 import LoginModal from "@/components/LoginModal/LoginModal";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Settings } from "lucide-react";
+import { Settings, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Header = () => {
+interface HeaderProps {
+  onShowWelcome?: () => void;
+}
+
+const Header = ({ onShowWelcome }: HeaderProps) => {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -23,6 +27,12 @@ const Header = () => {
     user?.profile_image_url && user.profile_image_url.trim() !== "";
 
   const userMenuItems: DropdownMenuItem[] = [
+    {
+      id: "welcome",
+      label: "Show Welcome",
+      icon: <HelpCircle size={16} />,
+      onClick: onShowWelcome,
+    },
     {
       id: "settings",
       label: "Settings",
@@ -43,6 +53,15 @@ const Header = () => {
       {/* Top Right Section - Controls */}
       <div className="top-3 right-3 z-10 fixed rounded-xl">
         <div className="flex items-center gap-1">
+          <Button
+            variant="text"
+            size="icon"
+            onClick={onShowWelcome}
+            className="rounded-full"
+            aria-label="Show welcome"
+          >
+            <HelpCircle size={16} />
+          </Button>
           {isLoading ? null : isAuthenticated ? (
             <DropdownMenu
               trigger={
