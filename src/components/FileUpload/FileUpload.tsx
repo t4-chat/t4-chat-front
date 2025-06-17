@@ -1,5 +1,6 @@
 import { type ChangeEvent, useRef } from "react";
-import "./FileUpload.scss";
+import { cn } from "@/utils/generalUtils";
+import { Button } from "@/components/ui/button";
 
 export interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -8,7 +9,7 @@ export interface FileUploadProps {
   disabled?: boolean;
 }
 
-export const FileUpload = ({
+const FileUpload = ({
   onFilesSelected,
   maxFiles = 3,
   accept = "*",
@@ -37,13 +38,19 @@ export const FileUpload = ({
   };
 
   return (
-    <div className={`file-upload ${disabled ? "disabled" : ""}`}>
-      <button
-        type="button"
-        className="file-upload-button"
+    <div
+      className={cn(
+        "inline-flex items-center",
+        disabled && "opacity-60 cursor-not-allowed",
+      )}
+    >
+      <Button
+        variant="text"
+        size="icon"
         onClick={handleClick}
         disabled={disabled}
         aria-label="Attach files"
+        className="rounded-full w-10 h-10 active:scale-95"
       >
         <svg
           width="20"
@@ -70,7 +77,7 @@ export const FileUpload = ({
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </Button>
       <input
         ref={fileInputRef}
         type="file"
@@ -83,3 +90,5 @@ export const FileUpload = ({
     </div>
   );
 };
+
+export default FileUpload;

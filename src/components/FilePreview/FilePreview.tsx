@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import "./FilePreview.scss";
+import { Button } from "@/components/ui/button";
 
 interface FilePreviewProps {
   file: File;
   onRemove: () => void;
 }
 
-export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
+const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,29 +33,38 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
       : file.name;
 
   return (
-    <div className="file-preview">
-      <div className="file-preview-content">
+    <div className="flex justify-between items-center bg-black/5 mr-2 mb-2 p-2 rounded-lg max-w-[200px]">
+      <div className="flex flex-1 items-center min-w-0">
         {previewUrl ? (
-          <div className="file-preview-image">
-            <img src={previewUrl} alt={file.name} />
+          <div className="flex-shrink-0 mr-2 rounded w-7 h-7 overflow-hidden">
+            <img
+              src={previewUrl}
+              alt={file.name}
+              className="w-full h-full object-cover"
+            />
           </div>
         ) : (
-          <div className="file-preview-icon">
-            <span className="file-extension">
+          <div className="flex flex-shrink-0 justify-center items-center bg-gray-200 mr-2 rounded w-7 h-7">
+            <span className="font-semibold text-[10px] text-[var(--text-secondary-color)] uppercase">
               {getFileExtension(file.name)}
             </span>
           </div>
         )}
-        <div className="file-preview-info">
-          <span className="file-name">{displayName}</span>
-          <span className="file-size">{(file.size / 1024).toFixed(1)} KB</span>
+        <div className="flex flex-col min-w-0 overflow-hidden">
+          <span className="overflow-hidden text-[var(--text-primary-color)] text-xs text-ellipsis whitespace-nowrap">
+            {displayName}
+          </span>
+          <span className="text-[10px] text-[var(--text-secondary-color)]">
+            {(file.size / 1024).toFixed(1)} KB
+          </span>
         </div>
       </div>
-      <button
-        className="file-remove-button"
+      <Button
+        variant="text"
+        size="icon"
         onClick={onRemove}
         aria-label="Remove file"
-        type="button"
+        className="flex-shrink-0 ml-2 p-0 w-5 h-5"
       >
         <svg
           width="16"
@@ -74,7 +83,9 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
             strokeLinejoin="round"
           />
         </svg>
-      </button>
+      </Button>
     </div>
   );
 };
+
+export default FilePreview;

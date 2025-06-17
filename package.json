@@ -8,6 +8,7 @@
     "@radix-ui/react-select": "2.2.5",
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.12",
+    "@radix-ui/react-tooltip": "^1.2.7",
     "@react-oauth/google": "^0.12.1",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/react-form": "^1.12.1",
@@ -47,7 +48,7 @@
   "scripts": {
     "start": "vite",
     "start:4200": "vite --port 4200",
-    "generate-api": "npx --package @7nohe/openapi-react-query-codegen openapi-rq -i https://dev-agg-ai-api-udpflod4rq-uc.a.run.app/openapi.json",
+    "generate-api": "npx --package @7nohe/openapi-react-query-codegen openapi-rq -i ./openapi.json && npx biome format --write",
     "build": "vite build",
     "preview": "vite preview --port 4200",
     "format": "biome format --write",

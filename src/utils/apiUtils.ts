@@ -1,12 +1,32 @@
+import { useMemo } from "react";
 import { useChatsServiceGetApiChats } from "~/openapi/queries/queries";
-import { tokenService } from "~/openapi/requests/core/OpenAPI";
+import { useAiModelsServiceGetApiAiModels } from "../../openapi/queries/queries";
+import type { AiModelResponseSchema } from "../../openapi/requests/types.gen";
+import { useAuth } from "../contexts/AuthContext";
+
+export const useFilteredAiModels = () => {
+  const { data: models = [], ...modelsQuery } =
+    useAiModelsServiceGetApiAiModels();
+
+  const filteredModels = useMemo(() => {
+    return models.filter((model: AiModelResponseSchema) => {
+      // Show model if it doesn't require BYOK or if user has an API key for it
+      return !model.only_with_byok || model.has_api_key;
+    });
+  }, [models]);
+
+  return {
+    ...modelsQuery,
+    data: filteredModels,
+  };
+};
 
 export interface MessageStartEvent {
   type: "message_start";
   message: {
     id: string;
     role: string;
-    model_id: number;
+    model_id: string;
     model_name: string;
     reply_to: string;
   };
@@ -33,7 +53,20 @@ export interface MessageStopEvent {
 
 export interface MessageContentStopEvent {
   type: "message_content_stop";
-  message: { id: string; model_id: number; model_name: string };
+  message: { id: string; model_id: string; model_name: string };
+}
+
+export interface ErrorStreamEvent {
+  type: "error";
+  error: string;
+  code?: number;
+}
+
+export interface ReasoningContentEvent {
+  type: "reasoning_content";
+  model_id: string;
+  message_id: string;
+  content: { text: string; type: string };
 }
 
 export type StreamEvent =
@@ -42,15 +75,18 @@ export type StreamEvent =
   | MessageContentStopEvent
   | ChatMetadataEvent
   | MessageStopEvent
-  | DoneEvent;
+  | DoneEvent
+  | ErrorStreamEvent
+  | ReasoningContentEvent;
 
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;
 export type DoneCallback = () => void;
 
 export const useChats = () => {
+  const { isAuthenticated } = useAuth();
   const { data: chats, ...other } = useChatsServiceGetApiChats(undefined, {
-    enabled: !!tokenService.getToken(),
+    enabled: isAuthenticated,
   });
 
   if (!chats) {

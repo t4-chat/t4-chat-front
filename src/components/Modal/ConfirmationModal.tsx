@@ -1,7 +1,6 @@
 import type { FC } from "react";
-import { Modal } from "./Modal";
-import { Button } from "../Button/Button";
-import "./ConfirmationModal.scss";
+import Modal from "./Modal";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -14,7 +13,7 @@ interface ConfirmationModalProps {
   isDanger?: boolean;
 }
 
-export const ConfirmationModal: FC<ConfirmationModalProps> = ({
+const ConfirmationModal: FC<ConfirmationModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -26,10 +25,12 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title}>
-      <div className="confirmation-modal">
-        <p className="confirmation-message">{message}</p>
+      <div className="p-0 px-4 pb-4">
+        <p className="mb-5 text-[var(--text-primary-color)] text-base leading-6">
+          {message}
+        </p>
 
-        <div className="confirmation-actions">
+        <div className="flex justify-end gap-3">
           <Button onClick={onClose} variant="secondary">
             {cancelLabel}
           </Button>
@@ -39,7 +40,7 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
               onConfirm();
               onClose();
             }}
-            variant={isDanger ? "danger" : "primary"}
+            variant={isDanger ? "destructive" : "primary"}
           >
             {confirmLabel}
           </Button>
@@ -48,3 +49,5 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
     </Modal>
   );
 };
+
+export default ConfirmationModal;

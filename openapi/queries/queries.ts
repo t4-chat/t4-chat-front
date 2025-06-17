@@ -14,17 +14,22 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
 import type {
+  AdminSendMessageRequestSchema,
   AggregationType,
   Body_upload_file_api_files_upload_post,
   DeleteChatsRequestSchema,
   EditAiModelHostRequestSchema,
   EditAiModelRequestSchema,
   GoogleAuthRequestSchema,
+  HostApiKeyCreateSchema,
+  HostApiKeyUpdateSchema,
   MultiModelCompletionRequestSchema,
+  UnshareChatsRequestSchema,
   UpdateChatTitleRequestSchema,
 } from "../requests/types.gen";
 import * as Common from "./common";
@@ -65,6 +70,44 @@ export const useChatsServiceGetApiChats = <
   useQuery<TData, TError>({
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(queryKey),
     queryFn: () => ChatsService.getApiChats() as TData,
+    ...options,
+  });
+export const useChatsServiceGetApiChatsShared = <
+  TData = Common.ChatsServiceGetApiChatsSharedDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseChatsServiceGetApiChatsSharedKeyFn(queryKey),
+    queryFn: () => ChatsService.getApiChatsShared() as TData,
+    ...options,
+  });
+export const useChatsServiceGetApiChatsSharedBySharedConversationId = <
+  TData = Common.ChatsServiceGetApiChatsSharedBySharedConversationIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn(
+        { sharedConversationId },
+        queryKey,
+      ),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }) as TData,
     ...options,
   });
 export const useChatsServiceGetApiChatsByChatId = <
@@ -276,6 +319,49 @@ export const useFilesServiceGetApiFilesByFileId = <
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }) as TData,
     ...options,
   });
+export const useHostApiKeysServiceGetApiHostApiKeys = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn(
+      { hostId },
+      queryKey,
+    ),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }) as TData,
+    ...options,
+  });
+export const useHostApiKeysServiceGetApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServiceGetApiHostApiKeysByKeyIdDefaultResponse,
+  TError = unknown,
+  TQueryKey extends Array<unknown> = unknown[],
+>(
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+  queryKey?: TQueryKey,
+  options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+) =>
+  useQuery<TData, TError>({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn(
+      { keyId },
+      queryKey,
+    ),
+    queryFn: () =>
+      HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }) as TData,
+    ...options,
+  });
 export const useUtilizationServiceGetApiUtilization = <
   TData = Common.UtilizationServiceGetApiUtilizationDefaultResponse,
   TError = unknown,
@@ -345,6 +431,37 @@ export const useChatsServicePostApiChatsConversation = <
     mutationFn: ({ requestBody }) =>
       ChatsService.postApiChatsConversation({
         requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useChatsServicePostApiChatsByChatIdShare = <
+  TData = Common.ChatsServicePostApiChatsByChatIdShareMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        chatId: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      chatId: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ chatId }) =>
+      ChatsService.postApiChatsByChatIdShare({
+        chatId,
       }) as unknown as Promise<TData>,
     ...options,
   });
@@ -441,6 +558,102 @@ export const useAdminServicePostApiAdminModelHosts = <
       }) as unknown as Promise<TData>,
     ...options,
   });
+export const useAdminServicePostApiAdminMessages = <
+  TData = Common.AdminServicePostApiAdminMessagesMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: AdminSendMessageRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: AdminSendMessageRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      AdminService.postApiAdminMessages({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useAdminServicePostApiAdminMessagesStream = <
+  TData = Common.AdminServicePostApiAdminMessagesStreamMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: AdminSendMessageRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: AdminSendMessageRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      AdminService.postApiAdminMessagesStream({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useAdminServicePostApiAdminToolsWebSearch = <
+  TData = Common.AdminServicePostApiAdminToolsWebSearchMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        numResults?: number;
+        query: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      numResults?: number;
+      query: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ numResults, query }) =>
+      AdminService.postApiAdminToolsWebSearch({
+        numResults,
+        query,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
 export const useFilesServicePostApiFilesUpload = <
   TData = Common.FilesServicePostApiFilesUploadMutationResult,
   TError = unknown,
@@ -469,6 +682,37 @@ export const useFilesServicePostApiFilesUpload = <
     mutationFn: ({ formData }) =>
       FilesService.postApiFilesUpload({
         formData,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useHostApiKeysServicePostApiHostApiKeys = <
+  TData = Common.HostApiKeysServicePostApiHostApiKeysMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: HostApiKeyCreateSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: HostApiKeyCreateSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      HostApiKeysService.postApiHostApiKeys({
+        requestBody,
       }) as unknown as Promise<TData>,
     ...options,
   });
@@ -536,6 +780,40 @@ export const useAdminServicePutApiAdminModelHostsByHostId = <
     mutationFn: ({ hostId, requestBody }) =>
       AdminService.putApiAdminModelHostsByHostId({
         hostId,
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useHostApiKeysServicePutApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServicePutApiHostApiKeysByKeyIdMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        keyId: string;
+        requestBody: HostApiKeyUpdateSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      keyId: string;
+      requestBody: HostApiKeyUpdateSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ keyId, requestBody }) =>
+      HostApiKeysService.putApiHostApiKeysByKeyId({
+        keyId,
         requestBody,
       }) as unknown as Promise<TData>,
     ...options,
@@ -668,6 +946,37 @@ export const useChatsServiceDeleteApiChats = <
       ChatsService.deleteApiChats({ requestBody }) as unknown as Promise<TData>,
     ...options,
   });
+export const useChatsServiceDeleteApiChatsShare = <
+  TData = Common.ChatsServiceDeleteApiChatsShareMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        requestBody: UnshareChatsRequestSchema;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      requestBody: UnshareChatsRequestSchema;
+    },
+    TContext
+  >({
+    mutationFn: ({ requestBody }) =>
+      ChatsService.deleteApiChatsShare({
+        requestBody,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
 export const useAdminServiceDeleteApiAdminAiModelsByAiModelId = <
   TData = Common.AdminServiceDeleteApiAdminAiModelsByAiModelIdMutationResult,
   TError = unknown,
@@ -727,6 +1036,37 @@ export const useAdminServiceDeleteApiAdminModelHostsByHostId = <
     mutationFn: ({ hostId }) =>
       AdminService.deleteApiAdminModelHostsByHostId({
         hostId,
+      }) as unknown as Promise<TData>,
+    ...options,
+  });
+export const useHostApiKeysServiceDeleteApiHostApiKeysByKeyId = <
+  TData = Common.HostApiKeysServiceDeleteApiHostApiKeysByKeyIdMutationResult,
+  TError = unknown,
+  TContext = unknown,
+>(
+  options?: Omit<
+    UseMutationOptions<
+      TData,
+      TError,
+      {
+        keyId: string;
+      },
+      TContext
+    >,
+    "mutationFn"
+  >,
+) =>
+  useMutation<
+    TData,
+    TError,
+    {
+      keyId: string;
+    },
+    TContext
+  >({
+    mutationFn: ({ keyId }) =>
+      HostApiKeysService.deleteApiHostApiKeysByKeyId({
+        keyId,
       }) as unknown as Promise<TData>,
     ...options,
   });

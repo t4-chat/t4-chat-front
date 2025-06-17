@@ -1,48 +1,88 @@
 import { providerIconPaths } from "@/assets/icons/ai-providers";
-import InfoModal from "@/components/InfoModal/InfoModal";
 import { SidebarContext } from "@/components/Layout/Layout";
-import { LoadingDots } from "@/components/LoadingDots/LoadingDots";
-import { LoginModal } from "@/components/LoginModal/LoginModal";
-import { Portal } from "@/components/Portal/Portal";
-import { useAuth } from "@/context/AuthContext";
-import ChatInput from "@/features/chat/components/ChatInput/ChatInput";
-import Pane, {
-  type ChatMessageWithDate,
-} from "@/features/chat/components/Pane/Pane";
-import useChatSender from "@/features/chat/hooks/useChatSender";
-import { useHotkey } from "@/hooks/general";
-import type { StreamEvent } from "@/utils/apiUtils";
+import LoadingScreen from "@/components/LoadingScreen/LoadingScreen";
+import LoginModal from "@/components/LoginModal/LoginModal";
+import Portal from "@/components/Portal/Portal";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import ChatInput from "@/components/ChatInput/ChatInput";
+import Pane, { type ChatMessageWithDate } from "@/components/Pane/Pane";
+import useChatSender from "@/utils/hooks";
+import { useHotkey } from "@/utils/hooks";
+import { useFilteredAiModels, type StreamEvent } from "@/utils/apiUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, XIcon } from "lucide-react";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { UseChatsServiceGetApiChatsKeyFn } from "~/openapi/queries/common";
 import {
-  useAiModelsServiceGetApiAiModels,
   useChatsServiceGetApiChatsByChatIdMessages,
+  useChatsServiceGetApiChatsSharedBySharedConversationId,
   useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect,
 } from "~/openapi/queries/queries";
 import type { AiModelResponseSchema } from "~/openapi/requests/types.gen";
-import "./ChatPage.scss";
-import { responseWasSelected } from "@/lib/utils";
+import { toast } from "sonner";
+import NotFoundPage from "@/pages/NotFoundPage/NotFoundPage";
+
+export const responseWasSelected = (
+  messages: Pick<
+    ChatMessageWithDate,
+    "id" | "role" | "previous_message_id" | "selected"
+  >[],
+) => {
+  if (!messages) return true;
+  const lastUserMessage = [...messages].findLast((m) => m.role === "user");
+
+  if (!lastUserMessage?.id) return true;
+
+  const responses = messages.filter(
+    (m) =>
+      m.previous_message_id === lastUserMessage.id && m.role === "assistant",
+  );
+  if (responses.length > 1) {
+    return responses.some((r) => r.selected === true);
+  }
+
+  return true;
+};
 
 const useInitialMessages = ({
   chatId,
+  sharedConversationId,
 }: {
   chatId: string | undefined;
+  sharedConversationId: string | undefined;
 }) => {
-  const { data: chatMessages, isLoading } =
-    useChatsServiceGetApiChatsByChatIdMessages(
-      { chatId: chatId || "" },
-      undefined,
-      { enabled: !!chatId },
-    );
+  const {
+    data: chatMessages,
+    isLoading,
+    error: chatError,
+  } = useChatsServiceGetApiChatsByChatIdMessages(
+    { chatId: chatId || "" },
+    undefined,
+    { enabled: !!chatId && !sharedConversationId },
+  );
+
+  const {
+    data: sharedChatData,
+    isLoading: isSharedChatLoading,
+    error: sharedChatError,
+  } = useChatsServiceGetApiChatsSharedBySharedConversationId(
+    { sharedConversationId: sharedConversationId || "" },
+    undefined,
+    { enabled: !!sharedConversationId },
+  );
+
   const previousChatIdRef = useRef<string | undefined>(undefined);
   const [messages, setMessages] = useState<ChatMessageWithDate[] | undefined>(
     undefined,
   );
   const navigate = useNavigate();
+
+  const currentData = sharedConversationId ? sharedChatData : chatMessages;
+  const currentLoading = sharedConversationId ? isSharedChatLoading : isLoading;
+  const currentError = sharedConversationId ? sharedChatError : chatError;
 
   useEffect(() => {
     if (!!previousChatIdRef.current && previousChatIdRef.current !== chatId) {
@@ -55,24 +95,36 @@ const useInitialMessages = ({
   useEffect(() => {
     if (messages?.length) return;
 
-    if (!chatId && !messages) {
+    if (!chatId && !sharedConversationId && !messages) {
       setMessages([]);
       return;
     }
 
-    if (chatId && !chatMessages?.messages.length && !isLoading) {
+    // Only redirect if there's an actual error (like 404), not just empty messages
+    if (chatId && currentError && !currentLoading) {
       navigate("/");
       return;
     }
-    if (!chatMessages?.messages) return;
-    setMessages(
-      chatMessages.messages.map((m) => ({
-        ...m,
-        created_at: new Date(m.created_at),
-        done: true,
-      })),
-    );
-  }, [chatMessages, messages, chatId, isLoading]);
+
+    // If we have data (even if messages array is empty), process it
+    if (currentData && !currentLoading) {
+      setMessages(
+        currentData.messages.map((m) => ({
+          ...m,
+          created_at: new Date(m.created_at),
+          done: true,
+          reasoning: "",
+        })),
+      );
+    }
+  }, [
+    currentData,
+    messages,
+    chatId,
+    sharedConversationId,
+    currentLoading,
+    currentError,
+  ]);
   return { messages, setMessages };
 };
 
@@ -200,6 +252,14 @@ const useInitialPanes = ({
       (m) =>
         m.previous_message_id === lastUserMessage.id && m.role === "assistant",
     );
+
+    // Fix: If there are no assistant messages, fallback to 1 pane
+    if (assistantMessages.length === 0) {
+      currentSearchParams.set("panes", "1");
+      setSearchParams(currentSearchParams);
+      return;
+    }
+
     const selectedMessages = assistantMessages.filter(
       (m) => m.selected === true || m.selected === null,
     );
@@ -272,15 +332,22 @@ const usePendingMessageHandler = ({
   }, [isAuthenticated, pendingMessage, modelIds, paneCount]);
 };
 
-export const ChatPage = () => {
+const ChatPage = () => {
   const navigate = useNavigate();
-  const { chatId } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
+  const { chatId, sharedConversationId } = useParams();
   const { isAuthenticated } = useAuth();
-
+  const { isOpen: isSidebarOpen } = useContext(SidebarContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
+
+  const { isLoading: isSharedChatLoading, error: sharedChatError } =
+    useChatsServiceGetApiChatsSharedBySharedConversationId(
+      { sharedConversationId: sharedConversationId || "" },
+      undefined,
+      { enabled: !!sharedConversationId },
+    );
 
   const paneCount = searchParams.get("panes")
     ? Number(searchParams.get("panes"))
@@ -291,9 +358,8 @@ export const ChatPage = () => {
   const [previewPaneIndex, setPreviewPaneIndex] = useState<number | undefined>(
     undefined,
   );
-  const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+
+  const selectedTools = searchParams.get("tools")?.split(",") || [];
 
   const abortStreamingRef = useRef<() => void>(null);
 
@@ -306,11 +372,14 @@ export const ChatPage = () => {
     };
   }, [chatId]);
 
-  const { data: availableModels } = useAiModelsServiceGetApiAiModels();
+  const { data: availableModels } = useFilteredAiModels();
   const { mutateAsync: selectMessage } =
     useChatsServicePatchApiChatsByChatIdMessagesByMessageIdSelect();
 
-  const { messages, setMessages } = useInitialMessages({ chatId });
+  const { messages, setMessages } = useInitialMessages({
+    chatId,
+    sharedConversationId,
+  });
 
   useInitialPanes({
     messages,
@@ -388,6 +457,12 @@ export const ChatPage = () => {
     ) => {
       if (!paneCount) return;
       switch (event.type) {
+        case "error":
+          toast.error(
+            event.error || "An unknown error occurred during streaming.",
+          );
+          setIsStreaming(false);
+          break;
         case "message_start":
           setIsStreaming(true);
           setMessages((prev) => {
@@ -409,12 +484,11 @@ export const ChatPage = () => {
                 selected: paneCount > 1 ? false : null,
                 done: false,
                 previous_message_id: event.message.reply_to,
+                reasoning: "",
               },
             ];
           });
-
           break;
-
         case "message_content":
           if (event.message_id) {
             setMessages((prev) => {
@@ -429,6 +503,30 @@ export const ChatPage = () => {
             });
           }
           break;
+        case "reasoning_content":
+          if (event.message_id) {
+            setMessages((prev) => {
+              const newMessages = [...(prev || [])];
+              const assistantMessage = newMessages.find(
+                (msg) => msg.id === event.message_id,
+              );
+              if (assistantMessage) {
+                assistantMessage.reasoning =
+                  (assistantMessage.reasoning || "") + event.content?.text;
+              } else {
+                newMessages.push({
+                  id: event.message_id,
+                  content: "",
+                  role: "assistant",
+                  model_id: event.model_id,
+                  created_at: new Date(),
+                  reasoning: event.content.text,
+                });
+              }
+              return newMessages;
+            });
+          }
+          break;
         case "message_content_stop":
           if (event.message_id) {
             setMessages((prev) => {
@@ -438,6 +536,7 @@ export const ChatPage = () => {
               );
               if (assistantMessage) {
                 assistantMessage.done = true;
+                assistantMessage.reasoning = "";
               }
               return newMessages;
             });
@@ -447,24 +546,19 @@ export const ChatPage = () => {
           if (chatId !== event.chat.id) {
             navigate(`/chat/${event.chat.id}?${searchParams.toString()}`);
           }
-
           break;
-
         default:
           break;
       }
     },
     onError: (err) => {
-      // TODO: add alert here to show error
-      // think about how to handle when one model returned error, but other models returned content
-      console.error("onStreamError", err);
+      toast.error(err instanceof Error ? err.message : String(err));
       setIsStreaming(false);
     },
     onDone: () => {
       if (abortStreamingRef.current) {
         abortStreamingRef.current = null;
       }
-      // TODO: make it smarter, fetch only when new chat was created
       queryClient.invalidateQueries({
         queryKey: UseChatsServiceGetApiChatsKeyFn(),
       });
@@ -474,7 +568,6 @@ export const ChatPage = () => {
 
   const sendMessage = async (msg: string, files?: File[]) => {
     if (!msg.trim() && (!files || files.length === 0)) return;
-
     if (!isAuthenticated) {
       setPendingMessage(msg);
       setIsLoginModalOpen(true);
@@ -491,7 +584,7 @@ export const ChatPage = () => {
             content: msg,
             role: "user",
             created_at: new Date(),
-            attachments: files,
+            attachments: null,
           },
         ];
       });
@@ -499,8 +592,10 @@ export const ChatPage = () => {
       const { abort } = await send(
         msg,
         files,
-        modelIds.slice(0, paneCount),
+        modelIds,
+        selectedTools.length > 0 ? selectedTools : undefined,
         chatId,
+        sharedConversationId,
       );
       abortStreamingRef.current = abort;
     } catch (error) {
@@ -508,7 +603,8 @@ export const ChatPage = () => {
     }
   };
 
-  useHotkey("Escape", handleEscape);
+  // Only register the high-priority escape handler when there's actually a preview open
+  useHotkey("Escape", handleEscape, previewPaneIndex !== undefined ? 10 : -1);
 
   usePendingMessageHandler({
     isAuthenticated,
@@ -520,34 +616,69 @@ export const ChatPage = () => {
     modelIds,
   });
 
+  useEffect(() => {
+    if (!chatId) return;
+    // Reset isStreaming when leaving the page (unmount)
+    return () => {
+      setIsStreaming(false);
+    };
+  }, [chatId]);
+
+  // If we're trying to access a shared chat that doesn't exist or was unshared
+  if (sharedConversationId && !isSharedChatLoading && sharedChatError) {
+    return (
+      <NotFoundPage
+        title="Chat Not Found"
+        message="This chat has been unshared or doesn't exist."
+      />
+    );
+  }
+
   if (!messages || !paneCount || !modelIds || !availableModels) {
-    return <LoadingDots />;
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <LoadingScreen message="Loading chat..." />
+      </div>
+    );
   }
 
   return (
-    <div className={`chat-page ${isSidebarOpen ? "with-sidebar" : ""}`}>
+    <div
+      className={`h-screen w-full flex justify-center bg-[var(--background-color)] overflow-hidden fixed top-0 left-0 right-0 m-0 transition-all duration-75 ${isSidebarOpen ? "md:pl-64" : ""}`}
+    >
       <motion.div
-        className="chat-container"
+        className="flex flex-col w-full max-w-full md:max-w-[90%] lg:max-w-[56.25rem] xl:max-w-[62.5rem] h-full overflow-hidden transition-all duration-75"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.15 }}
       >
         <LayoutGroup id="chat-layout">
           <motion.div
             layout
             key="split"
-            className="split-mode-wrapper"
+            className="flex flex-col flex-1 bg-[var(--component-bg-color)] mt-4 rounded-lg h-full min-h-0"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.1 }}
           >
-            <div className={`split-view-grid count-${paneCount}`}>
+            <div
+              className={`h-full grid gap-4 p-4 min-h-0 ${
+                paneCount === 2
+                  ? "grid-cols-1 md:grid-cols-2"
+                  : paneCount === 3
+                    ? "grid-cols-1 md:grid-cols-3"
+                    : paneCount === 4
+                      ? "grid-cols-1 md:grid-cols-2 md:grid-rows-2"
+                      : paneCount === 6
+                        ? "grid-cols-1 md:grid-cols-3 md:grid-rows-2"
+                        : "grid-cols-1"
+              }`}
+            >
               {Array.from({ length: paneCount }, (_, index) => ({
                 id: `split-pane-${index}`,
                 index,
               })).map(({ id, index }, paneIndex) => {
-                console.log("messages", messages);
                 // Displaying messages in Panes
                 // - When panes === 1, display all messages but the selected === false
                 // - (Optional) For messages where assistantResponse1.selected === false && assistantResponse2.selected === true && assistantResponse1.previous_message_id === assistantResponse2.previous_message_id, show a visible indicator that this message was split previously. We might let users pick another response and "branch out" later
@@ -583,9 +714,9 @@ export const ChatPage = () => {
 
                 return (
                   <motion.div
-                    className="split-pane"
+                    className="relative flex flex-colbg-[var(--component-bg-color)] border border-[var(--border-color)] rounded-md min-h-0 overflow-y-auto"
                     key={id}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.15, ease: "easeInOut" }}
                   >
                     <Pane
                       messages={displayedMessages}
@@ -596,8 +727,9 @@ export const ChatPage = () => {
                         label: m.name,
                         iconPath:
                           providerIconPaths[
-                            m.provider.slug as keyof typeof providerIconPaths
+                            m.provider?.slug as keyof typeof providerIconPaths
                           ],
+                        hasApiKey: m.has_api_key,
                       }))}
                       onModelChange={(modelId) => {
                         const assistantMessage = messages.find(
@@ -629,47 +761,51 @@ export const ChatPage = () => {
                       // }}
                     />
                     {isSplitMode && (
-                      <button
-                        className="preview-chat-btn"
+                      <Button
+                        variant="text"
+                        size="icon"
                         onClick={() => {
                           setPreviewPaneIndex(index);
                         }}
                         aria-label="Preview chat"
-                        type="button"
+                        className="top-2 right-2 absolute backdrop-blur-sm rounded-full w-10 h-10"
                       >
                         <Maximize2 size={16} />
-                      </button>
+                      </Button>
                     )}
 
                     {isSplitMode &&
                       lastDisplayedMessage?.selected === false &&
                       lastDisplayedMessage.done && (
-                        <div className="use-answer-container">
-                          <motion.button
-                            className="use-answer-btn"
-                            onClick={() =>
-                              handleUseAnswer({
-                                modelId:
-                                  lastDisplayedMessage.model_id?.toString() ||
-                                  "",
-                                messageId: lastDisplayedMessage.id,
-                              })
-                            }
-                            type="button"
+                        <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
+                          <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.1 }}
                           >
-                            Use this answer
-                          </motion.button>
+                            <Button
+                              variant="secondary"
+                              onClick={() =>
+                                handleUseAnswer({
+                                  modelId:
+                                    lastDisplayedMessage.model_id?.toString() ||
+                                    "",
+                                  messageId: lastDisplayedMessage.id,
+                                })
+                              }
+                              type="button"
+                            >
+                              Use this answer
+                            </Button>
+                          </motion.div>
                         </div>
                       )}
                     <Portal containerId={`preview-pane-${paneIndex}`}>
                       <AnimatePresence>
                         {previewPaneIndex === paneIndex && (
                           <motion.div
-                            className="chat-preview-overlay"
+                            className="z-[9999] fixed inset-0 flex justify-center items-center bg-black/60 backdrop-blur p-8"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -678,22 +814,23 @@ export const ChatPage = () => {
                             }}
                           >
                             <motion.div
-                              className="chat-preview-container"
+                              className="relative flex flex-col bg-[var(--component-bg-color)] shadow-2xl border border-[var(--border-color)] rounded-lg w-full max-w-[90vw] h-full max-h-[90vh] overflow-hidden"
                               onClick={(e) => e.stopPropagation()}
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.95 }}
-                              transition={{ duration: 0.2, ease: "easeInOut" }}
+                              transition={{ duration: 0.1, ease: "easeInOut" }}
                             >
-                              <button
-                                className="preview-close-btn"
+                              <Button
+                                variant="text"
+                                size="icon"
                                 onClick={() => {
                                   setPreviewPaneIndex(undefined);
                                 }}
-                                type="button"
+                                className="top-4 right-4 absolute rounded-full w-10 h-10 text-xl leading-none"
                               >
-                                ×
-                              </button>
+                                <XIcon size={16} />
+                              </Button>
                               <Pane
                                 modelOptions={availableModels?.map((m) => ({
                                   value: m.id.toString(),
@@ -701,8 +838,9 @@ export const ChatPage = () => {
                                   iconPath:
                                     providerIconPaths[
                                       m.provider
-                                        .slug as keyof typeof providerIconPaths
+                                        ?.slug as keyof typeof providerIconPaths
                                     ],
+                                  hasApiKey: m.has_api_key,
                                 }))}
                                 showModelSelectorTop={false}
                                 modelId={modelIds[paneIndex]}
@@ -711,25 +849,28 @@ export const ChatPage = () => {
                               {isSplitMode &&
                                 lastDisplayedMessage?.selected === false &&
                                 lastDisplayedMessage.done && (
-                                  <div className="use-answer-container">
-                                    <motion.button
-                                      className="use-answer-btn"
-                                      onClick={() =>
-                                        handleUseAnswer({
-                                          modelId:
-                                            lastDisplayedMessage.model_id?.toString() ||
-                                            "",
-                                          messageId: lastDisplayedMessage.id,
-                                        })
-                                      }
-                                      type="button"
+                                  <div className="right-4 bottom-4 absolute flex flex-col items-end gap-3">
+                                    <motion.div
                                       initial={{ opacity: 0, y: 10 }}
                                       animate={{ opacity: 1, y: 0 }}
                                       exit={{ opacity: 0, y: 10 }}
-                                      transition={{ duration: 0.2 }}
+                                      transition={{ duration: 0.1 }}
                                     >
-                                      Use this answer
-                                    </motion.button>
+                                      <Button
+                                        variant="secondary"
+                                        onClick={() =>
+                                          handleUseAnswer({
+                                            modelId:
+                                              lastDisplayedMessage.model_id?.toString() ||
+                                              "",
+                                            messageId: lastDisplayedMessage.id,
+                                          })
+                                        }
+                                        type="button"
+                                      >
+                                        Use this answer
+                                      </Button>
+                                    </motion.div>
                                   </div>
                                 )}
                             </motion.div>
@@ -742,77 +883,78 @@ export const ChatPage = () => {
               })}
             </div>
           </motion.div>
-        </LayoutGroup>
 
-        <motion.div
-          className="chat-input-wrapper"
-          layoutId="chat-input"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.25, delay: 0.1 }}
-        >
-          <ChatInput
-            onPaneCountChange={(count) => {
-              const newSearchParams = new URLSearchParams(searchParams);
-              newSearchParams.set("panes", count.toString());
-              setSearchParams(newSearchParams);
-            }}
-            onModelChange={(modelId) => {
-              updateSelectedModels(modelId, 0);
-            }}
-            onSplitToggle={(value) => {
-              const newSearchParams = new URLSearchParams(searchParams);
-              if (value) {
-                newSearchParams.set("panes", "2");
-              } else {
-                newSearchParams.set("panes", "1");
-              }
-              setSearchParams(newSearchParams);
-            }}
-            responseWasSelected={responseWasSelected(messages || [])}
-            onSend={(msg, files) => {
-              if (!responseWasSelected(messages || [])) {
-                setMessages((prev) => {
-                  const newMessages = [...(prev || [])];
-                  const lastUserMessage = newMessages.findLast(
-                    (m) => m.role === "user",
-                  );
-                  if (lastUserMessage) {
-                    const assistantMessage = newMessages.find(
-                      (v) => v.previous_message_id === lastUserMessage.id,
+          <motion.div
+            className="flex justify-center mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.15, delay: 0.1 }}
+          >
+            <ChatInput
+              selectedTools={selectedTools}
+              onToolsChange={(tools) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.set("tools", tools.join(","));
+                setSearchParams(newSearchParams);
+              }}
+              onPaneCountChange={(count) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                newSearchParams.set("panes", count.toString());
+                setSearchParams(newSearchParams);
+              }}
+              onModelChange={(modelId) => {
+                updateSelectedModels(modelId, 0);
+              }}
+              onSplitToggle={(value) => {
+                const newSearchParams = new URLSearchParams(searchParams);
+                if (value) {
+                  newSearchParams.set("panes", "2");
+                } else {
+                  newSearchParams.set("panes", "1");
+                }
+                setSearchParams(newSearchParams);
+              }}
+              responseWasSelected={responseWasSelected(messages || [])}
+              onSend={(msg, files) => {
+                if (!responseWasSelected(messages || [])) {
+                  setMessages((prev) => {
+                    const newMessages = [...(prev || [])];
+                    const lastUserMessage = newMessages.findLast(
+                      (m) => m.role === "user",
                     );
-                    if (assistantMessage) {
-                      assistantMessage.selected = true;
+                    if (lastUserMessage) {
+                      const assistantMessage = newMessages.find(
+                        (v) => v.previous_message_id === lastUserMessage.id,
+                      );
+                      if (assistantMessage) {
+                        assistantMessage.selected = true;
+                      }
                     }
-                  }
-                  return newMessages;
-                });
-                // setIsSelectModalOpen(true);
-              }
-              sendMessage(msg, files);
-            }}
-            isLoading={isStreaming}
-            modelOptions={availableModels?.map((m) => ({
-              value: m.id.toString(),
-              label: m.name,
-              iconPath:
-                providerIconPaths[
-                  m.provider.slug as keyof typeof providerIconPaths
-                ],
-            }))}
-            selectedModel={isSplitMode ? undefined : modelIds[0]}
-            isSplitMode={isSplitMode}
-            paneCount={paneCount}
-          />
-        </motion.div>
+                    return newMessages;
+                  });
+                  // setIsSelectModalOpen(true);
+                }
+                sendMessage(msg, files);
+              }}
+              isLoading={isStreaming}
+              modelOptions={availableModels?.map((m) => ({
+                value: m.id.toString(),
+                label: m.name,
+                iconPath:
+                  providerIconPaths[
+                    m.provider?.slug as keyof typeof providerIconPaths
+                  ],
+                hasApiKey: m.has_api_key,
+              }))}
+              selectedModel={isSplitMode ? undefined : modelIds[0]}
+              isSplitMode={isSplitMode}
+              paneCount={paneCount}
+            />
+          </motion.div>
+        </LayoutGroup>
       </motion.div>
-      <InfoModal
-        isOpen={isSelectModalOpen}
-        onClose={() => setIsSelectModalOpen(false)}
-        title="Select a message"
-        message="Please select a message to continue the conversation."
-      />
+
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => {
@@ -822,3 +964,5 @@ export const ChatPage = () => {
     </div>
   );
 };
+
+export default ChatPage;

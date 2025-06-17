@@ -1,20 +1,21 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
-import Logo from "@/assets/icons/logo.png";
-import UserIcon from "@/assets/icons/user.svg?react";
 import LogoutIcon from "@/assets/icons/logout.svg?react";
-import { Shield } from "lucide-react";
-import { LoginModal } from "@/components/LoginModal/LoginModal";
-import {
-  DropdownMenu,
+import UserIcon from "@/assets/icons/user.svg?react";
+import DropdownMenu, {
   type DropdownMenuItem,
 } from "@/components/DropdownMenu/DropdownMenu";
-import "./Header.scss";
-import { useMinimumLoading } from "@/hooks/useMinimumLoading";
+import LoginModal from "@/components/LoginModal/LoginModal";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { Settings, HelpCircle } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Header = () => {
-  const { isAuthenticated, user, logout, isLoading, isAdmin } = useAuth();
+interface HeaderProps {
+  onShowWelcome?: () => void;
+}
+
+const Header = ({ onShowWelcome }: HeaderProps) => {
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -26,81 +27,81 @@ export const Header = () => {
     user?.profile_image_url && user.profile_image_url.trim() !== "";
 
   const userMenuItems: DropdownMenuItem[] = [
-    ...(isAdmin
-      ? [
-          {
-            id: "admin",
-            label: "Admin",
-            icon: <Shield size={16} />,
-            onClick: () => navigate("/admin"),
-          } as DropdownMenuItem,
-        ]
-      : []),
+    {
+      id: "welcome",
+      label: "Show Welcome",
+      icon: <HelpCircle size={16} />,
+      onClick: onShowWelcome,
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      icon: <Settings size={16} />,
+      onClick: () => navigate("/settings"),
+    },
+
     {
       id: "logout",
       label: "Logout",
-      icon: <LogoutIcon />,
+      icon: <LogoutIcon width={16} height={16} />,
       onClick: logout,
     },
   ];
 
-  const userTrigger = (
-    <button className="header__user-button" title={userName} type="button">
-      {hasProfileImage ? (
-        <img
-          src={user.profile_image_url}
-          alt={userName}
-          className="header__user-profile-img"
-        />
-      ) : (
-        <UserIcon className="header__user-icon" />
-      )}
-    </button>
-  );
-  const { isMinimumLoading } = useMinimumLoading({
-    initialLoading: isLoading,
-  });
-
-  const renderLoginButtonContent = () => {
-    if (isMinimumLoading) {
-      return (
-        <div className="flex justify-center items-center h-10">Loading...</div>
-      );
-    }
-    if (isAuthenticated) {
-      return (
-        <div className="header__user">
-          <DropdownMenu
-            trigger={userTrigger}
-            items={userMenuItems}
-            position="left"
-            className="header__user-dropdown"
-          />
-        </div>
-      );
-    }
-    return (
-      <button
-        className="header__login-btn"
-        onClick={openLoginModal}
-        type="button"
-      >
-        Login
-      </button>
-    );
-  };
   return (
-    <header className="header">
-      <div className="header__content">
-        <Link to="/" className="header__logo-link">
-          <div className="header__logo">
-            <img src={Logo} alt="Agg AI Logo" className="header__logo-img" />
-            <span className="header__logo-text">AI Aggregator</span>
-          </div>
-        </Link>
-        <div className="header__actions">{renderLoginButtonContent()}</div>
+    <>
+      {/* Top Right Section - Controls */}
+      <div className="top-3 right-3 z-10 fixed rounded-xl">
+        <div className="flex items-center gap-1">
+          <Button
+            variant="text"
+            size="icon"
+            onClick={onShowWelcome}
+            className="rounded-full"
+            aria-label="Show welcome"
+          >
+            <HelpCircle size={16} />
+          </Button>
+          {isLoading ? null : isAuthenticated ? (
+            <DropdownMenu
+              trigger={
+                <Button
+                  variant="text"
+                  size="icon"
+                  title={userName}
+                  className="rounded-full"
+                >
+                  {hasProfileImage ? (
+                    <img
+                      src={user.profile_image_url || undefined}
+                      alt={userName}
+                      className="border border-[var(--border-color)] rounded-full w-6 h-6 object-cover"
+                    />
+                  ) : (
+                    <UserIcon className="w-5 h-5" />
+                  )}
+                </Button>
+              }
+              items={userMenuItems}
+              position="left"
+              className="[&_.dropdown-menu]:mt-2 [&_.dropdown-menu-icon_svg]:w-4 [&_.dropdown-menu]:min-w-[120px] [&_.dropdown-menu-icon_svg]:h-4"
+            />
+          ) : (
+            <Button
+              onClick={openLoginModal}
+              size="sm"
+              className="text-xs"
+              variant="secondary"
+            >
+              Login
+            </Button>
+          )}
+        </div>
       </div>
+
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-    </header>
+    </>
   );
 };
+
+export default Header;

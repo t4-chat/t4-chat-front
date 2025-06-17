@@ -6,7 +6,7 @@ interface UserIconProps {
   className?: string;
 }
 
-export const UserIcon: FC<UserIconProps> = ({
+const UserIcon: FC<UserIconProps> = ({
   width = 24,
   height = 24,
   className = "",
@@ -40,3 +40,5 @@ export const UserIcon: FC<UserIconProps> = ({
     </svg>
   );
 };
+
+export default UserIcon;

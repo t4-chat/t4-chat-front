@@ -10,18 +10,25 @@ import type {
   PostApiChatsResponse,
   DeleteApiChatsData,
   DeleteApiChatsResponse,
+  PostApiChatsConversationData,
+  PostApiChatsConversationResponse,
+  GetApiChatsSharedResponse,
+  GetApiChatsSharedBySharedConversationIdData,
+  GetApiChatsSharedBySharedConversationIdResponse,
+  DeleteApiChatsShareData,
+  DeleteApiChatsShareResponse,
   GetApiChatsByChatIdData,
   GetApiChatsByChatIdResponse,
   GetApiChatsByChatIdMessagesData,
   GetApiChatsByChatIdMessagesResponse,
-  PostApiChatsConversationData,
-  PostApiChatsConversationResponse,
   PatchApiChatsByChatIdTitleData,
   PatchApiChatsByChatIdTitleResponse,
   PatchApiChatsByChatIdPinData,
   PatchApiChatsByChatIdPinResponse,
   PatchApiChatsByChatIdMessagesByMessageIdSelectData,
   PatchApiChatsByChatIdMessagesByMessageIdSelectResponse,
+  PostApiChatsByChatIdShareData,
+  PostApiChatsByChatIdShareResponse,
   PostApiAuthGoogleData,
   PostApiAuthGoogleResponse,
   GetApiUsersCurrentResponse,
@@ -46,11 +53,27 @@ import type {
   GetApiAdminBudgetResponse,
   GetApiAdminUsageData,
   GetApiAdminUsageResponse,
+  PostApiAdminMessagesData,
+  PostApiAdminMessagesResponse,
+  PostApiAdminMessagesStreamData,
+  PostApiAdminMessagesStreamResponse,
+  PostApiAdminToolsWebSearchData,
+  PostApiAdminToolsWebSearchResponse,
   GetApiAiModelsResponse,
   PostApiFilesUploadData,
   PostApiFilesUploadResponse,
   GetApiFilesByFileIdData,
   GetApiFilesByFileIdResponse,
+  PostApiHostApiKeysData,
+  PostApiHostApiKeysResponse,
+  GetApiHostApiKeysData,
+  GetApiHostApiKeysResponse,
+  GetApiHostApiKeysByKeyIdData,
+  GetApiHostApiKeysByKeyIdResponse,
+  PutApiHostApiKeysByKeyIdData,
+  PutApiHostApiKeysByKeyIdResponse,
+  DeleteApiHostApiKeysByKeyIdData,
+  DeleteApiHostApiKeysByKeyIdResponse,
   GetApiUtilizationResponse,
   GetApiUtilizationLimitsResponse,
 } from "./types.gen";
@@ -130,6 +153,82 @@ export class ChatsService {
   }
 
   /**
+   * Send Message
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiChatsConversation(
+    data: PostApiChatsConversationData,
+  ): CancelablePromise<PostApiChatsConversationResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/chats/conversation",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Shared Chats
+   * @returns SharedConversationListItemResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiChatsShared(): CancelablePromise<GetApiChatsSharedResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/chats/shared",
+    });
+  }
+
+  /**
+   * Get Shared Chat
+   * @param data The data for the request.
+   * @param data.sharedConversationId
+   * @returns ChatResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiChatsSharedBySharedConversationId(
+    data: GetApiChatsSharedBySharedConversationIdData,
+  ): CancelablePromise<GetApiChatsSharedBySharedConversationIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/chats/shared/{shared_conversation_id}",
+      path: {
+        shared_conversation_id: data.sharedConversationId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Unshare Chats
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiChatsShare(
+    data: DeleteApiChatsShareData,
+  ): CancelablePromise<DeleteApiChatsShareResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/chats/share",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
    * Get Chat
    * @param data The data for the request.
    * @param data.chatId
@@ -167,27 +266,6 @@ export class ChatsService {
       path: {
         chat_id: data.chatId,
       },
-      errors: {
-        422: "Validation Error",
-      },
-    });
-  }
-
-  /**
-   * Send Message
-   * @param data The data for the request.
-   * @param data.requestBody
-   * @returns unknown Successful Response
-   * @throws ApiError
-   */
-  public static postApiChatsConversation(
-    data: PostApiChatsConversationData,
-  ): CancelablePromise<PostApiChatsConversationResponse> {
-    return __request(OpenAPI, {
-      method: "POST",
-      url: "/api/chats/conversation",
-      body: data.requestBody,
-      mediaType: "application/json",
       errors: {
         422: "Validation Error",
       },
@@ -258,6 +336,28 @@ export class ChatsService {
       path: {
         chat_id: data.chatId,
         message_id: data.messageId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Share Chat
+   * @param data The data for the request.
+   * @param data.chatId
+   * @returns ShareChatResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiChatsByChatIdShare(
+    data: PostApiChatsByChatIdShareData,
+  ): CancelablePromise<PostApiChatsByChatIdShareResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/chats/{chat_id}/share",
+      path: {
+        chat_id: data.chatId,
       },
       errors: {
         422: "Validation Error",
@@ -549,6 +649,72 @@ export class AdminService {
       },
     });
   }
+
+  /**
+   * Send Message
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns AdminSendMessageResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminMessages(
+    data: PostApiAdminMessagesData,
+  ): CancelablePromise<PostApiAdminMessagesResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/messages",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Generate Response Stream
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminMessagesStream(
+    data: PostApiAdminMessagesStreamData,
+  ): CancelablePromise<PostApiAdminMessagesStreamResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/messages/stream",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Web Search
+   * @param data The data for the request.
+   * @param data.query
+   * @param data.numResults
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static postApiAdminToolsWebSearch(
+    data: PostApiAdminToolsWebSearchData,
+  ): CancelablePromise<PostApiAdminToolsWebSearchResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/admin/tools/web-search",
+      query: {
+        query: data.query,
+        num_results: data.numResults,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
 }
 
 export class AiModelsService {
@@ -610,10 +776,124 @@ export class FilesService {
   }
 }
 
+export class HostApiKeysService {
+  /**
+   * Create Host Api Key
+   * @param data The data for the request.
+   * @param data.requestBody
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static postApiHostApiKeys(
+    data: PostApiHostApiKeysData,
+  ): CancelablePromise<PostApiHostApiKeysResponse> {
+    return __request(OpenAPI, {
+      method: "POST",
+      url: "/api/host-api-keys",
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Host Api Keys
+   * @param data The data for the request.
+   * @param data.hostId
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiHostApiKeys(
+    data: GetApiHostApiKeysData = {},
+  ): CancelablePromise<GetApiHostApiKeysResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/host-api-keys",
+      query: {
+        host_id: data.hostId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Get Host Api Key
+   * @param data The data for the request.
+   * @param data.keyId
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static getApiHostApiKeysByKeyId(
+    data: GetApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<GetApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Update Host Api Key
+   * @param data The data for the request.
+   * @param data.keyId
+   * @param data.requestBody
+   * @returns HostApiKeyResponseSchema Successful Response
+   * @throws ApiError
+   */
+  public static putApiHostApiKeysByKeyId(
+    data: PutApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<PutApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "PUT",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      body: data.requestBody,
+      mediaType: "application/json",
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+
+  /**
+   * Delete Host Api Key
+   * @param data The data for the request.
+   * @param data.keyId
+   * @returns unknown Successful Response
+   * @throws ApiError
+   */
+  public static deleteApiHostApiKeysByKeyId(
+    data: DeleteApiHostApiKeysByKeyIdData,
+  ): CancelablePromise<DeleteApiHostApiKeysByKeyIdResponse> {
+    return __request(OpenAPI, {
+      method: "DELETE",
+      url: "/api/host-api-keys/{key_id}",
+      path: {
+        key_id: data.keyId,
+      },
+      errors: {
+        422: "Validation Error",
+      },
+    });
+  }
+}
+
 export class UtilizationService {
   /**
    * Get Utilizations
-   * @returns unknown Successful Response
+   * @returns UtilizationsResponseSchema Successful Response
    * @throws ApiError
    */
   public static getApiUtilization(): CancelablePromise<GetApiUtilizationResponse> {

@@ -8,6 +8,7 @@ import {
   ChatsService,
   FilesService,
   HealthChecksService,
+  HostApiKeysService,
   UsersService,
   UtilizationService,
 } from "../requests/services.gen";
@@ -31,6 +32,31 @@ export const prefetchUseChatsServiceGetApiChats = (queryClient: QueryClient) =>
   queryClient.prefetchQuery({
     queryKey: Common.UseChatsServiceGetApiChatsKeyFn(),
     queryFn: () => ChatsService.getApiChats(),
+  });
+export const prefetchUseChatsServiceGetApiChatsShared = (
+  queryClient: QueryClient,
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseChatsServiceGetApiChatsSharedKeyFn(),
+    queryFn: () => ChatsService.getApiChatsShared(),
+  });
+export const prefetchUseChatsServiceGetApiChatsSharedBySharedConversationId = (
+  queryClient: QueryClient,
+  {
+    sharedConversationId,
+  }: {
+    sharedConversationId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey:
+      Common.UseChatsServiceGetApiChatsSharedBySharedConversationIdKeyFn({
+        sharedConversationId,
+      }),
+    queryFn: () =>
+      ChatsService.getApiChatsSharedBySharedConversationId({
+        sharedConversationId,
+      }),
   });
 export const prefetchUseChatsServiceGetApiChatsByChatId = (
   queryClient: QueryClient,
@@ -165,6 +191,32 @@ export const prefetchUseFilesServiceGetApiFilesByFileId = (
   queryClient.prefetchQuery({
     queryKey: Common.UseFilesServiceGetApiFilesByFileIdKeyFn({ fileId }),
     queryFn: () => FilesService.getApiFilesByFileId({ fileId }),
+  });
+export const prefetchUseHostApiKeysServiceGetApiHostApiKeys = (
+  queryClient: QueryClient,
+  {
+    hostId,
+  }: {
+    hostId?: string;
+  } = {},
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysKeyFn({ hostId }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeys({ hostId }),
+  });
+export const prefetchUseHostApiKeysServiceGetApiHostApiKeysByKeyId = (
+  queryClient: QueryClient,
+  {
+    keyId,
+  }: {
+    keyId: string;
+  },
+) =>
+  queryClient.prefetchQuery({
+    queryKey: Common.UseHostApiKeysServiceGetApiHostApiKeysByKeyIdKeyFn({
+      keyId,
+    }),
+    queryFn: () => HostApiKeysService.getApiHostApiKeysByKeyId({ keyId }),
   });
 export const prefetchUseUtilizationServiceGetApiUtilization = (
   queryClient: QueryClient,

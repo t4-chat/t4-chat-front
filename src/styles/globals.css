@@ -1,0 +1,550 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Font imports */
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap");
+
+/* Responsive font sizes */
+html {
+  font-size: 16px;
+}
+
+body {
+  width: 100vw !important;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+:root {
+  /* Primary theme colors from original SCSS */
+  --primary-color: #2196f3;
+  --secondary-color: #666;
+  --background-color: #fff;
+  --text-color: #1a1a1a;
+  --error-color: #f44336;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+
+  /* Component colors */
+  --text-primary-color: #1a1a1a;
+  --text-secondary-color: #666;
+  --component-bg-color: #f9f9f9;
+  --border-color: rgba(26, 26, 26, 0.1);
+  --hover-color: rgba(26, 26, 26, 0.05);
+
+  /* Chat specific variables */
+  --chat-bg-color: #fff;
+  --message-user-bg-color: #eaf4fe;
+  --message-assistant-bg-color: #f9f9f9;
+  --primary-color-rgb: 33, 150, 243;
+  --primary-color-hover: #1976d2;
+  --text-placeholder-color: rgba(26, 26, 26, 0.4);
+  --error-color-rgb: 244, 67, 54;
+
+  /* shadcn-ui variables mapped to our colors */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--component-bg-color);
+  --secondary-foreground: var(--text-primary-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+  --radius: 0.5rem;
+
+  /* Chart colors (keeping for shadcn compatibility) */
+  --chart-1: #2196f3;
+  --chart-2: #4caf50;
+  --chart-3: #ff9800;
+  --chart-4: #f44336;
+  --chart-5: #9c27b0;
+
+  /* Sidebar colors */
+  --sidebar: var(--background-color);
+  --sidebar-foreground: var(--text-color);
+  --sidebar-primary: var(--primary-color);
+  --sidebar-primary-foreground: var(--background-color);
+  --sidebar-accent: var(--component-bg-color);
+  --sidebar-accent-foreground: var(--text-primary-color);
+  --sidebar-border: var(--border-color);
+  --sidebar-ring: var(--primary-color);
+
+  /* Font families */
+  --font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-family-code: "Fira Code", "SF Mono", "SFMono-Regular", Consolas,
+    "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.dark {
+  /* Primary theme colors for dark mode */
+  --primary-color: #42a5f5;
+  --secondary-color: #f5f5f5;
+  --background-color: #1a1a1a;
+  --text-color: #fff;
+  --error-color: #ff5252;
+  --success-color: #66bb6a;
+  --warning-color: #ffb74d;
+
+  /* Component colors */
+  --text-primary-color: #fff;
+  --text-secondary-color: #f5f5f5;
+  --component-bg-color: #2c2c2c;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --hover-color: rgba(255, 255, 255, 0.05);
+
+  /* Chat specific variables */
+  --chat-bg-color: #1a1a1a;
+  --message-user-bg-color: #4a5568;
+  --message-assistant-bg-color: #2a2a2a;
+  --primary-color-rgb: 33, 165, 255;
+  --primary-color-hover: #5fbdff;
+  --text-placeholder-color: rgba(255, 255, 255, 0.4);
+  --error-color-rgb: 255, 82, 82;
+
+  /* shadcn-ui variables mapped to dark colors */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--component-bg-color);
+  --secondary-foreground: var(--text-primary-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+
+  /* Chart colors (keeping for shadcn compatibility) */
+  --chart-1: #42a5f5;
+  --chart-2: #66bb6a;
+  --chart-3: #ffb74d;
+  --chart-4: #ff5252;
+  --chart-5: #ce93d8;
+
+  /* Sidebar colors */
+  --sidebar: var(--background-color);
+  --sidebar-foreground: var(--text-color);
+  --sidebar-primary: var(--primary-color);
+  --sidebar-primary-foreground: var(--background-color);
+  --sidebar-accent: var(--component-bg-color);
+  --sidebar-accent-foreground: var(--text-primary-color);
+  --sidebar-border: var(--border-color);
+  --sidebar-ring: var(--primary-color);
+}
+
+/* Also support data-theme="dark" selector for compatibility */
+[data-theme="dark"] {
+  /* Primary theme colors for dark mode */
+  --primary-color: #42a5f5;
+  --secondary-color: #f5f5f5;
+  --background-color: #1a1a1a;
+  --text-color: #fff;
+  --error-color: #ff5252;
+  --success-color: #66bb6a;
+  --warning-color: #ffb74d;
+
+  /* Component colors */
+  --text-primary-color: #fff;
+  --text-secondary-color: #f5f5f5;
+  --component-bg-color: #2c2c2c;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --hover-color: #3f3f3f;
+
+  /* Chat specific variables */
+  --chat-bg-color: #1a1a1a;
+  --message-user-bg-color: #4a5568;
+  --message-assistant-bg-color: #2a2a2a;
+  --primary-color-rgb: 33, 165, 255;
+  --primary-color-hover: #5fbdff;
+  --text-placeholder-color: rgba(255, 255, 255, 0.4);
+  --error-color-rgb: 255, 82, 82;
+
+  /* shadcn-ui variables mapped to dark colors */
+  --background: var(--background-color);
+  --foreground: var(--text-color);
+  --card: var(--component-bg-color);
+  --card-foreground: var(--text-primary-color);
+  --popover: var(--component-bg-color);
+  --popover-foreground: var(--text-primary-color);
+  --primary: var(--primary-color);
+  --primary-foreground: var(--background-color);
+  --secondary: var(--component-bg-color);
+  --secondary-foreground: var(--text-primary-color);
+  --muted: var(--component-bg-color);
+  --muted-foreground: var(--text-secondary-color);
+  --accent: var(--component-bg-color);
+  --accent-foreground: var(--text-primary-color);
+  --destructive: var(--error-color);
+  --destructive-foreground: var(--background-color);
+  --border: var(--border-color);
+  --input: var(--border-color);
+  --ring: var(--primary-color);
+
+  /* Chart colors (keeping for shadcn compatibility) */
+  --chart-1: #42a5f5;
+  --chart-2: #66bb6a;
+  --chart-3: #ffb74d;
+  --chart-4: #ff5252;
+  --chart-5: #ce93d8;
+
+  /* Sidebar colors */
+  --sidebar: var(--background-color);
+  --sidebar-foreground: var(--text-color);
+  --sidebar-primary: var(--primary-color);
+  --sidebar-primary-foreground: var(--background-color);
+  --sidebar-accent: var(--component-bg-color);
+  --sidebar-accent-foreground: var(--text-primary-color);
+  --sidebar-border: var(--border-color);
+  --sidebar-ring: var(--primary-color);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  code {
+    font-family: var(--font-family-code);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+}
+
+/* Mobile font size fix for inputs to prevent zoom */
+@media (max-width: 768px) {
+  input[type="text"],
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Utility for sidebar layout */
+.with-sidebar {
+  @media (min-width: 768px) {
+    padding-left: 20rem; /* Add padding equal to sidebar width on larger screens */
+    transition: padding-left 0.2s ease;
+  }
+}
+
+/* Loading dots animation */
+@keyframes dot-pulse {
+  0%,
+  60%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  30% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dropdown animations */
+@keyframes dropdown-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dropdown-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add styles to ensure body doesn't have unnecessary scrolling */
+body,
+html {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* Chat sidebar styles for menu state */
+.chat-item.menu-open {
+  background-color: var(--hover-color) !important;
+}
+
+/* Global scrollbar styling with subtle hover effect */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--primary-color-rgb), 0.2);
+}
+
+/* More subtle scrollbar for chat areas */
+.chat-messages::-webkit-scrollbar-thumb:hover,
+.chats-list::-webkit-scrollbar-thumb:hover {
+  background-color: var(--border-color);
+}
+
+/* Sonner Toast Styling for Dark Mode */
+.dark [data-sonner-toaster],
+[data-theme="dark"] [data-sonner-toaster] {
+  --gray1: var(--background-color);
+  --gray2: var(--component-bg-color);
+  --gray3: var(--hover-color);
+  --gray4: var(--border-color);
+  --gray5: var(--text-secondary-color);
+  --gray6: var(--text-primary-color);
+  --gray11: var(--text-secondary-color);
+  --gray12: var(--text-primary-color);
+  --green1: var(--background-color);
+  --green2: var(--success-color);
+  --green3: var(--success-color);
+  --green4: var(--success-color);
+  --green5: var(--success-color);
+  --green6: var(--success-color);
+  --green7: var(--success-color);
+  --green8: var(--success-color);
+  --green9: var(--success-color);
+  --green10: var(--success-color);
+  --green11: var(--success-color);
+  --green12: #ffffff;
+  --red1: var(--background-color);
+  --red2: var(--error-color);
+  --red3: var(--error-color);
+  --red4: var(--error-color);
+  --red5: var(--error-color);
+  --red6: var(--error-color);
+  --red7: var(--error-color);
+  --red8: var(--error-color);
+  --red9: var(--error-color);
+  --red10: var(--error-color);
+  --red11: var(--error-color);
+  --red12: #ffffff;
+  --yellow1: var(--background-color);
+  --yellow2: var(--warning-color);
+  --yellow3: var(--warning-color);
+  --yellow4: var(--warning-color);
+  --yellow5: var(--warning-color);
+  --yellow6: var(--warning-color);
+  --yellow7: var(--warning-color);
+  --yellow8: var(--warning-color);
+  --yellow9: var(--warning-color);
+  --yellow10: var(--warning-color);
+  --yellow11: var(--warning-color);
+  --yellow12: #1a1a1a;
+}
+
+/* Toast styling */
+.dark [data-sonner-toast],
+[data-theme="dark"] [data-sonner-toast] {
+  background-color: var(--component-bg-color) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary-color) !important;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Toast description text */
+.dark [data-sonner-toast] [data-description],
+[data-theme="dark"] [data-sonner-toast] [data-description] {
+  color: var(--text-secondary-color) !important;
+}
+
+/* Close button styling */
+.dark [data-sonner-toast] [data-close-button],
+[data-theme="dark"] [data-sonner-toast] [data-close-button] {
+  background-color: var(--background-color) !important;
+  border: none !important;
+  color: var(--text-secondary-color) !important;
+  border-radius: 50% !important;
+  padding: 0.25rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.1s ease !important;
+}
+
+.dark [data-sonner-toast] [data-close-button]:hover,
+[data-theme="dark"] [data-sonner-toast] [data-close-button]:hover {
+  background-color: var(--hover-color) !important;
+}
+
+/* Success toast specific styling */
+.dark [data-sonner-toast][data-type="success"],
+[data-theme="dark"] [data-sonner-toast][data-type="success"] {
+  border-left: 4px solid var(--success-color) !important;
+}
+
+/* Error toast specific styling */
+.dark [data-sonner-toast][data-type="error"],
+[data-theme="dark"] [data-sonner-toast][data-type="error"] {
+  border-left: 4px solid var(--error-color) !important;
+}
+
+/* Warning toast specific styling */
+.dark [data-sonner-toast][data-type="warning"],
+[data-theme="dark"] [data-sonner-toast][data-type="warning"] {
+  border-left: 4px solid var(--warning-color) !important;
+}
+
+/* Loading toast styling */
+.dark [data-sonner-toast][data-type="loading"],
+[data-theme="dark"] [data-sonner-toast][data-type="loading"] {
+  border-left: 4px solid var(--primary-color) !important;
+}
+
+/* Action button styling */
+.dark [data-sonner-toast] button:not([data-close-button]),
+[data-theme="dark"] [data-sonner-toast] button:not([data-close-button]) {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.75rem !important;
+  font-weight: 500 !important;
+  transition: all 0.1s ease !important;
+}
+
+.dark [data-sonner-toast] button:not([data-close-button]):hover,
+[data-theme="dark"] [data-sonner-toast] button:not([data-close-button]):hover {
+  background-color: var(--primary-color-hover) !important;
+}

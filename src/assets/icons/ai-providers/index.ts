@@ -10,6 +10,8 @@ import geminiIcon from "./gemini.svg";
 import awsnovaIcon from "./awsnova.svg";
 import llamaIcon from "./llama.svg";
 import defaultIcon from "./default.svg";
+import openrouterIcon from "./openrouter.png";
+import groqIcon from "./groq.png";
 
 // This is a mapping from provider names to their SVG file paths
 export const providerIconPaths = {
@@ -23,5 +25,7 @@ export const providerIconPaths = {
   awsnova: awsnovaIcon,
   llama: llamaIcon,
   ollama: llamaIcon,
+  openrouter: openrouterIcon,
+  groq: groqIcon,
   default: defaultIcon,
 };
