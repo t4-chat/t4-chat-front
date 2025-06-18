@@ -425,7 +425,7 @@ const ChatMessage = ({
             <div className="flex items-center gap-3">
               <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-5 h-5 animate-spin" />
               <span className="text-[var(--text-secondary-color)] text-sm">
-                Generating image...
+                Searching the web...
               </span>
             </div>
           </div>
