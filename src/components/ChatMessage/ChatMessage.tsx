@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Copy,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+  X,
+  Download,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -7,6 +15,8 @@ import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import type { ChatMessageWithDate } from "@/components/Pane/Pane";
 import { fileService } from "@/services/fileService";
 import { cn } from "@/utils/generalUtils";
+import Portal from "@/components/Portal/Portal";
+import { Button } from "../ui/button";
 
 interface ChatMessageProps
   extends Omit<ChatMessageWithDate, "id" | "created_at"> {
@@ -16,6 +26,7 @@ interface ChatMessageProps
   created_at?: Date;
   scrollContainer?: HTMLElement | null;
   reasoning?: string;
+  tool_calls?: string[];
 }
 
 interface AttachmentInfo {
@@ -81,6 +92,7 @@ const ChatMessage = ({
   created_at,
   scrollContainer,
   reasoning,
+  tool_calls,
 }: ChatMessageProps) => {
   // Add test content for demonstration
 
@@ -100,6 +112,11 @@ const ChatMessage = ({
   const [sideOffset, setSideOffset] = useState(8);
   const [copied, setCopied] = useState(false);
   const [showReasoning, setShowReasoning] = useState(true);
+  const [fullscreenImage, setFullscreenImage] = useState<{
+    url: string;
+    alt: string;
+    fileId?: string;
+  } | null>(null);
 
   // Reset on unmount
   useEffect(() => {
@@ -115,6 +132,20 @@ const ChatMessage = ({
       });
     };
   }, []);
+
+  // Handle ESC key for fullscreen modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && fullscreenImage) {
+        setFullscreenImage(null);
+      }
+    };
+
+    if (fullscreenImage) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [fullscreenImage]);
 
   useEffect(() => {
     if (!hasAttachments) return;
@@ -375,6 +406,17 @@ const ChatMessage = ({
             )}
           </div>
         )}
+
+        {tool_calls?.includes("image_generation") && (
+          <div className="bg-black/[0.02] mb-4 p-3 border border-[var(--border-color)] rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-5 h-5 animate-spin" />
+              <span className="text-[var(--text-secondary-color)] text-sm">
+                Generating image...
+              </span>
+            </div>
+          </div>
+        )}
         {disableMarkdown ? (
           <div>{displayContent}</div>
         ) : (
@@ -431,7 +473,7 @@ const ChatMessage = ({
                   {children}
                 </blockquote>
               ),
-              p: ({ children }) => <p className="[&+*]:mt-0">{children}</p>,
+              p: ({ children }) => <p>{children}</p>,
               table: ({ children }) => (
                 <table className="[&+*]:mt-0 w-full border-collapse">
                   {children}
@@ -447,13 +489,11 @@ const ChatMessage = ({
                   {children}
                 </td>
               ),
-              img: ({ src, alt }) => (
-                <img
-                  src={src}
-                  alt={alt}
-                  className="[&+*]:mt-0 rounded-sm max-w-full"
-                />
-              ),
+              img: () => {
+                // Don't render images in markdown - they will be shown in attachments section
+                // This prevents duplicate display and ensures proper download functionality
+                return null;
+              },
               hr: () => (
                 <hr className="[&+*]:mt-0 border-[var(--border-color)] border-0 border-t" />
               ),
@@ -536,33 +576,34 @@ const ChatMessage = ({
                       alt={info.filename || "Image attachment"}
                       className="w-full h-full object-cover"
                     />
-                    <button
-                      type="button"
-                      className="right-2 bottom-2 absolute flex justify-center items-center bg-black/50 hover:bg-black/70 opacity-0 group-hover:opacity-100 border-none rounded-full w-7 h-7 text-white transition-opacity duration-100 cursor-pointer"
+                    <Button
+                      variant="secondary"
+                      className="top-2 right-2 absolute flex justify-center items-center rounded-full w-9 h-9 text-white"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (info.imageUrl) {
+                          setFullscreenImage({
+                            url: info.imageUrl,
+                            alt: info.filename || "Image attachment",
+                            fileId: info.fileId,
+                          });
+                        }
+                      }}
+                      aria-label="View fullscreen"
+                    >
+                      <Maximize2 size={16} className="shrink-0" />
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      className="right-2 bottom-2 absolute flex justify-center items-center rounded-full w-9 h-9 text-white"
                       onClick={(e) => {
                         e.stopPropagation();
                         downloadFile(info.fileId);
                       }}
                       aria-label="Download image"
                     >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        role="img"
-                        aria-label="Download image"
-                      >
-                        <path
-                          d="M12 15V3M12 15L8 11M12 15L16 11M3 17V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V17"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
+                      <Download className="shrink-0" size={16} />
+                    </Button>
                   </div>
                 ) : (
                   <>
@@ -631,6 +672,55 @@ const ChatMessage = ({
           </div>
         )}
       </div>
+
+      {/* Fullscreen Image Modal */}
+      {fullscreenImage && (
+        <Portal>
+          <div
+            className="z-50 fixed inset-0 flex justify-center items-center backdrop-blur w-full"
+            onClick={() => setFullscreenImage(null)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setFullscreenImage(null);
+              }
+            }}
+            role="dialog"
+            aria-modal="true"
+            tabIndex={-1}
+          >
+            <div className="relative">
+              <img
+                src={fullscreenImage.url}
+                alt={fullscreenImage.alt}
+                className="max-w-full max-h-full object-contain"
+              />
+              <Button
+                variant="secondary"
+                className="top-10 right-4 absolute flex justify-center items-center rounded-full w-10 h-10 text-white"
+                onClick={() => setFullscreenImage(null)}
+                aria-label="Close fullscreen"
+              >
+                <X size={20} className="shrink-0" />
+              </Button>
+              {fullscreenImage.fileId && (
+                <Button
+                  variant="secondary"
+                  className="right-4 bottom-10 absolute flex justify-center items-center rounded-full w-10 h-10 text-white"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (fullscreenImage.fileId) {
+                      downloadFile(fullscreenImage.fileId);
+                    }
+                  }}
+                  aria-label="Download image"
+                >
+                  <Download className="shrink-0" size={16} />
+                </Button>
+              )}
+            </div>
+          </div>
+        </Portal>
+      )}
     </div>
   );
 };

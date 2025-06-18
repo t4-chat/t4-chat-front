@@ -55,6 +55,7 @@ export interface MessageStopEvent {
 export interface MessageContentStopEvent {
   type: "message_content_stop";
   message: { id: string; model_id: string; model_name: string };
+  attachments?: Array<{ file_id: string; content_type: string }>;
 }
 
 export interface ErrorStreamEvent {
@@ -70,6 +71,14 @@ export interface ReasoningContentEvent {
   content: { text: string; type: string };
 }
 
+export interface ToolCallsEvent {
+  type: "tool_calls";
+  model_id: string;
+  message_id: string;
+  tools_calls: string[];
+  attachments: unknown[];
+}
+
 export type StreamEvent =
   | MessageStartEvent
   | MessageContentEvent
@@ -78,7 +87,8 @@ export type StreamEvent =
   | MessageStopEvent
   | DoneEvent
   | ErrorStreamEvent
-  | ReasoningContentEvent;
+  | ReasoningContentEvent
+  | ToolCallsEvent;
 
 export type StreamEventCallback = (event: StreamEvent) => void;
 export type ErrorCallback = (error: Error) => void;

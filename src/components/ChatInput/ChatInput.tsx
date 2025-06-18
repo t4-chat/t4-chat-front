@@ -214,12 +214,16 @@ const ChatInput: FC<IChatInputProps> = ({
                 Web Search
               </Button>
               <Button
-                variant={selectedTools.includes("image") ? "text" : "secondary"}
+                variant={
+                  selectedTools.includes("image_generation")
+                    ? "text"
+                    : "secondary"
+                }
                 size="sm"
-                onClick={() => toggleTool("image")}
+                onClick={() => toggleTool("image_generation")}
                 className={cn(
                   "gap-2 h-10",
-                  selectedTools.includes("image") &&
+                  selectedTools.includes("image_generation") &&
                     "text-primary border-transparent border",
                 )}
               >

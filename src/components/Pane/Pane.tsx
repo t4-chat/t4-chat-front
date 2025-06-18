@@ -29,6 +29,7 @@ export type ChatMessageWithDate = Omit<
   created_at: Date;
   done?: boolean;
   reasoning?: string;
+  tool_calls?: string[];
 };
 
 type PaneProps = {
@@ -181,6 +182,7 @@ const Pane: FC<PaneProps> = ({
                     modelIconPath={modelInfo.iconPath}
                     scrollContainer={messagesContainerRef.current}
                     reasoning={message.reasoning}
+                    tool_calls={message.tool_calls}
                   />
                   {/* TODO: add loading indicator 
                    {isLoading &&

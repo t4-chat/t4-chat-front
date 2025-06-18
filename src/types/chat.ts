@@ -3,6 +3,7 @@ import type { ChatMessageResponseSchema } from "~/openapi/requests/types.gen";
 export interface ChatMessage extends ChatMessageResponseSchema {
   done?: boolean;
   reasoning?: string;
+  tool_calls?: string[];
 }
 
 export interface AIModel {

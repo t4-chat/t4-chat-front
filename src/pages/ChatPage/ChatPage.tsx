@@ -527,6 +527,20 @@ const ChatPage = () => {
             });
           }
           break;
+        case "tool_calls":
+          if (event.message_id) {
+            setMessages((prev) => {
+              const newMessages = [...(prev || [])];
+              const assistantMessage = newMessages.find(
+                (msg) => msg.id === event.message_id,
+              );
+              if (assistantMessage) {
+                assistantMessage.tool_calls = event.tools_calls;
+              }
+              return newMessages;
+            });
+          }
+          break;
         case "message_content_stop":
           if (event.message_id) {
             setMessages((prev) => {
@@ -536,6 +550,14 @@ const ChatPage = () => {
               );
               if (assistantMessage) {
                 assistantMessage.done = true;
+                // Clear tool_calls when message is complete
+                assistantMessage.tool_calls = undefined;
+                // Handle any attachments (like generated images)
+                if (event.attachments && event.attachments.length > 0) {
+                  assistantMessage.attachments = event.attachments.map(
+                    (att) => att.file_id,
+                  );
+                }
               }
               return newMessages;
             });
