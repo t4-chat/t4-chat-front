@@ -420,6 +420,17 @@ const ChatMessage = ({
           </div>
         )}
 
+        {tool_calls?.includes("web_search") && (
+          <div className="bg-black/[0.02] mb-4 p-3 border border-[var(--border-color)] rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-5 h-5 animate-spin" />
+              <span className="text-[var(--text-secondary-color)] text-sm">
+                Generating image...
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Show thinking indicator when waiting for first content */}
         {isWaitingForContent && role === "assistant" && !content && (
           <div className="bg-black/[0.02] mb-4 p-3 border border-[var(--border-color)] rounded-lg">
