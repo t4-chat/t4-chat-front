@@ -632,38 +632,35 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
       </div>
 
       {/* Social Media Footer */}
-      <div className="p-4 border-[var(--border-color)] border-t">
-        <div className="flex justify-center items-center gap-4">
+      <div className="px-4 py-3 border-[var(--border-color)] border-t">
+        <div className="flex justify-center items-center gap-3">
           <a
             href="https://www.instagram.com/ai_viiibe/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            className="flex justify-center items-center hover:bg-[var(--hover-color)] rounded-lg w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-all duration-150"
             aria-label="Follow us on Instagram"
           >
-            <InstagramIcon width={20} height={20} />
+            <InstagramIcon width={16} height={16} />
           </a>
           <a
             href="https://x.com/ai_viiibe"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            className="flex justify-center items-center hover:bg-[var(--hover-color)] rounded-lg w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-all duration-150"
             aria-label="Follow us on X"
           >
-            <XTwitterIcon width={20} height={20} />
+            <XTwitterIcon width={16} height={16} />
           </a>
           <a
             href="https://t.me/ai_viiibe"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            className="flex justify-center items-center hover:bg-[var(--hover-color)] rounded-lg w-8 h-8 text-[var(--text-secondary-color)] hover:text-[var(--text-primary-color)] transition-all duration-150"
             aria-label="Join us on Telegram"
           >
-            <TelegramIcon width={20} height={20} />
+            <TelegramIcon width={16} height={16} />
           </a>
-        </div>
-        <div className="mt-2 font-medium text-[var(--text-secondary-color)] text-xs text-center">
-          Follow @ai_viiibe
         </div>
       </div>
 
