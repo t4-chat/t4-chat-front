@@ -754,7 +754,7 @@ const SettingsPage: FC = () => {
                       );
                     })}
                   </div>
-                ) : (
+                ) : !isCreating && !editingKey ? (
                   <div className="flex flex-col justify-center items-center py-16 text-center">
                     <div className="flex justify-center items-center bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--primary-color)]/5 mb-6 rounded-2xl w-20 h-20">
                       <Shield className="w-12 h-12 text-[var(--text-secondary-color)]" />
@@ -774,7 +774,7 @@ const SettingsPage: FC = () => {
                       Add Your First API Key
                     </Button>
                   </div>
-                )}
+                ) : null}
               </CardContent>
             </Card>
           </TabsContent>
