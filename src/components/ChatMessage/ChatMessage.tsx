@@ -576,7 +576,7 @@ const ChatMessage = ({
                 className={cn(
                   "flex items-center transition-all duration-75 cursor-pointer",
                   info.isImage || info.isLoading
-                    ? "p-0 overflow-hidden max-w-[200px] max-h-[200px] cursor-default rounded-md hover:bg-black/[0.05]"
+                    ? "p-0 overflow-hidden w-[200px] h-[200px] cursor-default rounded-md hover:bg-black/[0.05] flex-shrink-0"
                     : "py-2 px-4 bg-black/[0.05] rounded-md hover:bg-black/[0.08]",
                   isDownloading[info.fileId] &&
                     "bg-[rgba(var(--primary-color-rgb),0.1)] cursor-default",
@@ -605,7 +605,9 @@ const ChatMessage = ({
                     <img
                       src={info.imageUrl}
                       alt={info.filename || "Image attachment"}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-opacity duration-200"
+                      style={{ imageRendering: "crisp-edges" }}
+                      loading="eager"
                     />
                     <Button
                       variant="secondary"
