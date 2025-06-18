@@ -564,7 +564,7 @@ const ChatMessage = ({
                 key={info.fileId}
                 className={cn(
                   "flex items-center transition-all duration-75 cursor-pointer",
-                  info.isImage
+                  info.isImage || info.isLoading
                     ? "p-0 overflow-hidden max-w-[200px] max-h-[200px] cursor-default rounded-md hover:bg-black/[0.05]"
                     : "py-2 px-4 bg-black/[0.05] rounded-md hover:bg-black/[0.08]",
                   isDownloading[info.fileId] &&
@@ -581,8 +581,13 @@ const ChatMessage = ({
                 }}
               >
                 {info.isLoading ? (
-                  <div className="p-2 text-[var(--text-secondary-color)] text-sm">
-                    Loading...
+                  <div className="flex justify-center items-center bg-black/[0.03] rounded-md w-[200px] h-[200px]">
+                    <div className="flex items-center gap-2">
+                      <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-4 h-4 animate-spin" />
+                      <span className="text-[var(--text-secondary-color)] text-sm">
+                        Loading...
+                      </span>
+                    </div>
                   </div>
                 ) : info.isImage && info.imageUrl ? (
                   <div className="group relative flex justify-center items-center w-full h-full">
