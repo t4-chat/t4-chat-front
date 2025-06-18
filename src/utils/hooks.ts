@@ -60,7 +60,7 @@ export const useChatSender = ({
       options: { chatId, sharedConversationId, tools },
     });
 
-    return { abort };
+    return { abort, attachmentIds };
   };
 
   return { send };

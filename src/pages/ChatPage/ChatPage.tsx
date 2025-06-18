@@ -599,11 +599,13 @@ const ChatPage = () => {
 
     try {
       if (!modelIds) return;
+
+      const userMessageId = Date.now().toString();
       setMessages((prev) => {
         return [
           ...(prev || []),
           {
-            id: Date.now().toString(),
+            id: userMessageId,
             content: msg,
             role: "user",
             created_at: new Date(),
@@ -612,7 +614,7 @@ const ChatPage = () => {
         ];
       });
 
-      const { abort } = await send(
+      const { abort, attachmentIds } = await send(
         msg,
         files,
         modelIds,
@@ -621,6 +623,15 @@ const ChatPage = () => {
         sharedConversationId,
       );
       abortStreamingRef.current = abort;
+
+      // Update the user message with attachment IDs after upload completes
+      if (attachmentIds.length > 0) {
+        setMessages((prev) => {
+          return (prev || []).map((m) =>
+            m.id === userMessageId ? { ...m, attachments: attachmentIds } : m,
+          );
+        });
+      }
     } catch (error) {
       console.error("Failed to send message", error);
     }
