@@ -6,6 +6,9 @@ import RenameIcon from "@/assets/icons/chats/rename.svg?react";
 import SearchIcon from "@/assets/icons/chats/search.svg?react";
 import TrashIcon from "@/assets/icons/chats/trash.svg?react";
 import Logo from "@/assets/icons/logo.png";
+import InstagramIcon from "@/assets/icons/instagram.svg?react";
+import XTwitterIcon from "@/assets/icons/x-twitter.svg?react";
+import TelegramIcon from "@/assets/icons/telegram.svg?react";
 import DropdownMenu from "@/components/DropdownMenu/DropdownMenu";
 import ConfirmationModal from "@/components/Modal/ConfirmationModal";
 import ShareChatModal from "@/components/Modal/ShareChatModal";
@@ -627,6 +630,43 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
           </>
         )}
       </div>
+
+      {/* Social Media Footer */}
+      <div className="p-4 border-[var(--border-color)] border-t">
+        <div className="flex justify-center items-center gap-4">
+          <a
+            href="https://www.instagram.com/ai_viiibe/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            aria-label="Follow us on Instagram"
+          >
+            <InstagramIcon width={20} height={20} />
+          </a>
+          <a
+            href="https://x.com/ai_viiibe"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            aria-label="Follow us on X"
+          >
+            <XTwitterIcon width={20} height={20} />
+          </a>
+          <a
+            href="https://t.me/ai_viiibe"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center items-center text-[var(--text-secondary-color)] hover:text-[var(--primary-color)] hover:scale-110 transition-all duration-200"
+            aria-label="Join us on Telegram"
+          >
+            <TelegramIcon width={20} height={20} />
+          </a>
+        </div>
+        <div className="mt-2 font-medium text-[var(--text-secondary-color)] text-xs text-center">
+          Follow @ai_viiibe
+        </div>
+      </div>
+
       <ConfirmationModal
         isOpen={deleteModalState.isOpen}
         onClose={() => setDeleteModalState({ isOpen: false, chatIds: [] })}
