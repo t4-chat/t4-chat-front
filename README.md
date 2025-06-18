@@ -2,6 +2,11 @@
 
 A modern, responsive chat application built with React 19 and TypeScript. AI Vibe provides a seamless messaging experience with Google OAuth authentication, real-time features, and a beautiful user interface.
 
+## 🎬 Demo Video
+
+**[🎥 Watch Our Demo Video](https://youtu.be/l3B9tGeLSQg)** - See AI Vibe API in action!
+
+
 ## 🛠️ Tech Stack
 
 ### Core
