@@ -1,6 +1,6 @@
-# T4 Chat Frontend
+# AI Vibe Frontend
 
-A modern, responsive chat application built with React 19 and TypeScript. T4 Chat provides a seamless messaging experience with Google OAuth authentication, real-time features, and a beautiful user interface.
+A modern, responsive chat application built with React 19 and TypeScript. AI Vibe provides a seamless messaging experience with Google OAuth authentication, real-time features, and a beautiful user interface.
 
 ## 🛠️ Tech Stack
 

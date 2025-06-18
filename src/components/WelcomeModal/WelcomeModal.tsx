@@ -109,7 +109,7 @@ const WelcomeModal: FC<WelcomeModalProps> = ({ isOpen, onClose }) => {
 
           <motion.div variants={fadeIn}>
             <h2 className="bg-clip-text bg-gradient-to-r from-[rgb(66,255,252,0.75)] to-[var(--primary-color)] font-bold text-transparent text-3xl">
-              Welcome to T4 Chat
+              Welcome to AI Vibe
             </h2>
             <p className="mx-auto mt-2 max-w-sm text-[var(--text-secondary-color)] text-sm leading-relaxed">
               Experience the future of AI conversations with our powerful and

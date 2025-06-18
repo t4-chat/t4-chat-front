@@ -47,7 +47,7 @@ const LoginModal: FC<LoginModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Welcome to T4 Chat">
+    <Modal isOpen={isOpen} onClose={onClose} title="Welcome to AI Vibe">
       <div className="flex flex-col items-center px-6 py-4">
         <div className="mb-6 text-center">
           <p className="text-[var(--text-secondary-color)] text-sm">

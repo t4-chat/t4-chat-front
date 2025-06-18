@@ -45,7 +45,7 @@ const useUpdateBrowserTitle = ({
   const { chatId: activeChatId } = useParams();
 
   useEffect(() => {
-    const baseTitle = "T4 Chat";
+    const baseTitle = "AI Vibe";
     if (activeChatId) {
       const chatTitle = chats.find((c) => c.id === activeChatId)?.title;
       document.title = chatTitle ? `${chatTitle} - ${baseTitle}` : baseTitle;
@@ -378,9 +378,9 @@ const ChatSidebar = ({ isOpen, onToggle, isStreaming }: ChatSidebarProps) => {
           to="/"
           className="flex flex-1 items-center gap-2 hover:opacity-80 no-underline transition-opacity duration-100"
         >
-          <img src={Logo} alt="T4 Chat Logo" className="w-auto h-5" />
+          <img src={Logo} alt="AI Vibe Logo" className="w-auto h-5" />
           <span className="font-semibold text-[var(--text-color)] text-md">
-            T4 Chat
+            AI Vibe
           </span>
         </Link>
         <Button
