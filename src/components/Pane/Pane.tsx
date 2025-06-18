@@ -30,6 +30,7 @@ export type ChatMessageWithDate = Omit<
   done?: boolean;
   reasoning?: string;
   tool_calls?: string[];
+  isWaitingForContent?: boolean;
 };
 
 type PaneProps = {
@@ -185,6 +186,7 @@ const Pane: FC<PaneProps> = ({
                     scrollContainer={messagesContainerRef.current}
                     reasoning={message.reasoning}
                     tool_calls={message.tool_calls}
+                    isWaitingForContent={message.isWaitingForContent}
                   />
                   {/* TODO: add loading indicator 
                    {isLoading &&

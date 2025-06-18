@@ -486,6 +486,7 @@ const ChatPage = () => {
                 done: false,
                 previous_message_id: event.message.reply_to,
                 reasoning: "",
+                isWaitingForContent: true,
               },
             ];
           });
@@ -499,6 +500,7 @@ const ChatPage = () => {
               );
               if (assistantMessage) {
                 assistantMessage.content += event.content?.text;
+                assistantMessage.isWaitingForContent = false;
               }
               return newMessages;
             });
@@ -514,6 +516,7 @@ const ChatPage = () => {
               if (assistantMessage) {
                 assistantMessage.reasoning =
                   (assistantMessage.reasoning || "") + event.content?.text;
+                assistantMessage.isWaitingForContent = false;
               } else {
                 newMessages.push({
                   id: event.message_id,
@@ -522,6 +525,7 @@ const ChatPage = () => {
                   model_id: event.model_id,
                   created_at: new Date(),
                   reasoning: event.content.text,
+                  isWaitingForContent: false,
                 });
               }
               return newMessages;

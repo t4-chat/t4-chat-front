@@ -7,7 +7,7 @@ import type { StreamEvent } from "@/utils/apiUtils";
 
 interface UseChatSenderOptions {
   onEvent: (
-    event: StreamEvent & { message_id?: string; model_id?: number },
+    event: StreamEvent & { message_id?: string; model_id?: string },
   ) => void;
   onError: (error: unknown) => void;
   onDone: () => void;
@@ -124,7 +124,8 @@ export const useMutationErrorHandler = () => {
             .map((err: unknown) => {
               if (typeof err === "string") {
                 return err;
-              } else if (typeof err === "object" && err !== null) {
+              }
+              if (typeof err === "object" && err !== null) {
                 const errorObj = err as Record<string, unknown>;
                 return (
                   (errorObj.message as string) ||

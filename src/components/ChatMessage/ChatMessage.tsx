@@ -27,6 +27,7 @@ interface ChatMessageProps
   scrollContainer?: HTMLElement | null;
   reasoning?: string;
   tool_calls?: string[];
+  isWaitingForContent?: boolean;
 }
 
 interface AttachmentInfo {
@@ -93,6 +94,7 @@ const ChatMessage = ({
   scrollContainer,
   reasoning,
   tool_calls,
+  isWaitingForContent = false,
 }: ChatMessageProps) => {
   // Add test content for demonstration
 
@@ -417,6 +419,19 @@ const ChatMessage = ({
             </div>
           </div>
         )}
+
+        {/* Show thinking indicator when waiting for first content */}
+        {isWaitingForContent && role === "assistant" && !content && (
+          <div className="bg-black/[0.02] mb-4 p-3 border border-[var(--border-color)] rounded-lg">
+            <div className="flex items-center gap-3">
+              <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-5 h-5 animate-spin" />
+              <span className="text-[var(--text-secondary-color)] text-sm">
+                Thinking...
+              </span>
+            </div>
+          </div>
+        )}
+
         {disableMarkdown ? (
           <div>{displayContent}</div>
         ) : (
