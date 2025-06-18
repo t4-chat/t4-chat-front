@@ -220,8 +220,9 @@ const HomePage: FC = () => {
             <motion.div
               key={categorizationMode}
               className={cn("grid gap-8 w-full max-w-[75rem] mx-auto mb-8", {
-                "grid-cols-1": categorizationMode === "usage",
-                "grid-cols-1 md:grid-cols-2": categorizationMode === "provider",
+                "grid-cols-1":
+                  categorizationMode === "usage" ||
+                  categorizationMode === "provider",
               })}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

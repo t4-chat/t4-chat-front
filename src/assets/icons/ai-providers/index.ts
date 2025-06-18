@@ -12,6 +12,7 @@ import llamaIcon from "./llama.svg";
 import defaultIcon from "./default.svg";
 import openrouterIcon from "./openrouter.png";
 import groqIcon from "./groq.png";
+import qwenIcon from "./qwen.svg";
 
 // This is a mapping from provider names to their SVG file paths
 export const providerIconPaths = {
@@ -27,5 +28,6 @@ export const providerIconPaths = {
   ollama: llamaIcon,
   openrouter: openrouterIcon,
   groq: groqIcon,
+  qwen: qwenIcon,
   default: defaultIcon,
 };
