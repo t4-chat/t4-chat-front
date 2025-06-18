@@ -153,6 +153,14 @@ export const $AiModelResponseForAdminSchema = {
       title: "Tags",
       description: "The tags of the model",
     },
+    modalities: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Modalities",
+      description: "The modalities of the model",
+    },
     provider: {
       anyOf: [
         {
@@ -184,6 +192,7 @@ export const $AiModelResponseForAdminSchema = {
     "context_length",
     "is_active",
     "tags",
+    "modalities",
   ],
   title: "AiModelResponseForAdminSchema",
 } as const;
@@ -221,6 +230,14 @@ export const $AiModelResponseSchema = {
       description: "Whether the model is only available with BYOK",
       default: false,
     },
+    modalities: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Modalities",
+      description: "The modalities of the model",
+    },
     provider: {
       anyOf: [
         {
@@ -234,8 +251,28 @@ export const $AiModelResponseSchema = {
     },
   },
   type: "object",
-  required: ["id", "name", "tags"],
+  required: ["id", "name", "tags", "modalities"],
   title: "AiModelResponseSchema",
+} as const;
+
+export const $AiModelsRequestSchema = {
+  properties: {
+    image_gen_model_id: {
+      anyOf: [
+        {
+          type: "string",
+          format: "uuid",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Image Gen Model Id",
+      description: "The id of the image generation model",
+    },
+  },
+  type: "object",
+  title: "AiModelsRequestSchema",
 } as const;
 
 export const $AiProviderModelResponseSchema = {
@@ -693,6 +730,14 @@ export const $EditAiModelRequestSchema = {
       title: "Tags",
       description: "The tags of the model",
     },
+    modalities: {
+      items: {
+        type: "string",
+      },
+      type: "array",
+      title: "Modalities",
+      description: "The modalities of the model",
+    },
     host_associations: {
       items: {
         $ref: "#/components/schemas/ModelHostAssociationSchema",
@@ -712,6 +757,7 @@ export const $EditAiModelRequestSchema = {
     "context_length",
     "is_active",
     "tags",
+    "modalities",
     "host_associations",
   ],
   title: "EditAiModelRequestSchema",
@@ -970,6 +1016,24 @@ export const $MultiModelCompletionRequestSchema = {
       type: "array",
       title: "Model Ids",
       description: "The ids of the models to compare (minimum 2)",
+    },
+    models_auxiliary: {
+      anyOf: [
+        {
+          additionalProperties: {
+            $ref: "#/components/schemas/AiModelsRequestSchema",
+          },
+          propertyNames: {
+            format: "uuid",
+          },
+          type: "object",
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Models Auxiliary",
+      description: "The auxiliary models to use for the chat",
     },
     message: {
       $ref: "#/components/schemas/ChatMessageRequestSchema",

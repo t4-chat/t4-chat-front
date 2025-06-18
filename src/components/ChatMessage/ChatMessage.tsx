@@ -25,7 +25,52 @@ interface AttachmentInfo {
   filename?: string;
   isLoading: boolean;
 }
+const testContent = `# Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6
 
+This is a paragraph with **bold** and *italic* text. Here's a [link](https://example.com).
+
+> This is a blockquote with some important information.
+
+Here's a list:
+- Item 1
+- Item 2
+  - Nested item 2.1
+  - Nested item 2.2
+- Item 3
+
+And a numbered list:
+1. First item
+2. Second item
+3. Third item
+
+Here's a table:
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+
+Here's some inline code: \`const x = 1\`
+
+And a code block:
+\`\`\`javascript
+function example() {
+  console.log("Hello, world!");
+  return true;
+}
+\`\`\`
+
+Horizontal rule:
+---
+
+And an image:
+![Alt text](https://via.placeholder.com/150)
+
+This is the end of the test message.`;
 const ChatMessage = ({
   content,
   role,
@@ -37,6 +82,10 @@ const ChatMessage = ({
   scrollContainer,
   reasoning,
 }: ChatMessageProps) => {
+  // Add test content for demonstration
+
+  const displayContent = content; // Use test content if no content provided
+
   const hasAttachments = attachments && attachments.length > 0;
   const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
     {},
@@ -206,7 +255,7 @@ const ChatMessage = ({
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(content);
+      await navigator.clipboard.writeText(displayContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     } catch (error) {
@@ -327,48 +376,48 @@ const ChatMessage = ({
           </div>
         )}
         {disableMarkdown ? (
-          <div>{content}</div>
+          <div>{displayContent}</div>
         ) : (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => (
-                <h1 className="mt-4 mb-1 font-semibold text-[1.6em] leading-tight">
+                <h1 className="[&+*]:mt-0 font-semibold text-[1.6em] leading-tight">
                   {children}
                 </h1>
               ),
               h2: ({ children }) => (
-                <h2 className="mt-4 mb-1 font-semibold text-[1.4em] leading-tight">
+                <h2 className="[&+*]:mt-0 font-semibold text-[1.4em] leading-tight">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="mt-3 mb-1 font-semibold text-[1.2em] leading-tight">
+                <h3 className="[&+*]:mt-0 font-semibold text-[1.2em] leading-tight">
                   {children}
                 </h3>
               ),
               h4: ({ children }) => (
-                <h4 className="mt-3 mb-1 font-semibold text-[1.1em] leading-tight">
+                <h4 className="[&+*]:mt-0 font-semibold text-[1.1em] leading-tight">
                   {children}
                 </h4>
               ),
               h5: ({ children }) => (
-                <h5 className="mt-2 mb-1 font-semibold text-[1em] leading-tight">
+                <h5 className="[&+*]:mt-0 font-semibold text-[1em] leading-tight">
                   {children}
                 </h5>
               ),
               h6: ({ children }) => (
-                <h6 className="mt-2 mb-1 font-semibold text-[1em] leading-tight">
+                <h6 className="[&+*]:mt-0 font-semibold text-[1em] leading-tight">
                   {children}
                 </h6>
               ),
               ul: ({ children }) => (
-                <ul className="mt-1 mb-1 pl-6">{children}</ul>
+                <ul className="[&+*]:mt-0 pl-6">{children}</ul>
               ),
               ol: ({ children }) => (
-                <ol className="mt-1 mb-1 pl-6">{children}</ol>
+                <ol className="[&+*]:mt-0 pl-6">{children}</ol>
               ),
-              li: ({ children }) => <li className="mb-0.5">{children}</li>,
+              li: ({ children }) => <li className="[&+*]:mt-0">{children}</li>,
               a: ({ children, href }) => (
                 <a
                   href={href}
@@ -378,13 +427,13 @@ const ChatMessage = ({
                 </a>
               ),
               blockquote: ({ children }) => (
-                <blockquote className="my-1 px-4 py-1 border-[var(--border-color)] border-l-4 text-[var(--text-secondary-color)]">
+                <blockquote className="[&+*]:mt-0 px-4 py-1 border-[var(--border-color)] border-l-4 text-[var(--text-secondary-color)]">
                   {children}
                 </blockquote>
               ),
-              p: ({ children }) => <p className="mb-1">{children}</p>,
+              p: ({ children }) => <p className="[&+*]:mt-0">{children}</p>,
               table: ({ children }) => (
-                <table className="my-2 w-full border-collapse">
+                <table className="[&+*]:mt-0 w-full border-collapse">
                   {children}
                 </table>
               ),
@@ -399,10 +448,14 @@ const ChatMessage = ({
                 </td>
               ),
               img: ({ src, alt }) => (
-                <img src={src} alt={alt} className="rounded-sm max-w-full" />
+                <img
+                  src={src}
+                  alt={alt}
+                  className="[&+*]:mt-0 rounded-sm max-w-full"
+                />
               ),
               hr: () => (
-                <hr className="my-2 border-[var(--border-color)] border-0 border-t" />
+                <hr className="[&+*]:mt-0 border-[var(--border-color)] border-0 border-t" />
               ),
               code: ({
                 inline,
@@ -416,7 +469,7 @@ const ChatMessage = ({
               }) => {
                 const match = /language-(\w+)/.exec(className || "");
                 return !inline && match ? (
-                  <div className="bg-black/[0.05] my-2 p-4 rounded-md overflow-x-auto">
+                  <div className="bg-black/[0.05] [&+*]:mt-0 p-4 rounded-md overflow-x-auto">
                     <SyntaxHighlighter
                       // @ts-ignore
                       style={atomDark}
@@ -429,16 +482,23 @@ const ChatMessage = ({
                   </div>
                 ) : (
                   <code
-                    className="bg-black/[0.05] px-2 py-1 rounded-sm font-mono text-[0.9em]"
+                    className="bg-black/[0.05] [&+*]:mt-0 px-2 py-1 rounded-sm font-mono text-[0.9em]"
                     {...props}
                   >
                     {children}
                   </code>
                 );
               },
+              text: ({ children }) => {
+                if (typeof children === "string") {
+                  // Remove multiple consecutive newlines
+                  return children.replace(/\n{3,}/g, "\n\n");
+                }
+                return children;
+              },
             }}
           >
-            {content}
+            {displayContent}
           </ReactMarkdown>
         )}
 

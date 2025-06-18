@@ -536,7 +536,6 @@ const ChatPage = () => {
               );
               if (assistantMessage) {
                 assistantMessage.done = true;
-                assistantMessage.reasoning = "";
               }
               return newMessages;
             });

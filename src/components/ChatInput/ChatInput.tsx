@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Search, Image } from "lucide-react";
+import { Search, Image, Globe2, Globe } from "lucide-react";
 import { cn } from "@/utils/generalUtils";
 
 interface IChatInputProps {
@@ -210,18 +210,22 @@ const ChatInput: FC<IChatInputProps> = ({
                     "text-primary border-transparent border",
                 )}
               >
-                <Search className="w-4 h-4" />
-                Search
+                <Globe className="w-4 h-4" />
+                Web Search
               </Button>
-              {/* <Button
-                  variant={selectedTools.includes("image") ? "primary" : "text"}
-                  size="sm"
-                  onClick={() => toggleTool("image")}
-                  className="gap-2"
-                >
-                  <Image className="w-4 h-4" />
-                  Image
-                </Button> */}
+              <Button
+                variant={selectedTools.includes("image") ? "text" : "secondary"}
+                size="sm"
+                onClick={() => toggleTool("image")}
+                className={cn(
+                  "gap-2 h-10",
+                  selectedTools.includes("image") &&
+                    "text-primary border-transparent border",
+                )}
+              >
+                <Image className="w-4 h-4" />
+                Image Generation
+              </Button>
             </motion.div>
           )}
         </div>

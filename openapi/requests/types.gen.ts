@@ -87,6 +87,10 @@ export type AiModelResponseForAdminSchema = {
    */
   tags: Array<string>;
   /**
+   * The modalities of the model
+   */
+  modalities: Array<string>;
+  /**
    * The provider of the model
    */
   provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;
@@ -118,9 +122,20 @@ export type AiModelResponseSchema = {
    */
   only_with_byok?: boolean;
   /**
+   * The modalities of the model
+   */
+  modalities: Array<string>;
+  /**
    * The provider of the model
    */
   provider?: src__api__schemas__ai_models__AiProviderResponseSchema | null;
+};
+
+export type AiModelsRequestSchema = {
+  /**
+   * The id of the image generation model
+   */
+  image_gen_model_id?: string | null;
 };
 
 export type AiProviderModelResponseSchema = {
@@ -345,6 +360,10 @@ export type EditAiModelRequestSchema = {
    */
   tags: Array<string>;
   /**
+   * The modalities of the model
+   */
+  modalities: Array<string>;
+  /**
    * The model host associations of the model
    */
   host_associations: Array<ModelHostAssociationSchema>;
@@ -486,6 +505,12 @@ export type MultiModelCompletionRequestSchema = {
    * The ids of the models to compare (minimum 2)
    */
   model_ids: Array<string>;
+  /**
+   * The auxiliary models to use for the chat
+   */
+  models_auxiliary?: {
+    [key: string]: AiModelsRequestSchema;
+  } | null;
   /**
    * The message of the chat
    */

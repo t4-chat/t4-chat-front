@@ -10,6 +10,7 @@ export const useFilteredAiModels = () => {
 
   const filteredModels = useMemo(() => {
     return models.filter((model: AiModelResponseSchema) => {
+      if (!model.modalities.includes("text")) return false;
       // Show model if it doesn't require BYOK or if user has an API key for it
       return !model.only_with_byok || model.has_api_key;
     });
