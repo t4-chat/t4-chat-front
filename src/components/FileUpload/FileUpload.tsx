@@ -53,8 +53,8 @@ const FileUpload = ({
         className="rounded-full w-10 h-10 active:scale-95"
       >
         <svg
-          width="20"
-          height="20"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

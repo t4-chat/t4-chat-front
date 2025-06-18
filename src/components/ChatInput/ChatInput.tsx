@@ -7,6 +7,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { type FC, useEffect, useRef, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { Search, Image, Globe2, Globe } from "lucide-react";
 import { cn } from "@/utils/generalUtils";
 
@@ -192,52 +197,50 @@ const ChatInput: FC<IChatInputProps> = ({
               </motion.div>
             )}
           </AnimatePresence>
-          {onToolsChange && (
-            <motion.div
-              initial={{ opacity: 0, translateY: 10 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              exit={{ opacity: 0, translateY: 10 }}
-              transition={{ duration: 0.1, ease: "easeInOut" }}
-              className="flex gap-2"
-            >
-              <Button
-                variant={
-                  selectedTools.includes("web_search") ? "text" : "secondary"
-                }
-                size="sm"
-                onClick={() => toggleTool("web_search")}
-                className={cn(
-                  "gap-2 h-10",
-                  selectedTools.includes("web_search") &&
-                    "text-primary border-transparent border",
-                )}
-              >
-                <Globe className="w-4 h-4" />
-                Web Search
-              </Button>
-              <Button
-                variant={
-                  selectedTools.includes("image_generation")
-                    ? "text"
-                    : "secondary"
-                }
-                size="sm"
-                onClick={() => toggleTool("image_generation")}
-                className={cn(
-                  "gap-2 h-10",
-                  selectedTools.includes("image_generation") &&
-                    "text-primary border-transparent border",
-                )}
-              >
-                <Image className="w-4 h-4" />
-                Image Generation
-              </Button>
-            </motion.div>
-          )}
         </div>
 
         <div className="flex items-center gap-1">
           <AnimatePresence>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => toggleTool("web_search")}
+                  className={cn(
+                    "gap-1.5 rounded-full h-10 w-10 px-2.5 text-xs transition-all",
+                    selectedTools.includes("web_search") &&
+                      "bg-[var(--primary-color)]/10 text-[var(--primary-color)]",
+                  )}
+                >
+                  <Globe size={16} />
+                  {/* Web Search */}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Web Search</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="text"
+                  size="sm"
+                  onClick={() => toggleTool("image_generation")}
+                  className={cn(
+                    "gap-1.5 rounded-full h-10 w-10 px-2.5 text-xs text-gray-200 transition-all",
+                    selectedTools.includes("image_generation") &&
+                      "bg-[var(--primary-color)]/10 text-[var(--primary-color)]",
+                  )}
+                >
+                  <Image size={16} />
+                  {/* Image Generation */}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Image Generation</p>
+              </TooltipContent>
+            </Tooltip>
             {isSplitMode && onPaneCountChange && (
               <motion.div
                 initial={{ opacity: 0, translateY: 10 }}
