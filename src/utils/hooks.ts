@@ -11,12 +11,14 @@ interface UseChatSenderOptions {
   ) => void;
   onError: (error: unknown) => void;
   onDone: () => void;
+  onUploadingChange?: (isUploading: boolean) => void;
 }
 
 export const useChatSender = ({
   onEvent,
   onError,
   onDone,
+  onUploadingChange,
 }: UseChatSenderOptions) => {
   const { handleError, handleSuccess } = useMutationErrorHandler();
   const { mutateAsync: upload } = useFilesServicePostApiFilesUpload({
@@ -33,10 +35,15 @@ export const useChatSender = ({
   ) => {
     let attachmentIds: string[] = [];
     if (files && files.length > 0) {
-      const results = await Promise.all(
-        files.map((file) => upload({ formData: { file } })),
-      );
-      attachmentIds = results.map((r) => r.file_id);
+      onUploadingChange?.(true);
+      try {
+        const results = await Promise.all(
+          files.map((file) => upload({ formData: { file } })),
+        );
+        attachmentIds = results.map((r) => r.file_id);
+      } finally {
+        onUploadingChange?.(false);
+      }
     }
 
     const abort = new ChatService().streamChat({

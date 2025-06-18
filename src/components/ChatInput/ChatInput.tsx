@@ -13,6 +13,7 @@ import { cn } from "@/utils/generalUtils";
 interface IChatInputProps {
   onSend: (message: string, files?: File[], tools?: string[]) => void;
   isLoading?: boolean;
+  isUploading?: boolean;
   placeholder?: string;
   modelOptions?: SearchableSelectOption[];
   selectedModel?: string;
@@ -29,6 +30,7 @@ interface IChatInputProps {
 const ChatInput: FC<IChatInputProps> = ({
   onSend,
   isLoading = false,
+  isUploading = false,
   placeholder = "Type a message...",
   modelOptions,
   onSplitToggle,
@@ -64,7 +66,7 @@ const ChatInput: FC<IChatInputProps> = ({
   };
 
   const handleSend = () => {
-    if ((message.trim() || files.length > 0) && !isLoading) {
+    if ((message.trim() || files.length > 0) && !isLoading && !isUploading) {
       onSend(
         message,
         files.length > 0 ? files : undefined,
@@ -133,7 +135,7 @@ const ChatInput: FC<IChatInputProps> = ({
         }
       }}
       onKeyDown={() => {
-        if (isLoading) {
+        if (isLoading || isUploading) {
           return;
         }
 
@@ -275,19 +277,23 @@ const ChatInput: FC<IChatInputProps> = ({
           <FileUpload
             onFilesSelected={handleFilesSelected}
             maxFiles={3 - files.length}
-            disabled={isLoading || files.length >= 3}
+            disabled={isLoading || isUploading || files.length >= 3}
             accept="image/*,.pdf,.doc,.docx,.txt"
           />
 
           <Button
             variant={
-              (message.trim() || files.length > 0) && !isLoading
+              (message.trim() || files.length > 0) && !isLoading && !isUploading
                 ? "primary"
                 : "text"
             }
             size="icon"
             onClick={handleSend}
-            disabled={(!message.trim() && files.length === 0) || isLoading}
+            disabled={
+              (!message.trim() && files.length === 0) ||
+              isLoading ||
+              isUploading
+            }
             aria-label="Send message"
             className="rounded-full w-10 h-10"
           >

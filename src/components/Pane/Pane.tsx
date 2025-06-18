@@ -37,6 +37,7 @@ type PaneProps = {
   showModelSelectorTop: boolean;
   modelId: string;
   modelOptions: SearchableSelectOption[];
+  isUploading?: boolean;
 } & (
   | {
       showModelSelectorTop: false;
@@ -100,6 +101,7 @@ const Pane: FC<PaneProps> = ({
   showModelSelectorTop,
   modelId,
   modelOptions,
+  isUploading = false,
   ...props
 }) => {
   const hasMessages = useMemo(() => messages.length > 0, [messages.length]);
@@ -200,6 +202,18 @@ const Pane: FC<PaneProps> = ({
         )}
         <ScrollToBottomButton onClick={scrollToBottom} show={!isAtBottom} />
       </div>
+
+      {/* Upload Progress Indicator */}
+      {isUploading && (
+        <div className="top-4 left-1/2 z-20 absolute -translate-x-1/2 transform">
+          <div className="flex items-center gap-2 bg-[var(--component-bg-color)] shadow-lg backdrop-blur-sm px-4 py-2 border border-[var(--border-color)] rounded-full">
+            <div className="border-[var(--primary-color)] border-2 border-t-transparent rounded-full w-4 h-4 animate-spin" />
+            <span className="font-medium text-[var(--text-primary-color)] text-sm">
+              Uploading files...
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

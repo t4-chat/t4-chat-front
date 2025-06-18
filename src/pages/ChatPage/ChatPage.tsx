@@ -355,6 +355,7 @@ const ChatPage = () => {
   const modelIds = searchParams.get("modelIds")?.split(",") || undefined;
 
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [previewPaneIndex, setPreviewPaneIndex] = useState<number | undefined>(
     undefined,
   );
@@ -585,6 +586,7 @@ const ChatPage = () => {
       });
       setIsStreaming(false);
     },
+    onUploadingChange: setIsUploading,
   });
 
   const sendMessage = async (msg: string, files?: File[]) => {
@@ -743,6 +745,7 @@ const ChatPage = () => {
                       messages={displayedMessages}
                       showModelSelectorTop={isSplitMode}
                       modelId={modelIds[paneIndex]}
+                      isUploading={isUploading}
                       modelOptions={availableModels?.map((m) => ({
                         value: m.id.toString(),
                         label: m.name,
@@ -866,6 +869,7 @@ const ChatPage = () => {
                                 showModelSelectorTop={false}
                                 modelId={modelIds[paneIndex]}
                                 messages={displayedMessages}
+                                isUploading={isUploading}
                               />
                               {isSplitMode &&
                                 lastDisplayedMessage?.selected === false &&
@@ -959,6 +963,7 @@ const ChatPage = () => {
                 sendMessage(msg, files);
               }}
               isLoading={isStreaming}
+              isUploading={isUploading}
               modelOptions={availableModels?.map((m) => ({
                 value: m.id.toString(),
                 label: m.name,
