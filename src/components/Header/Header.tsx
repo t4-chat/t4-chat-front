@@ -28,12 +28,6 @@ const Header = ({ onShowWelcome }: HeaderProps) => {
 
   const userMenuItems: DropdownMenuItem[] = [
     {
-      id: "welcome",
-      label: "Show Welcome",
-      icon: <HelpCircle size={16} />,
-      onClick: onShowWelcome,
-    },
-    {
       id: "settings",
       label: "Settings",
       icon: <Settings size={16} />,
